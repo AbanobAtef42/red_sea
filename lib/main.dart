@@ -203,8 +203,8 @@ class _MyAppState extends State<MyApp> {
                     highlightColor: colorPrimary,
                     fontFamily: 'Georgia',
                     buttonTheme: ButtonThemeData(
-                      textTheme: ButtonTextTheme
-                          .primary, //  <-- this auto selects the right color
+                      textTheme: ButtonTextTheme.primary,
+                      //  <-- this auto selects the right color
                     ),
                     textTheme: TextTheme(
                       headline1: TextStyle(

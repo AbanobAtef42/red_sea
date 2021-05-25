@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/models/ModelProducts.dart';
+import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/myConstants.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'ProductDetailScreen.dart';
 
@@ -24,7 +26,7 @@ class Favourites extends StatefulWidget {
 class _FavouritesState extends State<Favourites> {
   var listPadding;
   late Box<Datum> dataBox;
-
+ late  ProviderHome newItemDeleted;
   List<Datum> list = [];
   bool isAlwaysShown = true;
   ScrollController _scrollController = new ScrollController();
@@ -48,6 +50,7 @@ class _FavouritesState extends State<Favourites> {
   @override
   void initState() {
     super.initState();
+    newItemDeleted = Provider.of<ProviderHome>(context,listen: false);
     _scrollController.addListener(() {
       FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -243,7 +246,9 @@ class _FavouritesState extends State<Favourites> {
           }
 
           return Dismissible(
-            onDismissed: (_) => dataBox.deleteAt(index),
+            onDismissed: (_) { dataBox.deleteAt(index);
+            newItemDeleted.getHomeState(true, dataBox.getAt(index)!.id!);
+            },
             key: Key(
                 modelProducts.slug.toString() + modelProducts.id.toString()),
             child: Material(

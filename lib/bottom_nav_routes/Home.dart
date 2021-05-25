@@ -36,6 +36,7 @@ import 'package:fluttericon/linecons_icons.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -65,6 +66,11 @@ class _HomeState extends State<Home> {
   ModelCats? modelCats;
   double? listPadding;
   ModelProducts? modelProducts;
+  Icon _iconHeart = Icon(
+    CupertinoIcons.heart_fill,
+    color: Colors.grey,
+    size: 25,
+  );
   FocusNode focusNode = FocusNode();
   ScrollController _scrollController = new ScrollController();
   static const int _pageSize = 10;
@@ -72,6 +78,8 @@ class _HomeState extends State<Home> {
       PagingController(firstPageKey: 0);
   late var provider;
   late var provider2;
+  late List<bool> _isFavorited;
+  late List<int> _favoriteIds;
   bool adsSlow = false;
   bool catsSlow = false;
   bool prosSlow = false;
@@ -85,10 +93,20 @@ class _HomeState extends State<Home> {
 
   int pageKey = 1;
 
+ late ProviderHome newItemDeleted;
+
   bool isLoading = true;
+
+  late Box<Datum>? boxFavs;
+
+  bool? isExistFav;
 
   @override
   void initState() {
+    _isFavorited = [];
+    _favoriteIds = [];
+
+    boxFavs = Hive.box(dataBoxNameFavs);
     _getPriceUnit(context, 'admin.\$');
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
@@ -114,6 +132,16 @@ class _HomeState extends State<Home> {
     _getAds(context);
     _getCats(context);
     _getProducts(context, pageKey);
+
+  newItemDeleted = Provider.of<ProviderHome>(context,listen: false);
+  newItemDeleted.addListener(() {
+    print('execsetstpro');
+    if(newItemDeleted.newItemDeleted && newItemDeleted.proId != -1)
+   // setState(() {
+    // _isFavorited[_favoriteIds.indexOf(newItemDeleted.proId)] = false;
+  //  });
+    newItemDeleted.removeListener(() { });
+  });
 
     statusBarHeight = MediaQuery.of(context).padding.top;
     super.didChangeDependencies();
@@ -441,16 +469,16 @@ class _HomeState extends State<Home> {
                                     builder: (context) => BottomNavHost('',
                                         cats[index].slug.toString(), index + 1),
                                   ));
-                              *//*BottomNavHost.searchQueryFun = '';
+                              */ /*BottomNavHost.searchQueryFun = '';
                               BottomNavHost.catQueryFun = cats[index].slug.toString();
                               BottomNavHost.catsIndex = index;
-                                widget.goToCats();*//*
+                                widget.goToCats();*/ /*
                             },
-                            *//*Navigator.push(
+                            */ /*Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        Categories(cats[index].slug, '')))*//*
+                                        Categories(cats[index].slug, '')))*/ /*
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
@@ -518,14 +546,14 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 30.0,
             ),
-
             RefreshIndicator(
               onRefresh: () => Future.sync(() {
                 pageKey = 1;
                 _pagingController.refresh();
               }),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0,left: 10.0),
+              child:
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0, left: 10.0),
                 child: PagedGridView<int, Datum>(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 100 / 170,
@@ -535,13 +563,15 @@ class _HomeState extends State<Home> {
                   ),
                   pagingController: _pagingController,
                   shrinkWrap: true,
-                physics: ScrollPhysics(),
-                //  physics: NeverScrollableScrollPhysics(),
+                  physics: ScrollPhysics(),
+                  //  physics: NeverScrollableScrollPhysics(),
                   builderDelegate: PagedChildBuilderDelegate<Datum>(
                     itemBuilder: (context, modelProducts, index) {
                       List<String> itemTags = [];
-                      itemTags.add(products[index % products.length].slug.toString());
-                      itemTags.add(products[index % products.length].name.toString());
+                      itemTags.add(
+                          products[index % products.length].slug.toString());
+                      itemTags.add(
+                          products[index % products.length].name.toString());
                       String name = modelProducts.name!;
                       if (name.length > 22) {
                         name = name.substring(0, 22) + '...';
@@ -558,8 +588,8 @@ class _HomeState extends State<Home> {
                                     Animation<double> secondaryAnimation) {
                                   return AnimatedBuilder(
                                       animation: animation,
-                                      builder:
-                                          (BuildContext context, Widget? child) {
+                                      builder: (BuildContext context,
+                                          Widget? child) {
                                         return Opacity(
                                           opacity: animation.value,
                                           child: ProductDetail(
@@ -569,7 +599,8 @@ class _HomeState extends State<Home> {
                                         );
                                       });
                                 },
-                                transitionDuration: Duration(milliseconds: 500)),
+                                transitionDuration:
+                                    Duration(milliseconds: 500)),
                           ),
                           child: _buildItem(modelProducts, products, index),
                         ),
@@ -842,8 +873,11 @@ class _HomeState extends State<Home> {
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   Future<void> _fetchPage(int pageKey) async {
+
     try {
       final newItems = await _getProducts(context, pageKey);
+
+     // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -863,25 +897,27 @@ class _HomeState extends State<Home> {
             int.parse(modelProduct.discount.toString()) != 0)
         ? RichText(
             text: TextSpan(
-            text: (double.parse(modelProduct.price!) +
-                    double.parse(modelProduct.discount!))
-                .toString(),
-            style: TextStyle(
-                fontSize: 14.0,
-                decoration: TextDecoration.lineThrough,
-                decorationColor: Colors.red,
-                decorationThickness: 2,
-                color: Colors.black45,
-                decorationStyle: TextDecorationStyle.solid,
-                height: 1.2),
-
-              children:[ TextSpan(text : ' ' + modelSettings!.data![0].value.toString() , style: TextStyle(
-                  fontSize: 14.0,
-                  decoration: TextDecoration.none,
-                  color: Colors.black45,
-                  decorationStyle: TextDecorationStyle.solid,
-                  height: 1.2) ),
-          ])
+                text: (double.parse(modelProduct.price!) +
+                        double.parse(modelProduct.discount!))
+                    .toString(),
+                style: TextStyle(
+                    fontSize: 14.0,
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: Colors.red,
+                    decorationThickness: 2,
+                    color: Colors.black45,
+                    decorationStyle: TextDecorationStyle.solid,
+                    height: 1.2),
+                children: [
+                TextSpan(
+                    text: ' ' + modelSettings!.data![0].value.toString(),
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        decoration: TextDecoration.none,
+                        color: Colors.black45,
+                        decorationStyle: TextDecorationStyle.solid,
+                        height: 1.2)),
+              ])
 
             //
             )
@@ -954,26 +990,28 @@ class _HomeState extends State<Home> {
 
   _buildItem(Datum modelProducts, List<Datum> products, int index) {
     String name = modelProducts.name!;
-    if(name.length > 13)
-    {
-     name = name.substring(0,12) + '...';
+    if (name.length > 13) {
+      name = name.substring(0, 12) + '...';
     }
+     _isFavorited.insert(index, false);
+    _favoriteIds.insert(index, modelProducts.id!);
     return Container(
-margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
+      margin:
+          EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
       // width: MediaQuery.of(context).size.width/1.2,
       //height: MediaQuery.of(context).size.height / 2.9,
       child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Column(
           children: [
-            Stack(
-              children:[ Padding(
+            Stack(children: [
+              Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(0.0),
                   child: Hero(
-                    tag: products[index % products.length].name.toString() +
-                        products[index % products.length].slug.toString(),
+                    tag: modelProducts.name.toString() +
+                        modelProducts.slug.toString(),
                     child: CachedNetworkImage(
                       placeholder: (context, s) => Icon(Icons.camera),
                       imageUrl: modelProducts.images!.isNotEmpty
@@ -986,31 +1024,47 @@ margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
                   ),
                 ),
               ),
-                Positioned(
-                  right: 0,
-                  top: 40,
-
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(color: Colors.red,borderRadius: BorderRadius.only(topLeft: Radius.circular(15.0))),
-                    child: Text('20%',style: TextStyle(color: Colors.white,fontSize: 12.0),),
+              Positioned(
+                right: 0,
+                top: 40,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius:
+                          BorderRadius.only(topLeft: Radius.circular(15.0))),
+                  child: Text(
+                    '20%',
+                    style: TextStyle(color: Colors.white, fontSize: 12.0),
                   ),
                 ),
-                Positioned(
-                  left: 15,
-                  top: 15,
-
-
+              ),
+              Positioned(
+                left: 15,
+                top: 15,
+                child: GestureDetector(
+                  onTap: () {
+                    onIconHeartClick(modelProducts,index);
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(color: Colors.white,shape:BoxShape.circle,border: Border() ),
-                    child: Icon(CupertinoIcons.heart_fill,color: Colors.grey),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border()),
+                    child: onIconHeartStart(modelProducts,index),
                   ),
                 ),
+              ),
             ]),
             Container(
-             // color: Colors.grey[50],
-              decoration:new BoxDecoration(color: Colors.transparent ,border: Border(right: BorderSide(),left: BorderSide(),bottom: BorderSide())),
+              // color: Colors.grey[50],
+              decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border(
+                      right: BorderSide(),
+                      left: BorderSide(),
+                      bottom: BorderSide())),
               padding: EdgeInsetsDirectional.only(top: 8.0),
               child: Column(
                 /*mainAxisAlignment: MainAxisAlignment.start,
@@ -1026,7 +1080,7 @@ margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
                         Container(
                           // width: MediaQuery.of(context).size.width / 1.8,
                           child: Hero(
-                            tag: products[index % products.length].name.toString(),
+                            tag: modelProducts.name.toString(),
                             child: Material(
                               child: Text(
                                 name,
@@ -1046,18 +1100,21 @@ margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10.0,),
                   SizedBox(
-                  //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
                     child: Padding(
                       padding: EdgeInsetsDirectional.only(
-                          end: listPadding!,),
+                        end: listPadding!,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                         // rateWidget(modelProducts),
+                          // rateWidget(modelProducts),
                           Spacer(
                             flex: 1,
                           ),
@@ -1079,14 +1136,23 @@ margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Styles.getButton(context, Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(S.of(context).cartAdd),
-                        SizedBox(width: 8.0,),
-                        Icon(Icons.add_shopping_cart)
-                      ],
-                    ) , () { }, Styles.getCartButtonStyle()),
+                    child: Styles.getButton(
+                        context,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              S.of(context).cartAdd,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Icon(Icons.add_shopping_cart)
+                          ],
+                        ),
+                        () {},
+                        Styles.getCartButtonStyle()),
                   )
                 ],
               ),
@@ -1095,6 +1161,67 @@ margin: EdgeInsetsDirectional.only(start: listPadding!,end: listPadding!),
         ),
       ),
     );
+  }
+
+  Icon onIconHeartStart(Datum modelProduct , int index) {
+    bool isFavourite = _isFavorited[index];
+    print('fffffffffffdddd');
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProduct.id)
+        .toList();
+    if(datums.length > 0)
+    {
+      _isFavorited[index] = true;
+    }
+
+    if (_isFavorited[index]) {
+      print('ffffffffffffff');
+
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.red,
+      );
+      isExistFav = true;
+      return _iconHeart;
+
+      //});
+    } else {
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.grey,
+      );
+      isExistFav = true;
+      return _iconHeart;
+    }
+  }
+
+  onIconHeartClick(Datum modelProducts , int index) {
+    print('fffffffffffdddd' + index.toString());
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProducts.id)
+        .toList();
+    if (datums.length == 0 ) {
+      print('ffffffffffffff');
+      boxFavs!.add(modelProducts);
+      setState(() {
+        _isFavorited[index] = true;
+        /*this._iconHeart = new Icon(
+          CupertinoIcons.heart_fill,
+          color: Colors.red,
+        );*/
+      });
+    } else {
+      setState(() {
+        /*this._iconHeart = new Icon(
+          CupertinoIcons.heart_fill,
+          color: Colors.grey,
+        );*/
+        _isFavorited[index] = false;
+        Iterable<dynamic> key = boxFavs!.keys
+            .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
+        boxFavs!.delete(key.toList()[0]);
+      });
+    }
   }
 }
 

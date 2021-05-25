@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="335bfc8d-4431-479c-bd5b-86c1f5bbcf65" name="Default Changelist" comment="" />
+    <list default="true" id="335bfc8d-4431-479c-bd5b-86c1f5bbcf65" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/bottom_nav_routes/Categories.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bottom_nav_routes/Categories.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/bottom_nav_routes/Home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bottom_nav_routes/Home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/providers/providerHome.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/providers/providerHome.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/CustomerOrdersScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/CustomerOrdersScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/FavsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/FavsScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1svupGCaNoU5NvArhV2GiVv0r4o" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -41,33 +58,49 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="2006" height="268" key="GridCell.Tab.0.bottom" timestamp="1621850636596">
-      <screen x="0" y="25" width="2048" height="1020" />
+    <state x="872" y="435" key="Github.ShareDialog" timestamp="1621868823532">
+      <screen x="0" y="25" width="2048" height="1033" />
+    </state>
+    <state x="872" y="435" key="Github.ShareDialog/0.25.2048.1033@0.25.2048.1033" timestamp="1621868823532" />
+    <state x="772" y="147" key="Github.UntrackedFilesDialog" timestamp="1621868829785">
+      <screen x="0" y="25" width="2048" height="1033" />
+    </state>
+    <state x="772" y="147" key="Github.UntrackedFilesDialog/0.25.2048.1033@0.25.2048.1033" timestamp="1621868829785" />
+    <state width="2006" height="268" key="GridCell.Tab.0.bottom" timestamp="1621949084983">
+      <screen x="0" y="25" width="2048" height="1033" />
     </state>
     <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1020@0.25.2048.1020" timestamp="1621850636596" />
+    <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1023@0.25.2048.1023" timestamp="1621867953518" />
     <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1027@0.25.2048.1027" timestamp="1621774949612" />
-    <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1030@0.25.2048.1030" timestamp="1621782602888" />
+    <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1030@0.25.2048.1030" timestamp="1621934612667" />
+    <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1033@0.25.2048.1033" timestamp="1621949084983" />
     <state width="2006" height="268" key="GridCell.Tab.0.bottom/0.25.2048.1036@0.25.2048.1036" timestamp="1621784648948" />
-    <state width="2006" height="268" key="GridCell.Tab.0.center" timestamp="1621850636595">
-      <screen x="0" y="25" width="2048" height="1020" />
+    <state width="2006" height="268" key="GridCell.Tab.0.center" timestamp="1621949084982">
+      <screen x="0" y="25" width="2048" height="1033" />
     </state>
     <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1020@0.25.2048.1020" timestamp="1621850636595" />
+    <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1023@0.25.2048.1023" timestamp="1621867953517" />
     <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1027@0.25.2048.1027" timestamp="1621774949611" />
-    <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1030@0.25.2048.1030" timestamp="1621782602888" />
+    <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1030@0.25.2048.1030" timestamp="1621934612666" />
+    <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1033@0.25.2048.1033" timestamp="1621949084982" />
     <state width="2006" height="268" key="GridCell.Tab.0.center/0.25.2048.1036@0.25.2048.1036" timestamp="1621784648947" />
-    <state width="2006" height="268" key="GridCell.Tab.0.left" timestamp="1621850636594">
-      <screen x="0" y="25" width="2048" height="1020" />
+    <state width="2006" height="268" key="GridCell.Tab.0.left" timestamp="1621949084982">
+      <screen x="0" y="25" width="2048" height="1033" />
     </state>
     <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1020@0.25.2048.1020" timestamp="1621850636594" />
+    <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1023@0.25.2048.1023" timestamp="1621867953516" />
     <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1027@0.25.2048.1027" timestamp="1621774949611" />
-    <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1030@0.25.2048.1030" timestamp="1621782602887" />
+    <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1030@0.25.2048.1030" timestamp="1621934612665" />
+    <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1033@0.25.2048.1033" timestamp="1621949084982" />
     <state width="2006" height="268" key="GridCell.Tab.0.left/0.25.2048.1036@0.25.2048.1036" timestamp="1621784648947" />
-    <state width="2006" height="268" key="GridCell.Tab.0.right" timestamp="1621850636595">
-      <screen x="0" y="25" width="2048" height="1020" />
+    <state width="2006" height="268" key="GridCell.Tab.0.right" timestamp="1621949084983">
+      <screen x="0" y="25" width="2048" height="1033" />
     </state>
     <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1020@0.25.2048.1020" timestamp="1621850636595" />
+    <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1023@0.25.2048.1023" timestamp="1621867953518" />
     <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1027@0.25.2048.1027" timestamp="1621774949612" />
-    <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1030@0.25.2048.1030" timestamp="1621782602888" />
+    <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1030@0.25.2048.1030" timestamp="1621934612666" />
+    <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1033@0.25.2048.1033" timestamp="1621949084983" />
     <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1036@0.25.2048.1036" timestamp="1621784648947" />
     <state x="717" y="266" width="813" height="608" key="find.popup" timestamp="1621852156052">
       <screen x="0" y="25" width="2048" height="1020" />

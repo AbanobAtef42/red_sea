@@ -74,6 +74,7 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   infinite_scroll_pagination: ^3.0.1
   search_page: ^2.0.0
+  steps_indicator: ^1.3.0
 
   awesome_dialog: 2.0.0-nullsafety.1
   injectable: ^1.2.2

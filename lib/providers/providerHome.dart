@@ -15,8 +15,10 @@ class ProviderHome with ChangeNotifier {
   ModelProducts modelProductsCats = new ModelProducts();
   ModelOrders? modelOrders;
   int index1 = 0;
+   int proId = -1;
 String? sentOrder;
   bool loaded = false;
+  bool newItemDeleted = false;
   static bool slowInternetAds = false;
   static bool slowInternetCats = false;
   static bool slowInternetPros = false;
@@ -99,5 +101,9 @@ String? sentOrder;
   getCatIndex(int index) {
     index = this.index1;
     notifyListeners();
+  }
+  getHomeState(bool newItemsDeleted , int proId){
+    this.newItemDeleted = newItemsDeleted;
+    this.proId = proId;
   }
 }

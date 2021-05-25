@@ -29,6 +29,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
+import 'package:steps_indicator/steps_indicator.dart';
 
 import 'CustomerOrdersDetailScreen.dart';
 
@@ -129,13 +130,14 @@ class _OrdersState extends State<Orders> {
           ],
         ),
       );
-    } else if (modelOrders != null && modelOrders!.path == 'slint') {
-      /* Fluttertoast.showToast(
+    } /*else
+      if (modelOrders != null && modelOrders!.path == 'slint') {
+      *//* Fluttertoast.showToast(
           msg: S.of(context).slowInternet,
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: colorPrimary,
           textColor: Colors.white,
-          gravity: ToastGravity.BOTTOM);*/
+          gravity: ToastGravity.BOTTOM);*//*
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         color: Colors.grey[300],
@@ -166,7 +168,7 @@ class _OrdersState extends State<Orders> {
           ],
         ),
       );
-    }
+    }*/
 
     return getAppWidget();
   }
@@ -383,6 +385,19 @@ class _OrdersState extends State<Orders> {
                                                               SizedBox(
                                                                 height: 10,
                                                               ),
+                                                              Text(
+                                                                modelOrders.total
+                                                                    .toString() +
+                                                                    ' ' +
+                                                                    modelSettings!
+                                                                        .data![0]
+                                                                        .value!,
+                                                                style: TextStyle(
+                                                                    fontSize: 14.0),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
                                                               optionsWidget(
                                                                   modelOrders),
                                                             ]),
@@ -438,19 +453,7 @@ class _OrdersState extends State<Orders> {
                                                                       .width /
                                                                   RateTextDividerBy),
                                                         ),
-                                                        Spacer(
-                                                          flex: 1,
-                                                        ),
-                                                        Text(
-                                                          modelOrders.total
-                                                                  .toString() +
-                                                              ' ' +
-                                                              modelSettings!
-                                                                  .data![0]
-                                                                  .value!,
-                                                          style: TextStyle(
-                                                              fontSize: 14.0),
-                                                        ),
+
                                                         //  rateWidget(modelProducts, index),
                                                       ],
                                                     ),
@@ -470,37 +473,7 @@ class _OrdersState extends State<Orders> {
                         ),
                       );
                     },
-                    firstPageErrorIndicatorBuilder: (context){
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: MediaQuery.of(context).size.height / 4,
-                              child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Icon(
-                                    Icons.error_outline_outlined,
-                                    color: Colors.red,
-                                  )),
-                            ),
 
-                            Container(
-                                width: MediaQuery.of(context).size.width / 1.4,
-                                child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: RichText( textAlign: TextAlign.center,text: TextSpan(text: S.of(context).anUnknownErrorOccuredn + '\n' , style: Theme.of(context).textTheme.headline6!.copyWith(
-                                        height: 1,fontWeight: FontWeight.bold
-                                    ),children:[ TextSpan(text:S.of(context).plzChknternetConnection+ '\n' + S.of(context).tryAgain,style: Theme.of(context).textTheme.headline6!.copyWith(height: 2) )]),))),
-                            SizedBox(height: 12.0,),
-                            retryButtonListWidget(),
-                          ],
-                        ),
-                      );
-                    },
                     noItemsFoundIndicatorBuilder: (context) => Container(
                       height: MediaQuery.of(context).size.height / 1.5,
                       child: Column(
@@ -526,6 +499,121 @@ class _OrdersState extends State<Orders> {
                         ],
                       ),
                     ),
+                    firstPageErrorIndicatorBuilder: (context) {
+                      if (modelOrders != null && modelOrders!.path == 'slint') {
+                        /* Fluttertoast.showToast(
+          msg: S.of(context).slowInternet,
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: colorPrimary,
+          textColor: Colors.white,
+          gravity: ToastGravity.BOTTOM);*/
+                        return Container(
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height / 1.5,
+                          color: Colors.grey[300],
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width / 2,
+                                height: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height / 4,
+                                child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Icon(
+                                      MyFlutterApp.slow_internet,
+                                      color: colorPrimary,
+                                    )),
+                              ),
+                              retryButtonWidget(),
+                              Container(
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 2,
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(S
+                                        .of(context)
+                                        .slowInternet,
+                                        style: TextStyle(
+                                            color: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .headline1!
+                                                .color,
+                                            height: 3)),
+                                  )),
+                            ],
+                          ),
+                        );
+                      }
+                      else{
+                      return Container(
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              height: MediaQuery.of(context).size.height / 4,
+                              child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Icon(
+                                    Icons.error_outline_outlined,
+                                    color: Colors.red,
+                                  )),
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width / 1.4,
+                                child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                          text: S
+                                              .of(context)
+                                              .anUnknownErrorOccuredn +
+                                              '\n',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(
+                                              height: 1,
+                                              fontWeight: FontWeight.bold),
+                                          children: [
+                                            TextSpan(
+                                                text: S
+                                                    .of(context)
+                                                    .plzChknternetConnection +
+                                                    '\n' +
+                                                    S.of(context).tryAgain,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6!
+                                                    .copyWith(height: 2))
+                                          ]),
+                                    ))),
+                            SizedBox(
+                              height: 12.0,
+                            ),
+                            retryButtonListWidget(),
+                          ],
+                        ),
+                      );
+
+                      }
+                    }
+
                     // separatorBuilder: (context, index) => new Divider(),
                   ),
                 ),
@@ -533,6 +621,43 @@ class _OrdersState extends State<Orders> {
             ),
           ));
     }
+  }
+  getOrderStateStripper(String status)
+  {
+    int selectedStep = 0;
+    if(status.toLowerCase() == 'done')
+    {
+      selectedStep = 2;
+    }
+    else
+      {
+        selectedStep = 1;
+      }
+   return StepsIndicator(
+     selectedStep: selectedStep,
+     nbSteps: 3,
+     selectedStepColorOut: Colors.green,
+     selectedStepColorIn: Colors.white,
+     unselectedStepColorOut: Colors.grey,
+     unselectedStepColorIn: Colors.white,
+     doneStepColor: Colors.blue,
+     doneLineColor: Colors.blue,
+     undoneLineColor: Colors.red,
+     isHorizontal: true,
+     lineLength: 40,
+     doneStepSize: 33,
+     unselectedStepSize: 25,
+     selectedStepSize: 14,
+     selectedStepBorderSize: 1,
+     doneStepWidget: Container(), // Custom Widget
+     unselectedStepWidget: Container(), // Custom Widget
+     selectedStepWidget: Container(), // Custom Widget
+     lineLengthCustomStep: [
+       StepsIndicatorCustomLine(nbStep: 3, length: 80)
+     ],
+     enableLineAnimation: true,
+     enableStepAnimation: true,
+   );
   }
 
   getOptions(Datum modelOrders) {
@@ -680,12 +805,9 @@ class _OrdersState extends State<Orders> {
           onClicked: () async {
             if (await MyApplication.checkConnection()) {
               _getPriceUnit(context, 'admin.\$');
-              _pagingController.addPageRequestListener((pageKey) {
-                _fetchPage(pageKey);
-              });
-              setState(() {
-                internet = true;
-              });
+              pageKey = 1;
+              _pagingController.refresh();
+
             }
           },
           child: Row(

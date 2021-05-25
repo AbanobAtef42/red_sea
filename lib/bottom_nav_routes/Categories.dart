@@ -30,6 +30,7 @@ import 'package:flutter_app8/values/myApplication.dart';
 import 'package:flutter_app8/values/myConstants.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -104,8 +105,15 @@ class _CategoriesState
 
   bool showCursor = true;
 
+  late List<bool> _isFavorited;
+  late List<int> _favoriteIds;
+  late Box<Datum>? boxFavs;
+
   @override
   void initState() {
+    _isFavorited = [];
+    _favoriteIds = [];
+    boxFavs = Hive.box(dataBoxNameFavs);
     provider = Provider.of<ProviderHome>(context, listen: false);
     focusNode = new FocusNode();
     isAlwaysShown = true;
@@ -518,21 +526,23 @@ class _CategoriesState
     //   provider = Provider.of<ProviderHome>(context, listen: false);
 
     modelProducts = provider!.modelProductsCats;
-    setState(() {
-      index1 = index;
-      searchQuery = '';
-      catQuery = index == 0 ? '' : modelCats!.data![index-1].slug!;
-      trendQuery = '';
-      // _pagingControllerMain = _pagingControllerCats;
+    if(index1 != index) {
+      setState(() {
+        index1 = index;
+        searchQuery = '';
+        catQuery = index == 0 ? '' : modelCats!.data![index - 1].slug!;
+        trendQuery = '';
+        // _pagingControllerMain = _pagingControllerCats;
 
-      loading = true;
-      pageKey = 1;
-      // this.modelCats = provider.modelCats;
-      //modelProducts = new ModelProducts();
+        loading = true;
+        pageKey = 1;
+        // this.modelCats = provider.modelCats;
+        //modelProducts = new ModelProducts();
 
-     // print('catQuery2' + modelCats!.data![index].slug!);
-    });
-    _pagingController.refresh();
+        // print('catQuery2' + modelCats!.data![index].slug!);
+      });
+      _pagingController.refresh();
+    }
     //_getProducts(context, index1, pageKey);
   }
 
@@ -652,7 +662,140 @@ class _CategoriesState
             _pagingController.refresh();
           },
         ),
-        child: PagedListView<int, Datum>(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 10.0, left: 10.0,top: 10.0),
+          child: PagedGridView<int, Datum>(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 100 / 170,
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+            ),
+            pagingController: _pagingController,
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            //  physics: NeverScrollableScrollPhysics(),
+            builderDelegate: PagedChildBuilderDelegate<Datum>(
+              itemBuilder: (context, modelProducts, index) {
+                List<String> itemTags = [];
+
+                String name = modelProducts.name!;
+                if (name.length > 22) {
+                  name = name.substring(0, 22) + '...';
+                }
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: colorPrimary,
+                    onTap: () => Navigator.push(
+                      context,
+                      PageRouteBuilder<Null>(
+                          pageBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation) {
+                            return AnimatedBuilder(
+                                animation: animation,
+                                builder: (BuildContext context,
+                                    Widget? child) {
+                                  return Opacity(
+                                    opacity: animation.value,
+                                    child: ProductDetail(
+                                      modelProducts: modelProducts,
+                                      tags: itemTags,
+                                    ),
+                                  );
+                                });
+                          },
+                          transitionDuration:
+                          Duration(milliseconds: 500)),
+                    ),
+                    child: _buildItem(modelProducts, index),
+                  ),
+                );
+              },
+              firstPageErrorIndicatorBuilder: (context) {
+                return Container(
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: MediaQuery.of(context).size.height / 4,
+                        child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Icon(
+                              Icons.error_outline_outlined,
+                              color: Colors.red,
+                            )),
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width / 1.4,
+                          child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                    text: S
+                                        .of(context)
+                                        .anUnknownErrorOccuredn +
+                                        '\n',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(
+                                        height: 1,
+                                        fontWeight: FontWeight.bold),
+                                    children: [
+                                      TextSpan(
+                                          text: S
+                                              .of(context)
+                                              .plzChknternetConnection +
+                                              '\n' +
+                                              S.of(context).tryAgain,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(height: 2))
+                                    ]),
+                              ))),
+                      SizedBox(
+                        height: 12.0,
+                      ),
+                      retryButtonListWidget(),
+                    ],
+                  ),
+                );
+              },
+              noItemsFoundIndicatorBuilder: (_) => Container(
+                height: MediaQuery.of(context).size.height / 1.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Icon(
+                            Icons.search_off_outlined,
+                            color: colorPrimary,
+                          )),
+                    ),
+                    Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(S.of(context).noResults))),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        /*PagedListView<int, Datum>(
           pagingController: _pagingController,
           shrinkWrap: true,
           builderDelegate: PagedChildBuilderDelegate<Datum>(
@@ -660,8 +803,8 @@ class _CategoriesState
               dataLoaded = true;
 
               List<String> itemTags = [];
-              /*itemTags.add(products[index].slug.toString());
-                itemTags.add(products[index].name.toString());*/
+              *//*itemTags.add(products[index].slug.toString());
+                itemTags.add(products[index].name.toString());*//*
               String name = modelProducts.name!;
               if (name.length > 22) {
                 name = name.substring(0, 22) + '...';
@@ -724,8 +867,8 @@ class _CategoriesState
                           ),
                           Expanded(
                             child: Column(
-                              /*mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,*/
+                              *//*mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,*//*
                               children: [
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width -
@@ -869,7 +1012,7 @@ class _CategoriesState
             ),
 //firstPageProgressIndicatorBuilder: (_)=> Container(),
           ),
-        ),
+        ),*/
       ),
     );
     // } else {
@@ -1462,7 +1605,240 @@ class _CategoriesState
           )),
     );
   }
+  _buildItem(Datum modelProducts , int index) {
+    String name = modelProducts.name!;
+    if (name.length > 13) {
+      name = name.substring(0, 12) + '...';
+    }
+    _isFavorited.insert(index, false);
+    _favoriteIds.insert(index, modelProducts.id!);
+    return Container(
+      margin:
+      EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
+      // width: MediaQuery.of(context).size.width/1.2,
+      //height: MediaQuery.of(context).size.height / 2.9,
+      child: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Column(
+          children: [
+            Stack(children: [
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(0.0),
+                  child: Hero(
+                    tag: modelProducts.name.toString() +
+                        modelProducts.slug.toString(),
+                    child: CachedNetworkImage(
+                      placeholder: (context, s) => Icon(Icons.camera),
+                      imageUrl: modelProducts.images!.isNotEmpty
+                          ? 'https://flk.sa/' + modelProducts.images![0]
+                          : 'jj',
+                      fit: BoxFit.cover,
+                      // width: MediaQuery.of(context).size.width / 3.7,
+                      height: MediaQuery.of(context).size.height / 5,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 40,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius:
+                      BorderRadius.only(topLeft: Radius.circular(15.0))),
+                  child: Text(
+                    '20%',
+                    style: TextStyle(color: Colors.white, fontSize: 12.0),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 15,
+                top: 15,
+                child: GestureDetector(
+                  onTap: () {
+                    onIconHeartClick(modelProducts,index);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border()),
+                    child: onIconHeartStart(modelProducts,index),
+                  ),
+                ),
+              ),
+            ]),
+            Container(
+              // color: Colors.grey[50],
+              decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border(
+                      right: BorderSide(),
+                      left: BorderSide(),
+                      bottom: BorderSide())),
+              padding: EdgeInsetsDirectional.only(top: 8.0),
+              child: Column(
+                /*mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,*/
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        end: listPadding!, start: listPadding!),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          // width: MediaQuery.of(context).size.width / 1.8,
+                          child: Hero(
+                            tag: modelProducts.name.toString(),
+                            child: Material(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .headline3!
+                                        .fontSize),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        rateWidget(modelProducts),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        end: listPadding!,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // rateWidget(modelProducts),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          Row(children: [
+                            Text(
+                              modelProducts.price! +
+                                  ' ' +
+                                  modelSettings!.data![0].value!,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            getDiscountWidget(modelProducts),
+                          ])
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Styles.getButton(
+                        context,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              S.of(context).cartAdd,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Icon(Icons.add_shopping_cart)
+                          ],
+                        ),
+                            () {},
+                        Styles.getCartButtonStyle()),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+  Icon onIconHeartStart(Datum modelProduct , int index) {
+    bool isFavourite = _isFavorited[index];
+    print('fffffffffffdddd');
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProduct.id)
+        .toList();
+    if(datums.length > 0)
+    {
+      _isFavorited[index] = true;
+    }
 
+    if (_isFavorited[index]) {
+      print('ffffffffffffff');
+
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.red,
+      );
+
+      return _iconHeart;
+
+      //});
+    } else {
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.grey,
+      );
+
+      return _iconHeart;
+    }
+  }
+
+  onIconHeartClick(Datum modelProducts , int index) {
+    print('fffffffffffdddd' + index.toString());
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProducts.id)
+        .toList();
+    if (datums.length == 0 ) {
+      print('ffffffffffffff');
+      boxFavs!.add(modelProducts);
+      setState(() {
+        _isFavorited[index] = true;
+        /*this._iconHeart = new Icon(
+          CupertinoIcons.heart_fill,
+          color: Colors.red,
+        );*/
+      });
+    } else {
+      setState(() {
+        /*this._iconHeart = new Icon(
+          CupertinoIcons.heart_fill,
+          color: Colors.grey,
+        );*/
+        _isFavorited[index] = false;
+        Iterable<dynamic> key = boxFavs!.keys
+            .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
+        boxFavs!.delete(key.toList()[0]);
+      });
+    }
+  }
 
 }
 
