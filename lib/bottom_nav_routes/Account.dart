@@ -10,7 +10,10 @@ import 'package:flutter_app8/screens/FavsScreen.dart';
 import 'package:flutter_app8/screens/PassWordResetScreen.dart';
 import 'package:flutter_app8/screens/ProfiledataScreen.dart';
 import 'package:flutter_app8/screens/loginScreen.dart';
+import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
+import 'package:flutter_app8/styles/textFieldStyle.dart';
+import 'package:flutter_app8/styles/textWidgetStyle.dart';
 import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/myConstants.dart';
 
@@ -34,6 +37,9 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   var _textDirection;
+  final TextEditingController phoneController = new TextEditingController();
+  final TextEditingController addressController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
   ProviderUser? userNameProvider;
   ModelDropDown modelDropDown = new ModelDropDown(
@@ -56,6 +62,8 @@ class _AccountState extends State<Account> {
     if (sharedPrefs.nameKey != null) {
       _nameController.text = sharedPrefs.nameKey;
     }
+    emailController.text = sharedPrefs.mailKey;
+    phoneController.text = sharedPrefs.phoneKey;
 
     ModelDropDown modelDropDown = new ModelDropDown(
         'عربي', Container(child: ImageIcon(AssetImage('images/arabic2.png'))));
@@ -94,21 +102,16 @@ class _AccountState extends State<Account> {
       ),*/
 
       body: Container(
-        color: Colors.grey[200],
+        color: Colors.white,
 
         // Container(height: Account.statusBarHeight),
         child: Container(
           height: MediaQuery.of(context).size.height / 1,
-          child: Stack(
+          child: Column(
             children: [
+              SizedBox(height: MediaQuery.of(context).padding.top + 20.0),
               Container(
-                  height: MediaQuery.of(context).size.height / 2.5,
-                  width: MediaQuery.of(context).size.width,
-                  child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Image.asset('images/account_img.jpeg'))),
-              Container(
-                height: MediaQuery.of(context).size.height / 3,
+             //   height: MediaQuery.of(context).size.height / 3,
                 child: new Align(
                   alignment: Alignment.topCenter,
                   child: Column(
@@ -119,7 +122,7 @@ class _AccountState extends State<Account> {
                           width: MediaQuery.of(context).size.width / 3,
                           height: MediaQuery.of(context).size.height / 8,
                           child: Image.asset('images/user.png')),
-                      SizedBox(height: MediaQuery.of(context).size.height / 23),
+                      SizedBox(height: 10.0),
                       Container(
                         color: colorSemiWhite2,
                         padding: EdgeInsets.all(8.0),
@@ -138,9 +141,8 @@ class _AccountState extends State<Account> {
                           // {
 
                           name = sharedPrefs.nameKey;
-                          if(name.trim().length > 50)
-                          {
-                            name = name.substring(0,49) + '...';
+                          if (name.trim().length > 50) {
+                            name = name.substring(0, 49) + '...';
                           }
                           //}
                           //
@@ -155,155 +157,49 @@ class _AccountState extends State<Account> {
                   ),
                 ),
               ),
-              Positioned(
-                left: 50,
-                right: 50,
-                top: MediaQuery.of(context).size.height / 2.5 -
-                    MediaQuery.of(context).size.height / 15,
+              IgnorePointer(
+                ignoring: true,
+                child: Column(children: [
 
-                // alignment: Alignment.bottomCenter,
-                child: Container(
-                  //  height: MediaQuery.of(context).size.height / 1.5,
-                  child: Column(
-                    /*crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,*/
-                    children: [
-                      SizedBox(
-                          //height: MediaQuery.of(context).size.width / 7.5),
-                          ),
-                      Container(
-                        height: MediaQuery.of(context).size.height / 7.3,
-                        width: MediaQuery.of(context).size.width / 1.3,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.0)),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height / 15,
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            accountItemSplashRadius)),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfileData()),
-                                    ),
-                                    splashColor: colorAccountFocus,
-                                    highlightColor: Colors.transparent,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                        ),
-                                        Icon(
-                                          CupertinoIcons.mail,
-                                          color: colorAccountIcon,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              15,
-                                        ),
-                                        Text(
-                                          S.of(context).perData,
-                                          style: Styles.getTextAccountStyle(),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                  width: MediaQuery.of(context).size.width /
-                                      accountDividerBy,
-                                  child: new Divider(
-                                    height: 1,
-                                    thickness: 1.0,
-                                    color: colorAccountIcon,
-                                  )),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 15,
-                                width: MediaQuery.of(context).size.width / 1.3,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            accountItemSplashRadius)),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PassWordReset()),
-                                    ),
-                                    splashColor: colorAccountFocus,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                        ),
-                                        Icon(
-                                          CupertinoIcons.lock,
-                                          color: colorAccountIcon,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              15,
-                                        ),
-                                        Text(
-                                          S.of(context).password,
-                                          style: Styles.getTextAccountStyle(),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          //  height: MediaQuery.of(context).size.width / 20
-                          ),
-                      FractionalTranslation(
-                        translation: Offset(0, 0.1),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height / 3,
-                            width: MediaQuery.of(context).size.width / 1.3,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: colorAccountIcon),
-                                borderRadius: BorderRadius.circular(15.0)),
+                  MyTextField(emailController, S.of(context).email, Icons.email,
+                      false, " ", true, TextInputType.emailAddress),
+                  SizedBox(
+                      height:
+                          10.0),
+                  MyTextField(phoneController, S.of(context).phone,
+                      Icons.phone_android, false, " ", true, TextInputType.phone),
+
+                  /*Positioned(
+                  left: 50,
+                  right: 50,
+                  top: MediaQuery.of(context).size.height / 2.5 -
+                      MediaQuery.of(context).size.height / 15,
+
+                  // alignment: Alignment.bottomCenter,
+                  child: Container(
+                    //  height: MediaQuery.of(context).size.height / 1.5,
+                    child: Column(
+                      */ /*crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,*/ /*
+                      children: [
+                        SizedBox(
+                            //height: MediaQuery.of(context).size.width / 7.5),
+                            ),
+                        Container(
+                          height: MediaQuery.of(context).size.height / 7.3,
+                          width: MediaQuery.of(context).size.width / 1.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0)),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 12.6,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.3,
+                                  height: MediaQuery.of(context).size.height / 15,
+                                  width: MediaQuery.of(context).size.width / 1.3,
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
@@ -313,9 +209,10 @@ class _AccountState extends State<Account> {
                                       onTap: () => Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Orders()),
+                                            builder: (context) => ProfileData()),
                                       ),
                                       splashColor: colorAccountFocus,
+                                      highlightColor: Colors.transparent,
                                       child: Row(
                                         children: [
                                           SizedBox(
@@ -325,7 +222,7 @@ class _AccountState extends State<Account> {
                                                 10,
                                           ),
                                           Icon(
-                                            Icons.menu,
+                                            CupertinoIcons.mail,
                                             color: colorAccountIcon,
                                           ),
                                           SizedBox(
@@ -335,61 +232,7 @@ class _AccountState extends State<Account> {
                                                 15,
                                           ),
                                           Text(
-                                            S.of(context).orders,
-                                            style: Styles.getTextAccountStyle(),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                    width: MediaQuery.of(context).size.width /
-                                        accountDividerBy,
-                                    child: new Divider(
-                                      height: 1,
-                                      thickness: 1.0,
-                                      color: colorAccountIcon,
-                                    )),
-                                Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            accountItemSplashRadius)),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Favourites()),
-                                    ),
-                                    splashColor: colorAccountFocus,
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              13,
-                                      width: MediaQuery.of(context).size.width /
-                                          1.3,
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                10,
-                                          ),
-                                          Icon(
-                                            CupertinoIcons.heart,
-                                            color: colorAccountIcon,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                15,
-                                          ),
-                                          Text(
-                                            S.of(context).wish,
+                                            S.of(context).perData,
                                             style: Styles.getTextAccountStyle(),
                                           )
                                         ],
@@ -406,125 +249,20 @@ class _AccountState extends State<Account> {
                                       color: colorAccountIcon,
                                     )),
                                 Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 13,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.3,
+                                  height: MediaQuery.of(context).size.height / 15,
+                                  width: MediaQuery.of(context).size.width / 1.3,
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
                                               accountItemSplashRadius)),
-                                      onTap: () => openDropdown(globalKey),
-                                      splashColor: colorAccountFocus,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                10,
-                                          ),
-                                          Icon(
-                                            CupertinoIcons.globe,
-                                            color: colorAccountIcon,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                15,
-                                          ),
-                                          // Text(S.of(context).lang,style: Styles.getTextAccountStyle()),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.5,
-                                            child: Align(
-                                              alignment: AlignmentDirectional
-                                                  .centerStart,
-                                              child:
-                                                  DropdownButton<ModelDropDown>(
-                                                key: globalKey,
-                                                underline: Text(''),
-                                                focusNode: Account.focusNode,
-                                                hint: Text(S.of(context).lang,
-                                                    style: Styles
-                                                        .getTextAccountStyle()),
-                                                // value: _selectedItem,
-                                                dropdownColor: colorPrimary,
-                                                isExpanded: true,
-                                                isDense: false,
-                                                onChanged: (value) {
-                                                  if (value!.value == 'عربي') {
-                                                    appLanguage.changeLanguage(
-                                                        Locale("ar", ""));
-                                                    MyApp.setLocale(context,
-                                                        Locale("ar", ""));
-                                                  } else {
-                                                    appLanguage.changeLanguage(
-                                                        Locale("en", "US"));
-                                                    MyApp.setLocale(context,
-                                                        Locale("en", "US"));
-                                                  }
-                                                },
-                                                items: buildDropDownMenuItems([
-                                                  ModelDropDown(
-                                                      'عربي',
-                                                      Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          child: Image.asset(
-                                                              'images/arb.png'))),
-                                                  ModelDropDown(
-                                                      'English',
-                                                      Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          child: Image.asset(
-                                                              'images/egl.png')))
-                                                ]),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PassWordReset()),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                    width: MediaQuery.of(context).size.width /
-                                        accountDividerBy,
-                                    child: new Divider(
-                                      height: 1,
-                                      thickness: 1.0,
-                                      color: colorAccountIcon,
-                                    )),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 12.6,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.3,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              accountItemSplashRadius)),
-                                      onTap: () {
-                                        SharedPrefs().signedIn(false);
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()),
-                                        );
-
-                                      },
                                       splashColor: colorAccountFocus,
                                       child: Row(
                                         children: [
@@ -535,7 +273,7 @@ class _AccountState extends State<Account> {
                                                 10,
                                           ),
                                           Icon(
-                                            Icons.logout,
+                                            CupertinoIcons.lock,
                                             color: colorAccountIcon,
                                           ),
                                           SizedBox(
@@ -545,7 +283,7 @@ class _AccountState extends State<Account> {
                                                 15,
                                           ),
                                           Text(
-                                            S.of(context).signOut,
+                                            S.of(context).password,
                                             style: Styles.getTextAccountStyle(),
                                           )
                                         ],
@@ -557,14 +295,394 @@ class _AccountState extends State<Account> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                            //  height: MediaQuery.of(context).size.width / 20
+                            ),
+                        FractionalTranslation(
+                          translation: Offset(0, 0.1),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 3,
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: colorAccountIcon),
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 12.6,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.3,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                accountItemSplashRadius)),
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Orders()),
+                                        ),
+                                        splashColor: colorAccountFocus,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            Icon(
+                                              Icons.menu,
+                                              color: colorAccountIcon,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                            ),
+                                            Text(
+                                              S.of(context).orders,
+                                              style: Styles.getTextAccountStyle(),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          accountDividerBy,
+                                      child: new Divider(
+                                        height: 1,
+                                        thickness: 1.0,
+                                        color: colorAccountIcon,
+                                      )),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              accountItemSplashRadius)),
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Favourites()),
+                                      ),
+                                      splashColor: colorAccountFocus,
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                13,
+                                        width: MediaQuery.of(context).size.width /
+                                            1.3,
+                                        color: Colors.transparent,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            Icon(
+                                              CupertinoIcons.heart,
+                                              color: colorAccountIcon,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                            ),
+                                            Text(
+                                              S.of(context).wish,
+                                              style: Styles.getTextAccountStyle(),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          accountDividerBy,
+                                      child: new Divider(
+                                        height: 1,
+                                        thickness: 1.0,
+                                        color: colorAccountIcon,
+                                      )),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 13,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.3,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                accountItemSplashRadius)),
+                                        onTap: () => openDropdown(globalKey),
+                                        splashColor: colorAccountFocus,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            Icon(
+                                              CupertinoIcons.globe,
+                                              color: colorAccountIcon,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                            ),
+                                            // Text(S.of(context).lang,style: Styles.getTextAccountStyle()),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.5,
+                                              child: Align(
+                                                alignment: AlignmentDirectional
+                                                    .centerStart,
+                                                child:
+                                                    DropdownButton<ModelDropDown>(
+                                                  key: globalKey,
+                                                  underline: Text(''),
+                                                  focusNode: Account.focusNode,
+                                                  hint: Text(S.of(context).lang,
+                                                      style: Styles
+                                                          .getTextAccountStyle()),
+                                                  // value: _selectedItem,
+                                                  dropdownColor: colorPrimary,
+                                                  isExpanded: true,
+                                                  isDense: false,
+                                                  onChanged: (value) {
+                                                    if (value!.value == 'عربي') {
+                                                      appLanguage.changeLanguage(
+                                                          Locale("ar", ""));
+                                                      MyApp.setLocale(context,
+                                                          Locale("ar", ""));
+                                                    } else {
+                                                      appLanguage.changeLanguage(
+                                                          Locale("en", "US"));
+                                                      MyApp.setLocale(context,
+                                                          Locale("en", "US"));
+                                                    }
+                                                  },
+                                                  items: buildDropDownMenuItems([
+                                                    ModelDropDown(
+                                                        'عربي',
+                                                        Container(
+                                                            width: 30,
+                                                            height: 30,
+                                                            child: Image.asset(
+                                                                'images/arb.png'))),
+                                                    ModelDropDown(
+                                                        'English',
+                                                        Container(
+                                                            width: 30,
+                                                            height: 30,
+                                                            child: Image.asset(
+                                                                'images/egl.png')))
+                                                  ]),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          accountDividerBy,
+                                      child: new Divider(
+                                        height: 1,
+                                        thickness: 1.0,
+                                        color: colorAccountIcon,
+                                      )),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 12.6,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.3,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                accountItemSplashRadius)),
+                                        onTap: () {
+                                          SharedPrefs().signedIn(false);
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen()),
+                                          );
+
+                                        },
+                                        splashColor: colorAccountFocus,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            Icon(
+                                              Icons.logout,
+                                              color: colorAccountIcon,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                            ),
+                                            Text(
+                                              S.of(context).signOut,
+                                              style: Styles.getTextAccountStyle(),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),*/
+                ]),
+              ),
+              SizedBox(height: 10.0,),
+              Container(
+                  padding: const EdgeInsetsDirectional.only(start: 22.0, bottom: 10.0),
+                  child: MyTextWidgetLabel(S.of(context).lang, 'label', colorBorder, 12.0)),
+              GestureDetector(
+                onTap:()=> openDropdown(globalKey),
+                child: Container(
+                  width: MediaQuery.of(context)
+                      .size
+                      .width /
+                      1.2,
+                  padding: const EdgeInsetsDirectional.only(start: 40.0,end: 40.0),
+                  decoration: BoxDecoration(color: Colors.grey[300],shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  child: Align(
+                    alignment: AlignmentDirectional
+                        .centerStart,
+                    child:
+                    DropdownButton<ModelDropDown>(
+                      key: globalKey,
+                      underline: Text(''),
+                      focusNode: Account.focusNode,
+                      hint: Text(S.of(context).lang,
+                          style: Styles
+                              .getTextAccountStyle()),
+                      // value: _selectedItem,
+                      dropdownColor: colorPrimary,
+                      isExpanded: true,
+                      isDense: false,
+                      onChanged: (value) {
+                        if (value!.value == 'عربي') {
+                          appLanguage.changeLanguage(
+                              Locale("ar", ""));
+                          MyApp.setLocale(context,
+                              Locale("ar", ""));
+                        } else {
+                          appLanguage.changeLanguage(
+                              Locale("en", "US"));
+                          MyApp.setLocale(context,
+                              Locale("en", "US"));
+                        }
+                      },
+                      items: buildDropDownMenuItems([
+                        ModelDropDown(
+                            'عربي',
+                            Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                    'images/arb.png'))),
+                        ModelDropDown(
+                            'English',
+                            Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                    'images/egl.png')))
+                      ]),
+                    ),
                   ),
                 ),
               ),
+              SizedBox(height: 20.0,),
+              GestureDetector(
+                onTap:(){SharedPrefs().signedIn(false);
+                Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        LoginScreen()),
+              );},
+                child: Container(
+                  padding: const EdgeInsetsDirectional.only(top: 16.0,bottom: 16.0),
+                  width: MediaQuery.of(context).size.width /1.2,
+                  decoration: BoxDecoration(color: Colors.grey[300],shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Center(child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                  Icon(Icons.logout,color: Colors.black,) ,
+                  Text(S.of(context).signOut,style: TextStyle(color: Colors.black,fontSize: 16.0,fontWeight: FontWeight.w600),)
+                ],)),
+                ),
+              ),
+              SizedBox(height: 20.0,),
+              MyButton(onClicked: ()=> Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileData()),
+              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[Icon(Icons.edit,color: Colors.white,),SizedBox(width: 8.0,), Text(S.of(context).editProfile),]),),
+              SizedBox(height: 20.0,),
+              MyButton(onClicked: ()=> Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PassWordReset()),
+              ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:[Icon(Icons.edit,color: Colors.white,),SizedBox(width: 8.0,), Text(S.of(context).editPass),]),)
             ],
           ),
-        ),
+          ),
+
         //  SizedBox(height: MediaQuery.of(context).size.width / 60),
         /*Container(
                 height: MediaQuery.of(context).size.height / 3.5,

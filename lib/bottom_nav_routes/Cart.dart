@@ -63,7 +63,7 @@ class _CartState extends State<Cart> {
     });
     tags =
         List.generate(2, (value) => GlobalKey());
-    dataBox = Hive.box(dataBoxName);
+    dataBox = Hive.box( sharedPrefs.mailKey +  dataBoxName);
 
 
   }

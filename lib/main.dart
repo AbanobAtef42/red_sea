@@ -68,8 +68,10 @@ Future<void> main() async {
   Hive..registerAdapter(VarAdapter());
   Hive..registerAdapter(ValueAdapter());
  // Hive..registerAdapter(UserAdapter());
-  await Hive.openBox<Datum>(dataBoxName);
-  await Hive.openBox<Datum>(dataBoxNameFavs);
+  if(sharedPrefs.getCurrentUserSignedInStatus) {
+    await Hive.openBox<Datum>( sharedPrefs.mailKey + dataBoxName);
+    await Hive.openBox<Datum>( sharedPrefs.mailKey + dataBoxNameFavs);
+  }
  // await Hive.openBox<Datum>(dataBoxNameUser);
   await Hive.openBox<Datum>(dataBoxNameCacheProductsCats);
   await Hive.openBox<Datum>(dataBoxNameCacheProducts);

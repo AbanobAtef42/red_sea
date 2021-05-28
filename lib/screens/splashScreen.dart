@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app8/screens/StartShoppingScreen.dart';
 import 'package:flutter_app8/screens/loginScreen.dart';
 import 'package:flutter_app8/values/SharedPreferenceClass.dart';
@@ -19,8 +20,15 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> animation;
   late AnimationController controller;
   @override
+  void dispose() {
+    // TODO: implement dispose
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    super.dispose();
+  }
+  @override
   void initState() {
     SharedPrefs().priceUnit('');
+    SystemChrome.setEnabledSystemUIOverlays([]);
     //  SharedPrefs().exertedPriceUnit('');
     super.initState();
 
@@ -34,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
 // the state that has changed here is the animation object’s value
         });
       });
-    controller.forward();
+  //  controller.forward();
 
     Timer(Duration(seconds: 3), () {
       if (sharedPrefs.getCurrentUserAppOpenTime) {
@@ -55,22 +63,22 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final String assetName = 'images/full_logo.svg';
-    //final String assetName = 'images/arabic2.png';
-
-    SvgPicture svg = new SvgPicture.asset(
-      assetName,
+    final String assetName = 'images/splash.jpeg';
+    Image svg = new Image.asset(
+      assetName, filterQuality: FilterQuality.high,fit: BoxFit.fill,
     );
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-          height: animation.value,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(padding: const EdgeInsets.all(16.0), child: svg),
-        ),
-      ]),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Padding(padding: const EdgeInsets.all(16.0), child: svg),
+          ),
+        ]),
+      ),
     );
   }
 }

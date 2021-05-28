@@ -130,14 +130,15 @@ class _OrdersState extends State<Orders> {
           ],
         ),
       );
-    } /*else
+    }
+    /*else
       if (modelOrders != null && modelOrders!.path == 'slint') {
-      *//* Fluttertoast.showToast(
+      */ /* Fluttertoast.showToast(
           msg: S.of(context).slowInternet,
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: colorPrimary,
           textColor: Colors.white,
-          gravity: ToastGravity.BOTTOM);*//*
+          gravity: ToastGravity.BOTTOM);*/ /*
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         color: Colors.grey[300],
@@ -237,34 +238,34 @@ class _OrdersState extends State<Orders> {
                 child: PagedListView<int, Datum>(
                   pagingController: _pagingController,
                   builderDelegate: PagedChildBuilderDelegate<Datum>(
-                    itemBuilder: (context, modelOrders, index) {
-                      if (modelOrders.items!.length == 0) {
-                        return Text('');
-                      }
-                      // print('length :'+ orders.length.toString());
-                      String name = modelOrders.items![0].productId!.name!;
-                      if (name.length > 22) {
-                        name = name.substring(0, 22) + '...';
-                      }
-                      return InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomerOrdersDetail(modelOrders)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 12.0, bottom: 12.0, right: 8.0, left: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16.0),
-                            child: Container(
-                              color: Colors.white,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  splashColor: colorPrimary,
-                                  /*onTap: () => Navigator.push(
+                      itemBuilder: (context, modelOrders, index) {
+                        if (modelOrders.items!.length == 0) {
+                          return Text('');
+                        }
+                        // print('length :'+ orders.length.toString());
+                        String name = modelOrders.items![0].productId!.name!;
+                        if (name.length > 22) {
+                          name = name.substring(0, 22) + '...';
+                        }
+                        return InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CustomerOrdersDetail(modelOrders)),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 12.0, bottom: 12.0, right: 8.0, left: 8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: colorPrimary,
+                                    /*onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ProductDetail(
@@ -272,196 +273,198 @@ class _OrdersState extends State<Orders> {
                                       )
                                   ),
                                 ),*/
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.2,
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              4.5,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: Row(
-                                          children: [
-                                            AspectRatio(
-                                              aspectRatio: 4.5 / 6,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  child: CachedNetworkImage(
-                                                    placeholder: (context, s) =>
-                                                        Icon(Icons.camera),
-                                                    imageUrl: (modelOrders
-                                                                    .items !=
-                                                                null &&
-                                                            modelOrders.items![
-                                                                    0] !=
-                                                                null &&
-                                                            modelOrders
-                                                                    .items![0]
-                                                                    .productId !=
-                                                                null &&
-                                                            modelOrders
-                                                                .items![0]
-                                                                .productId!
-                                                                .images!
-                                                                .isNotEmpty)
-                                                        ? 'https://flk.sa/' +
-                                                            modelOrders
-                                                                .items![0]
-                                                                .productId!
-                                                                .images![0]
-                                                        : 'jj',
-                                                    fit: BoxFit.cover,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            3.7,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            4.5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.2,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                4.5,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Row(
+                                            children: [
+                                              AspectRatio(
+                                                aspectRatio: 4.5 / 6,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: CachedNetworkImage(
+                                                      placeholder: (context,
+                                                              s) =>
+                                                          Icon(Icons.camera),
+                                                      imageUrl: (modelOrders
+                                                                      .items !=
+                                                                  null &&
+                                                              modelOrders.items![
+                                                                      0] !=
+                                                                  null &&
+                                                              modelOrders
+                                                                      .items![0]
+                                                                      .productId !=
+                                                                  null &&
+                                                              modelOrders
+                                                                  .items![0]
+                                                                  .productId!
+                                                                  .images!
+                                                                  .isNotEmpty)
+                                                          ? 'https://flk.sa/' +
+                                                              modelOrders
+                                                                  .items![0]
+                                                                  .productId!
+                                                                  .images![0]
+                                                          : 'jj',
+                                                      fit: BoxFit.cover,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              3.7,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              4.5,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Column(
-                                              /*mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,*/
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      MediaQuery.of(context)
+                                              Expanded(
+                                                child: Column(
+                                                  /*mainAxisAlignment: MainAxisAlignment.start,*/
+                                                  //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: MediaQuery.of(
+                                                                  context)
                                                               .size
-                                                              .width /
-                                                          2.5,
-                                                  child: Padding(
-                                                    padding: EdgeInsetsDirectional
-                                                        .only(
-                                                            end: listPadding!,
-                                                            top: listPadding! *
-                                                                1.2),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Container(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    1.8,
-                                                                child: Text(
-                                                                  name,
-                                                                  style: TextStyle(
-                                                                      fontSize: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .headline3!
-                                                                          .fontSize),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Text(
-                                                                modelOrders.total
-                                                                    .toString() +
-                                                                    ' ' +
-                                                                    modelSettings!
-                                                                        .data![0]
-                                                                        .value!,
-                                                                style: TextStyle(
-                                                                    fontSize: 14.0),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              optionsWidget(
-                                                                  modelOrders),
-                                                            ]),
-                                                        Spacer(
-                                                          flex: 1,
+                                                              .width -
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2.9,
+                                                      child: Padding(
+                                                        padding: EdgeInsetsDirectional
+                                                            .only(
+                                                                end:
+                                                                    listPadding!,
+                                                                top:
+                                                                    listPadding! *
+                                                                        1.2),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width /
+                                                                        1.8,
+                                                                    child: Text(
+                                                                      name,
+                                                                      style: TextStyle(
+                                                                          fontSize: Theme.of(context)
+                                                                              .textTheme
+                                                                              .headline3!
+                                                                              .fontSize),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Text(
+                                                                    modelOrders
+                                                                            .total
+                                                                            .toString() +
+                                                                        ' ' +
+                                                                        modelSettings!
+                                                                            .data![0]
+                                                                            .value!,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14.0),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  optionsWidget(
+                                                                      modelOrders),
+                                                                ]),
+                                                            Spacer(
+                                                              flex: 1,
+                                                            ),
+                                                            /*Icon(Icons.add_circle_outline,
+                                                            color: colorPrimary,
+                                                            size: MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                                18),*/
+                                                          ],
                                                         ),
-                                                        /*Icon(Icons.add_circle_outline,
-                                                          color: colorPrimary,
-                                                          size: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                              18),*/
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                                Spacer(
-                                                  flex: 1,
-                                                ),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      MediaQuery.of(context)
+                                                    Spacer(
+                                                      flex: 1,
+                                                    ),
+                                                    SizedBox(
+                                                      width: MediaQuery.of(
+                                                                  context)
                                                               .size
-                                                              .width /
-                                                          2.5,
-                                                  child: Padding(
-                                                    padding: EdgeInsetsDirectional
-                                                        .only(
-                                                            end: listPadding!,
-                                                            bottom:
-                                                                listPadding! *
-                                                                    1.2),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(
-                                                          modelOrders.status!,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  colorPrimary,
-                                                              fontSize: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  RateTextDividerBy),
-                                                        ),
+                                                              .width -
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2.5,
+                                                      child: Padding(
+                                                        padding: EdgeInsetsDirectional
+                                                            .only(
+                                                                end:
+                                                                    listPadding!,
+                                                                bottom:
+                                                                    listPadding! *
+                                                                        1.2),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            getOrderStateStepper(
+                                                                modelOrders
+                                                                    .status!),
 
-                                                        //  rateWidget(modelProducts, index),
-                                                      ],
+                                                            //  rateWidget(modelProducts, index),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
-                                              ],
-                                            )
-                                          ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -470,194 +473,240 @@ class _OrdersState extends State<Orders> {
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-
-                    noItemsFoundIndicatorBuilder: (context) => Container(
-                      height: MediaQuery.of(context).size.height / 1.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Icon(
-                                  FontAwesome.dropbox,
-                                  color: colorPrimary,
-                                )),
+                        );
+                      },
+                      noItemsFoundIndicatorBuilder: (context) => Container(
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  height:
+                                      MediaQuery.of(context).size.height / 3,
+                                  child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Icon(
+                                        FontAwesome.dropbox,
+                                        color: colorPrimary,
+                                      )),
+                                ),
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                            S.of(context).youHaveNoOrdersYet))),
+                              ],
+                            ),
                           ),
-                          Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child:
-                                      Text(S.of(context).youHaveNoOrdersYet))),
-                        ],
-                      ),
-                    ),
-                    firstPageErrorIndicatorBuilder: (context) {
-                      if (modelOrders != null && modelOrders!.path == 'slint') {
-                        /* Fluttertoast.showToast(
+                      firstPageErrorIndicatorBuilder: (context) {
+                        if (modelOrders != null &&
+                            modelOrders!.path == 'slint') {
+                          /* Fluttertoast.showToast(
           msg: S.of(context).slowInternet,
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: colorPrimary,
           textColor: Colors.white,
           gravity: ToastGravity.BOTTOM);*/
-                        return Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height / 1.5,
-                          color: Colors.grey[300],
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width / 2,
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height / 4,
-                                child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Icon(
-                                      MyFlutterApp.slow_internet,
-                                      color: colorPrimary,
-                                    )),
-                              ),
-                              retryButtonWidget(),
-                              Container(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width / 2,
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            color: Colors.grey[300],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
                                   child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(S
-                                        .of(context)
-                                        .slowInternet,
-                                        style: TextStyle(
-                                            color: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .headline1!
-                                                .color,
-                                            height: 3)),
-                                  )),
-                            ],
-                          ),
-                        );
-                      }
-                      else{
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: MediaQuery.of(context).size.height / 4,
-                              child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Icon(
-                                    Icons.error_outline_outlined,
-                                    color: Colors.red,
-                                  )),
+                                      fit: BoxFit.contain,
+                                      child: Icon(
+                                        MyFlutterApp.slow_internet,
+                                        color: colorPrimary,
+                                      )),
+                                ),
+                                retryButtonWidget(),
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(S.of(context).slowInternet,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1!
+                                                  .color,
+                                              height: 3)),
+                                    )),
+                              ],
                             ),
-                            Container(
-                                width: MediaQuery.of(context).size.width / 1.4,
-                                child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: RichText(
-                                      textAlign: TextAlign.center,
-                                      text: TextSpan(
-                                          text: S
-                                              .of(context)
-                                              .anUnknownErrorOccuredn +
-                                              '\n',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .copyWith(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold),
-                                          children: [
-                                            TextSpan(
-                                                text: S
-                                                    .of(context)
-                                                    .plzChknternetConnection +
-                                                    '\n' +
-                                                    S.of(context).tryAgain,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6!
-                                                    .copyWith(height: 2))
-                                          ]),
-                                    ))),
-                            SizedBox(
-                              height: 12.0,
+                          );
+                        } else {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Icon(
+                                        Icons.error_outline_outlined,
+                                        color: Colors.red,
+                                      )),
+                                ),
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.4,
+                                    child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: RichText(
+                                          textAlign: TextAlign.center,
+                                          text: TextSpan(
+                                              text: S
+                                                      .of(context)
+                                                      .anUnknownErrorOccuredn +
+                                                  '\n',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6!
+                                                  .copyWith(
+                                                      height: 1,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                              children: [
+                                                TextSpan(
+                                                    text: S
+                                                            .of(context)
+                                                            .plzChknternetConnection +
+                                                        '\n' +
+                                                        S.of(context).tryAgain,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6!
+                                                        .copyWith(height: 2))
+                                              ]),
+                                        ))),
+                                SizedBox(
+                                  height: 12.0,
+                                ),
+                                retryButtonListWidget(),
+                              ],
                             ),
-                            retryButtonListWidget(),
-                          ],
-                        ),
-                      );
-
+                          );
+                        }
                       }
-                    }
 
-                    // separatorBuilder: (context, index) => new Divider(),
-                  ),
+                      // separatorBuilder: (context, index) => new Divider(),
+                      ),
                 ),
               ),
             ),
           ));
     }
   }
-  getOrderStateStripper(String status)
-  {
-    int selectedStep = 0;
-    if(status.toLowerCase() == 'done')
-    {
+
+  getOrderStateStepper(String status) {
+    int selectedStep = 1;
+    if (status.toLowerCase() == 'done') {
       selectedStep = 2;
+    } else if(status.toLowerCase() == 'pending') {
+      selectedStep = 0;
     }
-    else
-      {
-        selectedStep = 1;
-      }
-   return StepsIndicator(
-     selectedStep: selectedStep,
-     nbSteps: 3,
-     selectedStepColorOut: Colors.green,
-     selectedStepColorIn: Colors.white,
-     unselectedStepColorOut: Colors.grey,
-     unselectedStepColorIn: Colors.white,
-     doneStepColor: Colors.blue,
-     doneLineColor: Colors.blue,
-     undoneLineColor: Colors.red,
-     isHorizontal: true,
-     lineLength: 40,
-     doneStepSize: 33,
-     unselectedStepSize: 25,
-     selectedStepSize: 14,
-     selectedStepBorderSize: 1,
-     doneStepWidget: Container(), // Custom Widget
-     unselectedStepWidget: Container(), // Custom Widget
-     selectedStepWidget: Container(), // Custom Widget
-     lineLengthCustomStep: [
-       StepsIndicatorCustomLine(nbStep: 3, length: 80)
-     ],
-     enableLineAnimation: true,
-     enableStepAnimation: true,
-   );
+
+    return
+      Column(
+       // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        SizedBox(
+          width: 190.0,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+             // Spacer(flex: 1,),
+            Text(
+              S.of(context).pending,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w500,height: 2,),
+            ),
+            Spacer(flex: 4,),
+            Text(
+              S.of(context).charged,
+              style: TextStyle(
+                  color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w500,height: 2),
+            ),
+              Spacer(flex: 4,),
+            Text(
+              S.of(context).done,
+              style: TextStyle(
+                  color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w500,height: 2),
+            ),
+              Spacer(flex: 2,),
+             // SizedBox(width: 10.0,),
+          ],),
+        ),
+        StepsIndicator(
+        selectedStep: selectedStep,
+        nbSteps: 3,
+        doneLineThickness: 3.0,
+        undoneLineThickness: 3.0,
+        selectedStepColorOut: Colors.green,
+        selectedStepColorIn: Colors.white,
+        unselectedStepColorOut: Colors.black,
+        unselectedStepColorIn: Colors.black,
+        doneStepColor: Colors.blue,
+        doneLineColor: Colors.green,
+        undoneLineColor: Colors.grey,
+        isHorizontal: true,
+        lineLength: 50,
+        doneStepSize: 33,
+        unselectedStepSize: 25,
+        selectedStepSize: 30,
+        selectedStepBorderSize: 1,
+        doneStepWidget: getStepIndicatorWidget(Colors.white, Colors.green ,status, 10.0, 20.0), // Custom Widget
+        unselectedStepWidget: getStepIndicatorWidget(Colors.white, Colors.grey, status, 10.0, 20.0), // Custom Widget
+        selectedStepWidget: getStepIndicatorWidget(Colors.white, Colors.green, status, 10.0, 20.0), // Custom Widget
+        lineLengthCustomStep: [
+          StepsIndicatorCustomLine(nbStep: 0,length: 50.0,)
+        ],
+        enableLineAnimation: false,
+        enableStepAnimation: false,
+      ),
+
+      ],);
+
+  }
+
+  getStepIndicatorWidget(Color? colorIn, Color? colorOut, String title,
+      double sizeIn, double sizeOut) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+
+        Container(
+          height: sizeOut,
+          width: sizeOut,
+          decoration: BoxDecoration(color: colorOut, shape: BoxShape.circle),
+          padding: EdgeInsets.all(5.0),
+          child: Container(
+            height: sizeIn,
+            width: sizeIn,
+            decoration: BoxDecoration(color: colorIn, shape: BoxShape.circle),
+          ),
+        ),
+
+      ],
+    );
   }
 
   getOptions(Datum modelOrders) {
@@ -807,7 +856,6 @@ class _OrdersState extends State<Orders> {
               _getPriceUnit(context, 'admin.\$');
               pageKey = 1;
               _pagingController.refresh();
-
             }
           },
           child: Row(
@@ -825,6 +873,7 @@ class _OrdersState extends State<Orders> {
           )),
     );
   }
+
   retryButtonListWidget() {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 2,

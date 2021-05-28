@@ -165,7 +165,7 @@ class _MyTextFieldState extends State<MyTextField>
                   color: focusNode.hasFocus ||
                           widget.textEditingController!.text.trim().isNotEmpty
                       ? Colors.black
-                      : Colors.white,
+                      : Colors.transparent,
                 ),
               ),
               color: Colors.transparent, //just to cover the intercepted border
@@ -246,7 +246,7 @@ class _MyTextFieldState extends State<MyTextField>
                     color: focusNode.hasFocus ||
                             widget.textEditingController!.text.isNotEmpty
                         ? Colors.black
-                        : Colors.white,
+                        : Colors.transparent,
                   ),
                 ),
                 color:

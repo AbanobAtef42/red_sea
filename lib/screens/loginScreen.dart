@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/main.dart';
+import 'package:flutter_app8/models/ModelProducts.dart';
 import 'package:flutter_app8/models/modelUser.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/screens/BottomNavScreen.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/api.dart';
 import 'package:flutter_app8/values/myApplication.dart';
 import 'package:flutter_app8/values/myConstants.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
@@ -116,19 +118,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Visibility(
-                                child: SizedBox(
-                                  height: MediaQuery.of(context).size.height /
-                                      registerTopViewHeight,
-                                  width: MediaQuery.of(context).size.height /
-                                      registerTopViewHeight,
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height /
+                                    registerTopViewHeight,
+                                width: MediaQuery.of(context).size.height /
+                                    registerTopViewHeight,
+                                child: Visibility(
+                                  visible: _visible,
                                   child: CircularProgressIndicator(
                                    // color: colorPrimary,
 
                                   ),
                                 ),
-                                visible: _visible,
                               ),
+                              Icon(RpgAwesome.food_chain,size: 100.0,color: Colors.black,),
                             ],
                           ),
                         ),
@@ -225,6 +228,7 @@ if(kIsWeb && !await MyApplication.checkConnection())
       if (provider.modelUser!.message == 'success') {
         String token = provider.modelUser!.token!;
         String email = provider.modelUser!.user!.email!;
+        String phone = provider.modelUser!.user!.phone!;
         String pass = passController.text;
         String name = provider.modelUser!.user!.fullName!;
         String currentId = provider.modelUser!.user!.id.toString();
@@ -233,8 +237,11 @@ if(kIsWeb && !await MyApplication.checkConnection())
          SharedPrefs().eMail(email);
          SharedPrefs().pass(pass);
          SharedPrefs().name(name);
+         SharedPrefs().phone(phone);
          SharedPrefs().currentUserId(currentId);
          SharedPrefs().signedIn(true);
+        await Hive.openBox<Datum>( sharedPrefs.mailKey + dataBoxName);
+        await Hive.openBox<Datum>( sharedPrefs.mailKey + dataBoxNameFavs);
 
        //  boxUser.put(SharedPrefs().getCurrentUserId,provider.modelUser.user);
         Fluttertoast.showToast(

@@ -113,7 +113,7 @@ class _CategoriesState
   void initState() {
     _isFavorited = [];
     _favoriteIds = [];
-    boxFavs = Hive.box(dataBoxNameFavs);
+    boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
     provider = Provider.of<ProviderHome>(context, listen: false);
     focusNode = new FocusNode();
     isAlwaysShown = true;

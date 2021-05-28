@@ -11,6 +11,7 @@ class SharedPrefs {
   String get tokenKey => sharedPrefs!.getString(keyToken) ?? "";
   String get nameKey => sharedPrefs!.getString(keyName)?? "";
   String get mailKey => sharedPrefs!.getString(keyMail) ?? "";
+  String get phoneKey => sharedPrefs!.getString(keyPhone) ?? "";
   String get passKey => sharedPrefs!.getString(keyPass) ?? "";
   String get priceUnitKey => sharedPrefs!.getString(keyPriceUnit) ?? "";
   String get exertedPriceUnitKey => sharedPrefs!.getString(keyExertedPriceUnit) ?? "";
@@ -37,6 +38,9 @@ class SharedPrefs {
   void eMail(String mail) {
     sharedPrefs!.setString(keyMail, mail);
   }
+  void phone(String phone) {
+    sharedPrefs!.setString(keyPhone, phone);
+  }
   void pass(String pass) {
     sharedPrefs!.setString(keyPass, pass);
   }
@@ -61,5 +65,6 @@ const String keyExertedPriceUnit = "key_exerted_price_unit";
 const String keyName = "key_name";
 const String keyPass = "key_pass";
 const String keyMail = "key_email";
+const String keyPhone = "key_phone";
 const String keyLang = "key_lang";
 const String keyCurrentUserId = "key_current_user_id";

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app8/bottom_nav_routes/Cart.dart';
 import 'package:flutter_app8/bottom_nav_routes/Categories.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/icons/my_flutter_app_icons.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_app8/models/ModelSetting.dart';
 import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/screens/BottomNavScreen.dart';
+import 'package:flutter_app8/screens/FavsScreen.dart';
 import 'package:flutter_app8/screens/ProductDetailScreen.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
@@ -33,6 +35,7 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -93,7 +96,7 @@ class _HomeState extends State<Home> {
 
   int pageKey = 1;
 
- late ProviderHome newItemDeleted;
+  late ProviderHome newItemDeleted;
 
   bool isLoading = true;
 
@@ -106,7 +109,7 @@ class _HomeState extends State<Home> {
     _isFavorited = [];
     _favoriteIds = [];
 
-    boxFavs = Hive.box(dataBoxNameFavs);
+    boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
     _getPriceUnit(context, 'admin.\$');
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
@@ -133,15 +136,15 @@ class _HomeState extends State<Home> {
     _getCats(context);
     _getProducts(context, pageKey);
 
-  newItemDeleted = Provider.of<ProviderHome>(context,listen: false);
-  newItemDeleted.addListener(() {
-    print('execsetstpro');
-    if(newItemDeleted.newItemDeleted && newItemDeleted.proId != -1)
-   // setState(() {
-    // _isFavorited[_favoriteIds.indexOf(newItemDeleted.proId)] = false;
-  //  });
-    newItemDeleted.removeListener(() { });
-  });
+    newItemDeleted = Provider.of<ProviderHome>(context, listen: false);
+    newItemDeleted.addListener(() {
+      print('execsetstpro');
+      if (newItemDeleted.newItemDeleted && newItemDeleted.proId != -1)
+        // setState(() {
+        // _isFavorited[_favoriteIds.indexOf(newItemDeleted.proId)] = false;
+        //  });
+        newItemDeleted.removeListener(() {});
+    });
 
     statusBarHeight = MediaQuery.of(context).padding.top;
     super.didChangeDependencies();
@@ -157,40 +160,27 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: toolbarHeight,
-        automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onTap: _showSearch,
-          child: Container(
-            width: MediaQuery.of(context).size.width / 1.2,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: Theme(
-              data: ThemeData(disabledColor: Colors.black),
-              child: TextFormField(
-                enabled: false,
-                style: Styles.getTextAdsStyle(),
+        actions: [
+          IconButton(icon:Icon( Icons.search,color: Colors.black,), onPressed: _showSearch),
+          IconButton(icon:Icon( CupertinoIcons.heart_fill,color: Colors.black,), onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Favourites() ),
+          ),),
 
-                //  onTap: () => this._searchIcon = new Icon(Icons.close),
-                focusNode: focusNode,
-
-                textInputAction: TextInputAction.search,
-
-                // controller: _filter,
-                decoration: new InputDecoration(
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  prefixIcon: new IconButton(
-                      icon: Icon(Icons.search), onPressed: () => _showSearch()),
-                  hintText: S.of(context).searchInFlk,
-                ),
-              ),
-            ),
+        ],
+        leading: IconButton(
+          icon: Icon(
+            Icons.shopping_cart,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Cart()),
           ),
         ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: Icon(RpgAwesome.food_chain),
       ),
       body: RawScrollbar(
         thumbColor: colorPrimary,
@@ -551,8 +541,7 @@ class _HomeState extends State<Home> {
                 pageKey = 1;
                 _pagingController.refresh();
               }),
-              child:
-              Padding(
+              child: Padding(
                 padding: const EdgeInsets.only(right: 10.0, left: 10.0),
                 child: PagedGridView<int, Datum>(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -873,11 +862,10 @@ class _HomeState extends State<Home> {
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   Future<void> _fetchPage(int pageKey) async {
-
     try {
       final newItems = await _getProducts(context, pageKey);
 
-     // _isFavorited.addAll(List.filled(newItems.length, false));
+      // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -993,7 +981,7 @@ class _HomeState extends State<Home> {
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
     }
-     _isFavorited.insert(index, false);
+    _isFavorited.insert(index, false);
     _favoriteIds.insert(index, modelProducts.id!);
     return Container(
       margin:
@@ -1044,7 +1032,7 @@ class _HomeState extends State<Home> {
                 top: 15,
                 child: GestureDetector(
                   onTap: () {
-                    onIconHeartClick(modelProducts,index);
+                    onIconHeartClick(modelProducts, index);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
@@ -1052,7 +1040,7 @@ class _HomeState extends State<Home> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                         border: Border()),
-                    child: onIconHeartStart(modelProducts,index),
+                    child: onIconHeartStart(modelProducts, index),
                   ),
                 ),
               ),
@@ -1163,14 +1151,13 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Icon onIconHeartStart(Datum modelProduct , int index) {
+  Icon onIconHeartStart(Datum modelProduct, int index) {
     bool isFavourite = _isFavorited[index];
     print('fffffffffffdddd');
     List<Datum?> datums = boxFavs!.values
         .where((element) => element.id == modelProduct.id)
         .toList();
-    if(datums.length > 0)
-    {
+    if (datums.length > 0) {
       _isFavorited[index] = true;
     }
 
@@ -1195,12 +1182,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-  onIconHeartClick(Datum modelProducts , int index) {
+  onIconHeartClick(Datum modelProducts, int index) {
     print('fffffffffffdddd' + index.toString());
     List<Datum?> datums = boxFavs!.values
         .where((element) => element.id == modelProducts.id)
         .toList();
-    if (datums.length == 0 ) {
+    if (datums.length == 0) {
       print('ffffffffffffff');
       boxFavs!.add(modelProducts);
       setState(() {

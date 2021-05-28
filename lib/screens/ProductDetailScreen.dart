@@ -11,6 +11,7 @@ import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/screens/CheckoutScreen.dart';
 import 'package:flutter_app8/styles/styles.dart';
+import 'package:flutter_app8/styles/textWidgetStyle.dart';
 import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/api.dart';
 import 'package:flutter_app8/values/myApplication.dart';
@@ -63,12 +64,12 @@ class _ProductDetailState extends State<ProductDetail> {
   double? scrollExpandedHeight;
   Icon _iconHeart = Icon(
     CupertinoIcons.heart,
-    color: Colors.white,
+    color: Colors.blue,
     size: 35,
   );
   Icon _iconBack = Icon(
     Icons.arrow_back,
-    color: Colors.white,
+    color: Colors.black,
     size: 30,
   );
   final List<String> imgList = [
@@ -114,8 +115,8 @@ class _ProductDetailState extends State<ProductDetail> {
 
     _myController1.addListener(() => setState(() {}));
     _focusNode = new FocusNode();
-    box = Hive.box(dataBoxName);
-    boxFavs = Hive.box(dataBoxNameFavs);
+    box = Hive.box(sharedPrefs.mailKey + dataBoxName);
+    boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
 
     // boxUser = Hive.box<User>(dataBoxNameUser);
     onIconHeartStart();
@@ -184,279 +185,293 @@ class _ProductDetailState extends State<ProductDetail> {
       },*/
     /*child:*/ var rtl;
     return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          RawScrollbar(
-            thumbColor: colorPrimary,
-            isAlwaysShown: isAlwaysShown,
-            radius: Radius.circular(scrollBarRadius),
-            child:
-                CustomScrollView(controller: _myController1, slivers: <Widget>[
-              SliverAppBar(
-                pinned: true,
-                expandedHeight: scrollExpandedHeight,
-                automaticallyImplyLeading: false,
-                title: SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  height: scrollExpandedHeight,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                              splashColor: Colors.white,
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                SystemChrome.setEnabledSystemUIOverlays(
-                                    SystemUiOverlay.values);
-                              },
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(80.0)),
-                              child: _iconBack)),
-                      Spacer(
-                        flex: 10,
-                      ),
-                      Material(
-                          color: Colors.transparent,
-                          child: GestureDetector(
-                              onTap: () => onIconHeartClick(),
-                              child: _iconHeart)),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                    background: Column(children: [
-                  Expanded(
-                    child: Column(
+
+      child: Theme(
+        data: ThemeData(primaryColor: Colors.white,accentColor: Colors.black),
+        child: Scaffold(
+          body: Stack(children: [
+            RawScrollbar(
+              thumbColor: colorPrimary,
+              isAlwaysShown: isAlwaysShown,
+              radius: Radius.circular(scrollBarRadius),
+              child:
+                  CustomScrollView(controller: _myController1, slivers: <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: scrollExpandedHeight,
+                  automaticallyImplyLeading: false,
+                  title: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    height: scrollExpandedHeight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 10.0,
+                        Spacer(
+                          flex: 1,
                         ),
-                        Expanded(
-                          child: CarouselSlider(
-                            options: CarouselOptions(
-                                autoPlay: _isAutoPlayed,
-                                height: scrollExpandedHeight!,
-                                autoPlayInterval: Duration(seconds: 2),
-                                viewportFraction: 1.0),
-                            items: widget.modelProducts!.images!
-                                .map((item) => Padding(
-                                      padding: EdgeInsetsDirectional.only(
-                                          start: 8.0, end: 8.0, top: 8.0),
-                                      child: Stack(
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: 2 / 3,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 0.0),
-                                              child: new Align(
-                                                alignment: Alignment.center,
-                                                child: Hero(
-                                                  tag: widget
-                                                          .modelProducts!.name
-                                                          .toString() +
-                                                      widget.modelProducts!.slug
-                                                          .toString(),
-                                                  child: CachedNetworkImage(
-                                                    placeholder: (context, s) =>
-                                                        Icon(Icons.camera),
-                                                    imageUrl:
-                                                        'https://flk.sa/' +
-                                                            item,
+                        Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                splashColor: Colors.white,
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  SystemChrome.setEnabledSystemUIOverlays(
+                                      SystemUiOverlay.values);
+                                },
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(80.0)),
+                                child: _iconBack)),
+                        Spacer(
+                          flex: 10,
+                        ),
+                        Material(
+                            color: Colors.transparent,
+                            child: GestureDetector(
+                                onTap: () => onIconHeartClick(),
+                                child: _iconHeart)),
+                        Spacer(
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                      background: Column(children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Expanded(
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                  autoPlay: _isAutoPlayed,
+                                  height: scrollExpandedHeight!,
+                                  autoPlayInterval: Duration(seconds: 2),
+                                  viewportFraction: 1.0),
+                              items: widget.modelProducts!.images!
+                                  .map((item) => Padding(
+                                        padding: EdgeInsetsDirectional.only(
+                                            start: 8.0, end: 8.0, top: 8.0),
+                                        child: Stack(
+                                          children: [
+                                            AspectRatio(
+                                              aspectRatio: 2 / 3,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 0.0),
+                                                child: new Align(
+                                                  alignment: Alignment.center,
+                                                  child: Hero(
+                                                    tag: widget
+                                                            .modelProducts!.name
+                                                            .toString() +
+                                                        widget.modelProducts!.slug
+                                                            .toString(),
+                                                    child: CachedNetworkImage(
+                                                      placeholder: (context, s) =>
+                                                          Icon(Icons.camera),
+                                                      imageUrl:
+                                                          'https://flk.sa/' +
+                                                              item,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                .toList(),
+                                          ],
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  /*FlexibleSpaceBar(
+                    /*FlexibleSpaceBar(
 
-                          background: Column(
+                            background: Column(
 
-                              children: [
-                            SizedBox(height: scrollExpandedHeight!/2),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.only(end: 10.0),
-                              child: new Align(
-                                alignment: AlignmentDirectional.bottomEnd,
-                                child: FractionalTranslation(
-                                  translation: Offset(0.0, -0.5),
-                                  child: FloatingActionButton(
-                                    backgroundColor: Colors.white,
-                                    elevation: 12.0,
-                                    splashColor: colorPrimary,
-                                    onPressed: () {
-                                      Share.share( 'https://foryou.flk.sa/store/' + widget.modelProducts!.name.toString().replaceAll(' ', '_'));
+                                children: [
+                              SizedBox(height: scrollExpandedHeight!/2),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(end: 10.0),
+                                child: new Align(
+                                  alignment: AlignmentDirectional.bottomEnd,
+                                  child: FractionalTranslation(
+                                    translation: Offset(0.0, -0.5),
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.white,
+                                      elevation: 12.0,
+                                      splashColor: colorPrimary,
+                                      onPressed: () {
+                                        Share.share( 'https://foryou.flk.sa/store/' + widget.modelProducts!.name.toString().replaceAll(' ', '_'));
 
-                                    },
-                                    child: Icon(
-                                      Icons.share_rounded,
-                                      color: colorPrimary,
+                                      },
+                                      child: Icon(
+                                        Icons.share_rounded,
+                                        color: colorPrimary,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
+                            ]),
+                          ),*/
+                  ])),
+                ),
+
+                /*SliverGrid(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200.0,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+                  childAspectRatio: 4.0,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: Colors.teal[100 * (index % 9)],
+                      child: Text('Grid Item $index'),
+                    );
+                  },
+                  childCount: 20,
+                    ),
+            ),
+            SliverFixedExtentList(
+                    itemExtent: 50.0,
+                    delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: Colors.lightBlue[100 * (index % 9)],
+                      child: Text('List Item $index'),
+                    );
+                  },
+                    ),
+            ),*/
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                        top: 16.0, start: 16.0, end: 16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              child: Hero(
+                                tag: widget.modelProducts!.name.toString(),
+                                child: Align(
+                                    alignment: AlignmentDirectional.topStart,
+                                    child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          widget.modelProducts!.name!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ))),
+                              )),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(start: 16.0),
+                            child: Align(
+                              alignment: AlignmentDirectional.topStart,
+                              child: rateWidget(widget.modelProducts!),
                             ),
+                          ),
                           ]),
-                        ),*/
-                ])),
-              ),
-
-              /*SliverGrid(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 10.0,
-                childAspectRatio: 4.0,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.teal[100 * (index % 9)],
-                    child: Text('Grid Item $index'),
-                  );
-                },
-                childCount: 20,
-                  ),
-          ),
-          SliverFixedExtentList(
-                  itemExtent: 50.0,
-                  delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.lightBlue[100 * (index % 9)],
-                    child: Text('List Item $index'),
-                  );
-                },
-                  ),
-          ),*/
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      top: 16.0, start: 16.0, end: 16),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.3,
-                            child: Hero(
-                              tag: widget.modelProducts!.name.toString(),
-                              child: Align(
-                                  alignment: AlignmentDirectional.topStart,
-                                  child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        widget.modelProducts!.name!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2,
-                                      ))),
-                            )),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(top: 16.0),
-                          child: Align(
-                            alignment: AlignmentDirectional.topStart,
-                            child: rateWidget(widget.modelProducts!),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                              top: 16.0, end: 16.0),
-                          child: Align(
-                            alignment: AlignmentDirectional.topEnd,
-                            child: Text(
-                              widget.modelProducts!.price! +
-                                  ' ' +
-                                  sharedPrefs.priceUnitKey,
-                              style: TextStyle(
-                                  fontSize: MediaQuery.of(context).size.width /
-                                      RateTextDividerBy),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                                top: 0.0, end: 16.0),
+                            child: Align(
+                              alignment: AlignmentDirectional.topEnd,
+                              child: Text(
+                                widget.modelProducts!.price! +
+                                    ' ' +
+                                    sharedPrefs.priceUnitKey,
+                                style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.width /
+                                        RateTextDividerBy),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        new MarkdownBody(
-                            data: html2md
-                                .convert(widget.modelProducts!.description!)),
-                        /* WebView(
-                      initialUrl: 'about:blank',
-                      onWebViewCreated: (WebViewController webViewController) {
-                        webViewController = webViewController;
-                        _loadHtml();
-                      },
-                    ),*/
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Divider(height: 1.0,color : colorBorder,indent: 0.0, ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          MyTextWidgetLabel('description', 'label', colorBorder, 16.0),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          new MarkdownBody(
+                              data: html2md
+                                  .convert(widget.modelProducts!.description!)),
+                          /* WebView(
+                        initialUrl: 'about:blank',
+                        onWebViewCreated: (WebViewController webViewController) {
+                          webViewController = webViewController;
+                          _loadHtml();
+                        },
+                      ),*/
 
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 24),
-                        varsWidget(),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 24),
-                        //  parseHtmlDocument(widget.modelProducts.description)
-                        quantityWidget(),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height /
-                                textFieldButtonDividerLogin),
-                        Center(
-                          child: MyButton(
-                            onClicked: () => onButtonClick(),
-                            child: Text(
-                              buttonCartText!,
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height / 24),
+                          varsWidget(),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height / 24),
+                          //  parseHtmlDocument(widget.modelProducts.description)
+                          quantityWidget(),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height /
+                                  textFieldButtonDividerLogin),
+                          Center(
+                            child: MyButton(
+                              onClicked: () => onButtonClick(),
+                              child: Text(
+                                buttonCartText!,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height /
-                                textFieldButtonDividerLogin /
-                                2),
-                        Visibility(
-                          visible: visible,
-                          child: Center(
-                            child: Styles.getButton(
-                                context,
-                                Text(
-                                  S.of(context).checkOutBtn,
-                                  style: Styles.getTextAdsStyle(),
-                                ),
-                                () => onClickedCheck(),
-                                Styles.getButtonCheckoutStyle()),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height /
+                                  textFieldButtonDividerLogin /
+                                  2),
+                          Visibility(
+                            visible: visible,
+                            child: Center(
+                              child: Styles.getButton(
+                                  context,
+                                  Text(
+                                    S.of(context).checkOutBtn,
+                                    style: Styles.getTextAdsStyle(),
+                                  ),
+                                  () => onClickedCheck(),
+                                  Styles.getButtonCheckoutStyle()),
+                            ),
                           ),
-                        ),
 
-                        SizedBox(
-                          height: scrollExpandedHeight,
-                        ), /*MediaQuery.of(context).size.height /
-                                  textFieldButtonDividerLogin),*/
-                      ],
+                          SizedBox(
+                            height: scrollExpandedHeight,
+                          ), /*MediaQuery.of(context).size.height /
+                                    textFieldButtonDividerLogin),*/
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            ]),
-          ),
-          _buildFab()
-        ]),
+                )
+              ]),
+            ),
+            _buildFab()
+          ]),
+        ),
       ),
     );
   }
@@ -476,7 +491,7 @@ class _ProductDetailState extends State<ProductDetail> {
       setState(() {
         this._iconHeart = new Icon(
           CupertinoIcons.heart,
-          color: Colors.white,
+          color: Colors.black,
         );
         Iterable<dynamic> key = boxFavs!.keys.where(
             (element) => boxFavs!.get(element)!.id == widget.modelProducts!.id);
@@ -504,7 +519,7 @@ class _ProductDetailState extends State<ProductDetail> {
       setState(() {
         this._iconHeart = new Icon(
           CupertinoIcons.heart,
-          color: Colors.white,
+          color: Colors.black,
         );
         isExistFav = false;
       });
@@ -519,7 +534,7 @@ class _ProductDetailState extends State<ProductDetail> {
             fit: BoxFit.contain,
             child: Icon(
               Icons.star_rate_rounded,
-              color: colorPrimary,
+              color: Colors.yellow[800],
               size: MediaQuery.of(context).size.width / RateTextDividerBy,
             ),
           ),
@@ -973,7 +988,7 @@ class _ProductDetailState extends State<ProductDetail> {
             width: MediaQuery.of(context).size.width / 1.2,
           ),
           Visibility(
-            visible: true,
+            visible: false,
             child: Padding(
               padding: const EdgeInsetsDirectional.only(end: 10.0),
               child: new Align(

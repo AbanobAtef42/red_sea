@@ -90,5 +90,8 @@
   "plzChknternetConnection": "please Check Your Internet Connection",
   "tryAgain": "And Try Again",
   "forgotPassword": "Forgot Password?",
-  "enterNewPassword": "Enter New Password"
+  "enterNewPassword": "Enter New Password",
+  "pending": "Pending",
+  "charged": "Charged",
+  "done": "Done"
 }
