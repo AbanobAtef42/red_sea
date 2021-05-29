@@ -94,7 +94,7 @@ class _CartState extends State<Cart> {
       ]);
     }
     return Scaffold(
-      appBar:  AppBar(automaticallyImplyLeading: false,centerTitle: true,toolbarHeight: toolbarHeight,title: appBarTitle, actions: <Widget>[
+      appBar:  AppBar(automaticallyImplyLeading: true,centerTitle: true,toolbarHeight: toolbarHeight,title: appBarTitle, actions: <Widget>[
       Padding(
         padding: const EdgeInsetsDirectional.only(end: 10.0),
         child: new IconButton(
@@ -319,10 +319,10 @@ scrollBarConfig();
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width / 1.8,
-                                          child: Hero(
+                                        Column(
+                                          crossAxisAlignment : CrossAxisAlignment.start,
+                                         // width: MediaQuery.of(context).size.width / 1.8,
+                                          children:[ Hero(
                                             tag: modelProducts!.name.toString(),
                                             child: Material(
                                               child: Text(
@@ -335,14 +335,17 @@ scrollBarConfig();
                                               ),
                                             ),
                                           ),
-                                        ),
+                                            SizedBox(height: 12.0,),
+                                            Text(
+                                              modelProducts!.price! + ' '+sharedPrefs.exertedPriceUnitKey,
+                                              style: TextStyle(
+                                                  fontSize: 14.0),
+                                            ),
+                                        ]),
                                         Spacer(
                                           flex: 1,
                                         ),
-                                        Icon(Icons.add_circle_outline,
-                                            color: colorPrimary,
-                                            size:
-                                                14.0),
+                                        rateWidget(modelProducts!),
                                       ],
                                     ),
                                   ),
@@ -350,7 +353,7 @@ scrollBarConfig();
                                 Spacer(
                                   flex: 1,
                                 ),
-                                SizedBox(
+                                /*SizedBox(
                                   width: MediaQuery.of(context).size.width -
                                       MediaQuery.of(context).size.width / 2.8,
                                   child: Padding(
@@ -362,7 +365,6 @@ scrollBarConfig();
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        rateWidget(modelProducts!),
                                         Spacer(
                                           flex: 1,
                                         ),
@@ -375,7 +377,7 @@ scrollBarConfig();
                                       ],
                                     ),
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                           )

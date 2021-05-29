@@ -75,8 +75,8 @@ class _OrdersState extends State<Orders> {
     }
     scrollBarConfig();
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: Styles.getAppBarStyle(
+      resizeToAvoidBottomInset: false,
+      appBar: Styles.getAppBarStyleOrders(
           context, S.of(context).orders, Octicons.list_ordered),
       body: Container(
         color: Colors.grey[300],
@@ -225,7 +225,7 @@ class _OrdersState extends State<Orders> {
           padding:
               EdgeInsets.only(top: 0.0, bottom: 0.0, right: 0.0, left: 0.0),
           child: Container(
-            height: MediaQuery.of(context).size.height / 1.2,
+            height: MediaQuery.of(context).size.height / 1.3,
             child: RawScrollbar(
               radius: Radius.circular(scrollBarRadius),
               thumbColor: colorPrimary,

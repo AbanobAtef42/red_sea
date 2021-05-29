@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app8/bottom_nav_routes/Account.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_app8/bottom_nav_routes/Cart.dart';
 import 'package:flutter_app8/bottom_nav_routes/Categories.dart';
 import 'package:flutter_app8/bottom_nav_routes/Home.dart';
 import 'package:flutter_app8/generated/l10n.dart';
+import 'package:flutter_app8/screens/CustomerOrdersScreen.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/values/myConstants.dart';
@@ -16,7 +18,10 @@ import 'package:flutter_app8/bottom_nav_routes/Home.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/maki_icons.dart';
 import 'package:fluttericon/web_symbols_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart' as intl;
@@ -102,7 +107,7 @@ _pages = <Widget>[
   Home( ()=>goToCats()),
   Categories(catQry, search, index,new Key('ggg')),
   Account(),
-  Cart(),
+  Orders(),
 ];
     getDialogue(context);
     print('catqryFunnnnnnn2'+ ' ' + catQry);
@@ -145,8 +150,8 @@ index: _selectedIndex,
               label: S.of(context).account,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: S.of(context).cart,
+              icon: Icon(Maki.fast_food),
+              label: S.of(context).orders,
             ),
           ],
           currentIndex: _selectedIndex,

@@ -407,7 +407,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           SizedBox(
                             height: 10,
                           ),
-                          MyTextWidgetLabel('description', 'label', colorBorder, 16.0),
+                          MyTextWidgetLabel(S.of(context).desc, 'label', colorBorder, 16.0),
                           SizedBox(
                             height: 10,
                           ),

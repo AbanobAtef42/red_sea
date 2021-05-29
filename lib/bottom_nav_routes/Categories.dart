@@ -20,6 +20,7 @@ import 'package:flutter_app8/models/ModelSetting.dart';
 import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/screens/BottomNavScreen.dart';
+import 'package:flutter_app8/screens/FavsScreen.dart';
 import 'package:flutter_app8/screens/ProductDetailScreen.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
@@ -28,6 +29,7 @@ import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/api.dart';
 import 'package:flutter_app8/values/myApplication.dart';
 import 'package:flutter_app8/values/myConstants.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
@@ -35,6 +37,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'Cart.dart';
 
 class Categories extends StatefulWidget {
   final String catQuery;
@@ -177,6 +181,36 @@ class _CategoriesState
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
+        elevation: 0,
+        toolbarHeight: toolbarHeight,
+        actions: [
+          IconButton(icon:Icon( Icons.search,color: Colors.black,), onPressed: _showSearch),
+          IconButton(icon:Icon( CupertinoIcons.heart_fill,color: Colors.black,), onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Favourites() ),
+          ),),
+
+        ],
+        leading: IconButton(
+          icon: Icon(
+            Icons.shopping_cart,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Cart()),
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title:
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
+              Icon(RpgAwesome.food_chain,color: Colors.black,size: 30.0,) ]),
+      ),
+      /*AppBar(
+        centerTitle: true,
         toolbarHeight: toolbarHeight,
         automaticallyImplyLeading: false,
         title: GestureDetector(
@@ -213,7 +247,7 @@ class _CategoriesState
             ),
           ),
         ),
-      ), //_buildBar(context) as PreferredSizeWidget?,
+      ), *///_buildBar(context) as PreferredSizeWidget?,
       body: RawScrollbar(
         thumbColor: colorPrimary,
         isAlwaysShown: isAlwaysShown,
@@ -1181,6 +1215,7 @@ class _CategoriesState
   Widget _buildBar(BuildContext context) {
     return new AppBar(
         centerTitle: true,
+
         automaticallyImplyLeading: false,
         toolbarHeight: toolbarHeight,
         title: Container(
@@ -1641,21 +1676,7 @@ class _CategoriesState
                   ),
                 ),
               ),
-              Positioned(
-                right: 0,
-                top: 40,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(15.0))),
-                  child: Text(
-                    '20%',
-                    style: TextStyle(color: Colors.white, fontSize: 12.0),
-                  ),
-                ),
-              ),
+              getDiscRate(modelProducts),
               Positioned(
                 left: 15,
                 top: 15,
@@ -1682,7 +1703,7 @@ class _CategoriesState
                       right: BorderSide(),
                       left: BorderSide(),
                       bottom: BorderSide())),
-              padding: EdgeInsetsDirectional.only(top: 8.0),
+              padding: EdgeInsetsDirectional.only(top: 12.0,bottom: 18.0),
               child: Column(
                 /*mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,*/
@@ -1751,7 +1772,7 @@ class _CategoriesState
                       ),
                     ),
                   ),
-                  Padding(
+                  /*Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Styles.getButton(
                         context,
@@ -1770,7 +1791,7 @@ class _CategoriesState
                         ),
                             () {},
                         Styles.getCartButtonStyle()),
-                  )
+                  )*/
                 ],
               ),
             )
@@ -1778,6 +1799,26 @@ class _CategoriesState
         ),
       ),
     );
+  }
+  getDiscRate(Datum modelProduct){
+    return (modelProduct != null &&
+        modelProduct.discount != 'null' &&
+        int.parse(modelProduct.discount.toString()) != 0)
+        ? Positioned(
+      right: 0,
+      top: 40,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius:
+            BorderRadius.only(topLeft: Radius.circular(15.0))),
+        child: Text(
+          '20%',
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
+        ),
+      ),
+    ):Text('');
   }
   Icon onIconHeartStart(Datum modelProduct , int index) {
     bool isFavourite = _isFavorited[index];

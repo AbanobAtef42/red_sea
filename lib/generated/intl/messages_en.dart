@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couldNotFindResults" : MessageLookupByLibrary.simpleMessage("could not Find Results"),
     "country" : MessageLookupByLibrary.simpleMessage("Country"),
     "delFCart" : MessageLookupByLibrary.simpleMessage("Delete From Cart"),
+    "desc" : MessageLookupByLibrary.simpleMessage("description"),
     "diffPasses" : MessageLookupByLibrary.simpleMessage("The password confirmation does not match"),
     "done" : MessageLookupByLibrary.simpleMessage("Done"),
     "dubEmail" : MessageLookupByLibrary.simpleMessage("The email has already been taken"),

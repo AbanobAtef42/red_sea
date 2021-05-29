@@ -15,6 +15,7 @@ import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/textFieldStyle.dart';
 import 'package:flutter_app8/styles/textWidgetStyle.dart';
+import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/api.dart';
 import 'package:flutter_app8/values/myApplication.dart';
 import 'package:flutter_app8/values/myConstants.dart';
@@ -84,7 +85,7 @@ class _CheckOutState extends State<CheckOut> {
   void initState() {
     _getUserData(context);
     _getGovsData(context);
-    box = Hive.box(dataBoxName);
+    box = Hive.box( sharedPrefs.mailKey + dataBoxName);
     // _textDirection = intl.Bidi.isRtlLanguage( Localizations.localeOf(context).languageCode) ? TextDirection.rtl : TextDirection.ltr;
     super.initState();
     shippers = ['BARQ', 'GREEN', 'QUICK'];
@@ -189,13 +190,11 @@ class _CheckOutState extends State<CheckOut> {
                       MyTextField(nameController, S.of(context).name,
                           Icons.person, false, " ", true, TextInputType.name),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       MyTextField(lNameController, S.of(context).lName,
                           Icons.person, false, " ", true, TextInputType.name),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       MyTextField(
                           emailController,
                           S.of(context).email,
@@ -205,8 +204,7 @@ class _CheckOutState extends State<CheckOut> {
                           true,
                           TextInputType.emailAddress),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       MyTextField(
                           phoneController,
                           S.of(context).phone,
@@ -216,8 +214,7 @@ class _CheckOutState extends State<CheckOut> {
                           true,
                           TextInputType.phone),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -267,8 +264,7 @@ class _CheckOutState extends State<CheckOut> {
                         ),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -325,8 +321,7 @@ class _CheckOutState extends State<CheckOut> {
                         ),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                          height: 12.0),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -393,9 +388,8 @@ key: cityKey,
                           ),
                         ),
                       ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height /
-                              textFieldsDivider),
+                      /*SizedBox(
+                          height: 12.0),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -461,7 +455,7 @@ key: cityKey,
                             ),
                           ),
                         ),
-                      ),
+                      ),*/
                       SizedBox(
                           height: MediaQuery.of(context).size.height /
                               textFieldsDivider),
@@ -536,7 +530,7 @@ key: cityKey,
       currentFocus.unfocus();
     }
     final FormState form = _formKey.currentState!;
-    if (form.validate()  && gov != null && city != null && price != null ) {
+    if (form.validate()  && gov != null && city != null /*&& price != null*/ ) {
     //  MyApplication.getDialogue(context, 'processing', 'Please Wait', DialogType.INFO);
       showLoaderDialog(context);
       List<String?> vars = [];
@@ -571,8 +565,8 @@ key: cityKey,
         ],
       };
       final provider = Provider.of<ProviderHome>(context, listen: false);
-      double total = double.parse(widget.modelProducts!.price!) +
-          double.parse(price.toString());
+      double total = double.parse(widget.modelProducts!.price!); /*+
+          double.parse(price.toString());*/
       final Map<String, Object?> data = {
         "first_name": nameController.text.toString(),
         "last_name": lNameController.text.toString(),
@@ -582,7 +576,7 @@ key: cityKey,
         "gov_id": gov!.id,
         "city_id": city!.id,
         "payment": "cash",
-        "shipped": price,
+        "shipped": 0,
         "total":( widget.modelProducts!.discount !=  null && widget.modelProducts!.discount.toString() != 'null' ) ? total -
             double.parse(widget.modelProducts!.discount!.toString()) : total
       };
@@ -624,10 +618,10 @@ key: cityKey,
       {
         openDropdown(cityKey);
       }
-      else if(price == null)
+      /*else if(price == null)
       {
         openDropdown(shipKey);
-      }
+      }*/
 
       final snackBar = SnackBar(content: Text(S.of(context).fillIn));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

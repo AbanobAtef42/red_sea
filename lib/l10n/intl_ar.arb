@@ -51,7 +51,7 @@
   "signOut": "تسجيل الخروج",
   "search": "بحث",
   "notRegistered": "ليس لديك حساب؟",
-  "signupnow": "سجّل الأن",
+  "signupnow": "حساب جديد",
   "delFCart": "حذف من عربة التسوق",
   "noProInWishList": "لا توجد منتجات مفضًلة",
   "noProShoppingCart": "لا توجد منتجات في عربة التسوٌق",
@@ -84,7 +84,7 @@
   "passwordResetFailed": "خطأ في تعديل كلمة المرور",
   "profileUpdateFailed": "خطأ في تعديل البيانات",
   "orderRequestFailed": "خطأ في تقديم الطلب",
-  "youHaveNoOrdersYet": "ليس لديك طلبات الأن",
+  "youHaveNoOrdersYet": "ليس لديك طلبات حاليا",
   "searchInFlk": "إبحث في فلك",
   "sendingOrder": "جارِ إرسال الطلب...",
   "anUnknownErrorOccuredn": "حدث خطأ ما",
@@ -94,5 +94,6 @@
   "enterNewPassword": "أدخل كلمة المرور الجديدة",
   "pending": "إكتمال الطلب",
   "charged": "شحن الطلب",
-  "done": "التسليم"
+  "done": "التسليم",
+  "desc": "الوصف"
 }

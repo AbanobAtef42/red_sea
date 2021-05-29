@@ -94,7 +94,7 @@ dev_dependencies:
 
 
 flutter_icons:
-  image_path: "assets/splash_flk.jpeg"
+  image_path: "assets/redsea2.png"
   android: true
   ios: true
   flutter_test:

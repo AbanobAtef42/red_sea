@@ -157,8 +157,11 @@ class _HomeState extends State<Home> {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar:
+      AppBar(
         centerTitle: true,
+
+        elevation: 0,
         toolbarHeight: toolbarHeight,
         actions: [
           IconButton(icon:Icon( Icons.search,color: Colors.black,), onPressed: _showSearch),
@@ -180,8 +183,11 @@ class _HomeState extends State<Home> {
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        title: Icon(RpgAwesome.food_chain),
-      ),
+        title:
+    Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
+      Icon(RpgAwesome.food_chain,color: Colors.black,size: 30.0,) ]),),
       body: RawScrollbar(
         thumbColor: colorPrimary,
         isAlwaysShown: isAlwaysShown,
@@ -896,16 +902,16 @@ class _HomeState extends State<Home> {
                     color: Colors.black45,
                     decorationStyle: TextDecorationStyle.solid,
                     height: 1.2),
-                children: [
-                TextSpan(
+               /* children: [
+               *//* TextSpan(
                     text: ' ' + modelSettings!.data![0].value.toString(),
                     style: TextStyle(
                         fontSize: 14.0,
                         decoration: TextDecoration.none,
                         color: Colors.black45,
                         decorationStyle: TextDecorationStyle.solid,
-                        height: 1.2)),
-              ])
+                        height: 1.2)),*//*
+              ]*/)
 
             //
             )
@@ -1012,21 +1018,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              Positioned(
-                right: 0,
-                top: 40,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius:
-                          BorderRadius.only(topLeft: Radius.circular(15.0))),
-                  child: Text(
-                    '20%',
-                    style: TextStyle(color: Colors.white, fontSize: 12.0),
-                  ),
-                ),
-              ),
+              getDiscRate(modelProducts),
               Positioned(
                 left: 15,
                 top: 15,
@@ -1053,7 +1045,7 @@ class _HomeState extends State<Home> {
                       right: BorderSide(),
                       left: BorderSide(),
                       bottom: BorderSide())),
-              padding: EdgeInsetsDirectional.only(top: 8.0),
+              padding: EdgeInsetsDirectional.only(top: 12.0,bottom: 18.0),
               child: Column(
                 /*mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,*/
@@ -1122,7 +1114,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  Padding(
+                  /*Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Styles.getButton(
                         context,
@@ -1141,7 +1133,7 @@ class _HomeState extends State<Home> {
                         ),
                         () {},
                         Styles.getCartButtonStyle()),
-                  )
+                  )*/
                 ],
               ),
             )
@@ -1209,6 +1201,26 @@ class _HomeState extends State<Home> {
         boxFavs!.delete(key.toList()[0]);
       });
     }
+  }
+  getDiscRate(Datum modelProduct){
+    return (modelProduct != null &&
+        modelProduct.discount != 'null' &&
+        int.parse(modelProduct.discount.toString()) != 0)
+        ? Positioned(
+      right: 0,
+      top: 40,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius:
+            BorderRadius.only(topLeft: Radius.circular(15.0))),
+        child: Text(
+          '20%',
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
+        ),
+      ),
+    ):Text('');
   }
 }
 

@@ -93,5 +93,6 @@
   "enterNewPassword": "Enter New Password",
   "pending": "Pending",
   "charged": "Charged",
-  "done": "Done"
+  "done": "Done",
+  "desc": "description"
 }

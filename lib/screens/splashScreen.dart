@@ -45,11 +45,11 @@ class _SplashScreenState extends State<SplashScreen>
   //  controller.forward();
 
     Timer(Duration(seconds: 3), () {
-      if (sharedPrefs.getCurrentUserAppOpenTime) {
+      /*if (sharedPrefs.getCurrentUserAppOpenTime) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => StartShopping()));
       }
-      else if(sharedPrefs.getCurrentUserSignedInStatus)
+      else*/ if(sharedPrefs.getCurrentUserSignedInStatus)
       {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1)));

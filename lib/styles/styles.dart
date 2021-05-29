@@ -101,19 +101,48 @@ class Styles
           child: IconButton(
 
               icon: Icon(Icons.arrow_back,color: Colors.black,size: 35,),
-          onPressed: ()=> Navigator.pop(context),),
+          onPressed: (){Navigator.pop(context);},),
         ),
        toolbarHeight: toolbarHeight,
        title: Row(
            mainAxisAlignment: MainAxisAlignment.center,
            children:[
-             Icon(icon,color: Colors.white,size: 35,),
+             Icon(icon,color: Colors.black,size: 35,),
 
              SizedBox(width: 8.0,),
              Text(
 
                title,
-               style: TextStyle(color: Colors.white),
+               style: TextStyle(color: Colors.black),
+             ),
+
+           ]),
+     );
+   }
+   static AppBar getAppBarStyleOrders(BuildContext context , String title, IconData icon)
+   {
+     return AppBar(
+       centerTitle: true,
+       backgroundColor: Colors.transparent,
+       elevation: 0.0,
+       leading: Padding(
+         padding: const EdgeInsetsDirectional.only(start :12.0),
+         child: IconButton(
+
+           icon: Icon(Icons.arrow_back,color: Colors.transparent,size: 35,),
+           onPressed: (){},),
+       ),
+       toolbarHeight: toolbarHeight,
+       title: Row(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children:[
+             Icon(icon,color: Colors.black,size: 35,),
+
+             SizedBox(width: 8.0,),
+             Text(
+
+               title,
+               style: TextStyle(color: Colors.black),
              ),
 
            ]),

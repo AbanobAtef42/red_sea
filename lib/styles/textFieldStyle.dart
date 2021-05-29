@@ -87,7 +87,7 @@ class _MyTextFieldState extends State<MyTextField>
           //height: MediaQuery.of(context).size.height / 12,
           child: Stack(children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(5, 18, 5, 5),
+              padding: EdgeInsets.fromLTRB(5, 25, 5, 10),
               child: TextFormField(
                 // enableInteractiveSelection: true,
                 controller: widget.textEditingController,
@@ -155,9 +155,9 @@ class _MyTextFieldState extends State<MyTextField>
             ),
             Container(
               //position label
-              margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
+              margin: EdgeInsets.fromLTRB(7, 0, 0, 8),
               padding: EdgeInsets.fromLTRB(4, 0, 4,
-                  0), // input outline default seems using 4.0 as padding from their source
+                  8), // input outline default seems using 4.0 as padding from their source
               child: Text(
                 widget.labelText,
                 style: TextStyle(
@@ -182,7 +182,7 @@ class _MyTextFieldState extends State<MyTextField>
           child: Center(
             child: Stack(children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(5, 18, 5, 5),
+                padding: EdgeInsets.fromLTRB(5, 25, 5, 5),
                 child: TextFormField(
                   controller: widget.textEditingController,
                   obscureText: _isObscure,
@@ -237,7 +237,7 @@ class _MyTextFieldState extends State<MyTextField>
               Container(
                 //position label
                 margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
-                padding: EdgeInsets.fromLTRB(4, 0, 4,
+                padding: EdgeInsets.fromLTRB(4, 0, 8,
                     0), // input outline default seems using 4.0 as padding from their source
                 child: Text(
                   widget.labelText,

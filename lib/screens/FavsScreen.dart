@@ -218,7 +218,7 @@ class _FavouritesState extends State<Favourites> {
         List.generate(count*2, (value) => GlobalKey());
     print('counttttt'+ count.toString());
     return Padding(
-      padding: EdgeInsets.all(0.0),
+      padding: EdgeInsets.all(10.0),
       child: GridView.count(
         crossAxisCount: 2,
           childAspectRatio: 100 / 170,
@@ -578,21 +578,7 @@ children: List.generate(list.length, (index) {
                   ),
                 ),
               ),
-              Positioned(
-                right: 0,
-                top: 40,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(15.0))),
-                  child: Text(
-                    '20%',
-                    style: TextStyle(color: Colors.white, fontSize: 12.0),
-                  ),
-                ),
-              ),
+              getDiscRate(modelProducts),
               Positioned(
                 left: 15,
                 top: 15,
@@ -619,7 +605,7 @@ children: List.generate(list.length, (index) {
                       right: BorderSide(),
                       left: BorderSide(),
                       bottom: BorderSide())),
-              padding: EdgeInsetsDirectional.only(top: 8.0),
+              padding: EdgeInsetsDirectional.only(top: 12.0,bottom: 18.0),
               child: Column(
                 /*mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,*/
@@ -675,8 +661,7 @@ children: List.generate(list.length, (index) {
                           Row(children: [
                             Text(
                               modelProducts.price! +
-                                  ' ' +
-                                  modelProducts.price! + ' '+sharedPrefs.exertedPriceUnitKey,
+                                  ' '  + ' '+sharedPrefs.exertedPriceUnitKey,
                               style: TextStyle(fontSize: 14.0),
                             ),
                             SizedBox(
@@ -688,7 +673,7 @@ children: List.generate(list.length, (index) {
                       ),
                     ),
                   ),
-                  Padding(
+                 /* Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Styles.getButton(
                         context,
@@ -707,7 +692,7 @@ children: List.generate(list.length, (index) {
                         ),
                             () {},
                         Styles.getCartButtonStyle()),
-                  )
+                  )*/
                 ],
               ),
             )
@@ -715,6 +700,26 @@ children: List.generate(list.length, (index) {
         ),
       ),
     );
+  }
+  getDiscRate(Datum modelProduct){
+    return (modelProduct != null &&
+        modelProduct.discount != 'null' &&
+        int.parse(modelProduct.discount.toString()) != 0)
+        ? Positioned(
+      right: 0,
+      top: 40,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius:
+            BorderRadius.only(topLeft: Radius.circular(15.0))),
+        child: Text(
+          '20%',
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
+        ),
+      ),
+    ):Text('');
   }
 
   Icon onIconHeartStart(Datum modelProduct) {
@@ -785,7 +790,7 @@ children: List.generate(list.length, (index) {
                 color: Colors.black45,
                 decorationStyle: TextDecorationStyle.solid,
                 height: 1.2),
-            children: [
+            /*children: [
               TextSpan(
                   text: ' ' + sharedPrefs.exertedPriceUnitKey,
                   style: TextStyle(
@@ -794,7 +799,7 @@ children: List.generate(list.length, (index) {
                       color: Colors.black45,
                       decorationStyle: TextDecorationStyle.solid,
                       height: 1.2)),
-            ])
+            ]*/)
 
       //
     )

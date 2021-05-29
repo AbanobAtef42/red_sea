@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couldNotFindResults" : MessageLookupByLibrary.simpleMessage("لم يتم الحصول علي نتائج"),
     "country" : MessageLookupByLibrary.simpleMessage("البلد"),
     "delFCart" : MessageLookupByLibrary.simpleMessage("حذف من عربة التسوق"),
+    "desc" : MessageLookupByLibrary.simpleMessage("الوصف"),
     "diffPasses" : MessageLookupByLibrary.simpleMessage("كلمتي المرور مختلفتان"),
     "done" : MessageLookupByLibrary.simpleMessage("التسليم"),
     "dubEmail" : MessageLookupByLibrary.simpleMessage("هذا البريد الإليكتروني مأخوذ بالفعل"),
@@ -104,7 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shortPass" : MessageLookupByLibrary.simpleMessage("كلمة المرور لابد ان تكون 7 رموز علي الأقل"),
     "signOut" : MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "signed" : MessageLookupByLibrary.simpleMessage("تم تسجيل الدخول بنجاح"),
-    "signupnow" : MessageLookupByLibrary.simpleMessage("سجّل الأن"),
+    "signupnow" : MessageLookupByLibrary.simpleMessage("حساب جديد"),
     "slowInternet" : MessageLookupByLibrary.simpleMessage("الإتصال بالإنترنت بطئ"),
     "stShopDesc" : MessageLookupByLibrary.simpleMessage("إبدأ رحلة التسوق عن طريق \n متابعة جميع الماركات"),
     "stShopping" : MessageLookupByLibrary.simpleMessage("إبدأ التسوُق"),
@@ -115,6 +116,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "wish" : MessageLookupByLibrary.simpleMessage("المنتجات المفضلة"),
     "wrongEmailOrPass" : MessageLookupByLibrary.simpleMessage("خطأ في البريد الإليكتروني أو كلمة المرور"),
     "yes" : MessageLookupByLibrary.simpleMessage("نعم"),
-    "youHaveNoOrdersYet" : MessageLookupByLibrary.simpleMessage("ليس لديك طلبات الأن")
+    "youHaveNoOrdersYet" : MessageLookupByLibrary.simpleMessage("ليس لديك طلبات حاليا")
   };
 }
