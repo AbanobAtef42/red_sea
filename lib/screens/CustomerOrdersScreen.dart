@@ -24,6 +24,7 @@ import 'package:fluttericon/mfg_labs_icons.dart';
 import 'package:fluttericon/octicons_icons.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:fluttericon/zocial_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -57,9 +58,10 @@ class _OrdersState extends State<Orders> {
   @override
   void initState() {
     _getPriceUnit(context, 'admin.\$');
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+      _pagingController.addPageRequestListener((pageKey) {
+        _fetchPage(pageKey);
+      });
+
 
     super.initState();
     MyApplication.initCache();
@@ -175,15 +177,18 @@ class _OrdersState extends State<Orders> {
   }
 
   Widget getAppWidget() {
-    if (false) {
+    if (modelSettings == null) {
       return
           //  MyTextWidgetLabel('loading.....', 'l', Colors.black, textLabelSize);
-          Container(
+          Theme(
+            data: Theme.of(context).copyWith(accentColor: Colors.black),
+            child: Container(
         height: MediaQuery.of(context).size.height / 1.5,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          CircularProgressIndicator(),
+            CircularProgressIndicator(),
         ]),
-      );
+      ),
+          );
     } else {
       //   List orders = modelOrders!.data!;
       final List<String> imgList = [
@@ -296,9 +301,7 @@ class _OrdersState extends State<Orders> {
                                                         BorderRadius.circular(
                                                             8.0),
                                                     child: CachedNetworkImage(
-                                                      placeholder: (context,
-                                                              s) =>
-                                                          Icon(Icons.camera),
+                                                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
                                                       imageUrl: (modelOrders
                                                                       .items !=
                                                                   null &&
@@ -761,7 +764,7 @@ class _OrdersState extends State<Orders> {
     } else {
       print('iduser' + sharedPrefs.getCurrentUserId);
       await Provider.of<ProviderHome>(context, listen: false)
-          .getOrders(sharedPrefs.getCurrentUserId);
+          .getOrders( sharedPrefs.getCurrentUserId);
       setState(() {
         modelOrders = provider.modelOrders;
       });
@@ -833,7 +836,7 @@ class _OrdersState extends State<Orders> {
       final newItems = await _getOrdersData(context, pageKey);
       print('dataaaaaaaaaaaa');
       final isLastPage = newItems.length < _pageSize;
-      if (modelSettings != null) {
+
         if (isLastPage) {
           _pagingController.appendLastPage(newItems);
         } else {
@@ -841,9 +844,15 @@ class _OrdersState extends State<Orders> {
 
           _pagingController.appendPage(newItems, nextPageKey.toInt());
         }
-      }
+
     } catch (error) {
       _pagingController.error = error;
+      Fluttertoast.showToast(
+          msg: error.toString(),
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: colorPrimary,
+          textColor: Colors.white,
+          gravity: ToastGravity.BOTTOM);
     }
   }
 

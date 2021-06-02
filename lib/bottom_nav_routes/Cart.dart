@@ -295,7 +295,7 @@ scrollBarConfig();
                                 child: Hero(
                                   tag: modelProducts!.name.toString()+modelProducts!.slug.toString(),
                                   child: CachedNetworkImage(
-                                       placeholder:(context,s)=> Icon(Icons.camera), imageUrl: modelProducts!.images != null ? 'https://flk.sa/'+ modelProducts!.images![0] : 'jj' ,
+                                       placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'), imageUrl: modelProducts!.images != null && modelProducts!.images!.isNotEmpty  ? 'https://flk.sa/'+ modelProducts!.images![0] : 'jj' ,
                                     fit: BoxFit.cover,
                                   //  width: MediaQuery.of(context).size.width / 3.7,
                                     height: MediaQuery.of(context).size.height / 4.5,

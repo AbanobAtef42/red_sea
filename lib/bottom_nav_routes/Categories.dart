@@ -207,7 +207,7 @@ class _CategoriesState
         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
-              Icon(RpgAwesome.food_chain,color: Colors.black,size: 30.0,) ]),
+              Image.asset("assets/redsea2.png",height: 40.0,) ]),
       ),
       /*AppBar(
         centerTitle: true,
@@ -1665,7 +1665,7 @@ class _CategoriesState
                     tag: modelProducts.name.toString() +
                         modelProducts.slug.toString(),
                     child: CachedNetworkImage(
-                      placeholder: (context, s) => Icon(Icons.camera),
+                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
                       imageUrl: modelProducts.images!.isNotEmpty
                           ? 'https://flk.sa/' + modelProducts.images![0]
                           : 'jj',

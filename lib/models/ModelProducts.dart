@@ -187,7 +187,7 @@ class Datum {
   @HiveField(24)
   String? seoKeywords;
   @HiveField(25)
-  String? fee;
+  dynamic? fee;
   @HiveField(26)
   int? trend;
   @HiveField(27)

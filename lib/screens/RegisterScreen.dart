@@ -60,7 +60,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     scrollBarConfig();
     return Scaffold(
-      //appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        centerTitle: true,
+
+        elevation: 0,
+        toolbarHeight: toolbarHeight,
+
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+            size: 25.0,
+          ),
+          onPressed: () => Navigator.pop(context)),
+
+
+
+        backgroundColor: Colors.white,
+        title:
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
+              Image.asset("assets/redsea2.png",height: 40.0,), ]),),
       body: Container(
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
@@ -70,23 +91,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               children: [
                 Container(
-                  height: MediaQuery.of(context).padding.top,
+                  //height: MediaQuery.of(context).padding.top,
                   color: Colors.white,
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height / 7,
+                  height: 100,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.white,
                   child: Column(children: [
-                    SizedBox(
-                      height: 12.0,
-                    ),
+
                     Row(
                       children: [
                         SizedBox(
                           width: 12.0,
                         ),
-                        Material(
+                       /* Material(
                           color: Colors.transparent,
                           child: InkWell(
                             splashColor: Colors.white,
@@ -104,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
 
-                        Spacer(),
+                        Spacer(),*/
                         /*Padding(
                           padding: const EdgeInsets.only(
                               top: 30.0),
@@ -131,12 +150,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 registerTopViewHeight,
                             child: Theme(
                               data: Theme.of(context)
-                                  .copyWith(accentColor: Colors.white),
+                                  .copyWith(accentColor: Colors.black),
                               child: CircularProgressIndicator(),
                             ),
                           ),
                           visible: _visible,
                         ),
+
                       ],
                     ),
                   ]),
@@ -168,8 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   textLabelSize),
                             ),*/
                             SizedBox(
-                                height: MediaQuery.of(context).size.height /
-                                    registerTextFieldLabelDivider),
+                                height: 10.0),
                             MyTextField(
                                 nameController,
                                 S.of(context).name,

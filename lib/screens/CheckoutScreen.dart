@@ -561,6 +561,7 @@ key: cityKey,
             "qnt": widget.qnt,
             "price": widget.modelProducts!.price.toString(),
             "discount": widget.modelProducts!.discount.toString(),
+            "options": []
           }
         ],
       };

@@ -567,7 +567,7 @@ children: List.generate(list.length, (index) {
                     tag: modelProducts.name.toString() +
                         modelProducts.slug.toString(),
                     child: CachedNetworkImage(
-                      placeholder: (context, s) => Icon(Icons.camera),
+                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
                       imageUrl: modelProducts.images!.isNotEmpty
                           ? 'https://flk.sa/' + modelProducts.images![0]
                           : 'jj',

@@ -187,7 +187,7 @@ class _HomeState extends State<Home> {
     Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
-      Icon(RpgAwesome.food_chain,color: Colors.black,size: 30.0,) ]),),
+          Image.asset("assets/redsea2.png",height: 40.0,), ]),),
       body: RawScrollbar(
         thumbColor: colorPrimary,
         isAlwaysShown: isAlwaysShown,
@@ -297,10 +297,7 @@ class _HomeState extends State<Home> {
       final List<Widget> imgList = [
         FittedBox(
             fit: BoxFit.cover,
-            child: Icon(
-              Icons.check_box_outline_blank_sharp,
-              color: colorPrimary,
-            ))
+            child: Image.asset('images/plcholder.jpeg'),)
         // 'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
         // 'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
         // 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
@@ -340,6 +337,7 @@ class _HomeState extends State<Home> {
                                   new Align(
                                     alignment: Alignment.topCenter,
                                     child: CachedNetworkImage(
+                                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
                                       imageUrl: modelAds!.data!.isNotEmpty &&
                                               modelAds!.data![_current].image !=
                                                   null
@@ -1007,7 +1005,7 @@ class _HomeState extends State<Home> {
                     tag: modelProducts.name.toString() +
                         modelProducts.slug.toString(),
                     child: CachedNetworkImage(
-                      placeholder: (context, s) => Icon(Icons.camera),
+                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
                       imageUrl: modelProducts.images!.isNotEmpty
                           ? 'https://flk.sa/' + modelProducts.images![0]
                           : 'jj',

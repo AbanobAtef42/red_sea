@@ -84,7 +84,8 @@ class Api {
   ///
   /// This API doesn't have a key but often, APIs do require authentication
   final String _url = 'flk.sa';
-  static var uri = "https://flk.sa";
+  //static var uri = "https://flk.sa";
+  static var uri = "https://www.redsea5stars.net";
   static var uri2 = "https://flkwatches.flk.sa";
   String? token ;
 
@@ -448,7 +449,7 @@ if(jsonResponse == null)
 
       Dio dio = Dio(options);
       bool internet = await MyApplication.checkConnection();
-   //   dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
+      dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
 
       Options requestOptions = Options(
             headers: {
@@ -513,7 +514,7 @@ if(jsonResponse == null)
 
       Dio dio = Dio(options);
       bool internet = await MyApplication.checkConnection();
-    //  dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
+      dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
 
       Options requestOptions = Options(
         headers: {
@@ -669,7 +670,7 @@ if(jsonResponse == null)
 
      dio = Dio(options);
       bool internet = await MyApplication.checkConnection();
-   //  dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
+     dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
       Response response = await Api.dio.get(url, options: /*buildCacheOptions(Duration(days: 7), options:*/requestOptions);
      print('respnotfound'+response.toString());
 
@@ -1182,8 +1183,8 @@ if(jsonResponse == null)
 
   }
   Future<ModelOrders?> getOrdersApi(String category) async {
-    final String url = uri + '/api/$category+&page=$orderPage';
-    print('order pageeeeeee'+ ' $orderPage');
+    final String url = uri + '/api/$category+&page=1';
+    //print('order pageeeeeee'+ ' $orderPage');
     //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     //  final String token = sharedPreferences.getString('tokenKey');
     final jsonResponse = await _getOrders(url, sharedPrefs.tokenKey);
@@ -1214,19 +1215,20 @@ if(jsonResponse == null)
 
       Dio dio = Dio(options);
       bool internet = await MyApplication.checkConnection();
-     // dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
+      dio.interceptors.add(DioCacheInterceptor(options:CacheOptions(store: cacheStore,policy: !internet  ? CachePolicy.forceCache: CachePolicy.refreshForceCache )));
     
       Options requestOptions = Options(
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
           "Authorization": token,
-          'Charset': 'utf-8'
+
         },
       );
 
       Response response = await dio.get(url,options:/*buildCacheOptions(Duration(days: 7), options:*/ requestOptions);
       print('responseAds');
-      print(response);
+      print(response.toString() + 'responsordersssssssss');
       return json.decode(response.toString());
     }on Exception catch (e) {
       if(e is DioError)
@@ -1342,10 +1344,10 @@ if(jsonResponse == null)
 
       return json.decode(response.toString());
     } on Exception catch (e) {
-      print('execptionnnnnn' + e.toString());
+      print('execptionnnnnnorders' + e.toString());
 
       if (e is DioError) {
-
+        print('execptionnnnnnorders' + e.error.toString());
         if (e.error
             .toString()
             .contains('No address associated with hostname')) {

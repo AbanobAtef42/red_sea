@@ -42,7 +42,7 @@ class DatumAdapter extends TypeAdapter<Datum> {
       seoTitle: fields[22] as String?,
       seoDescription: fields[23] as String?,
       seoKeywords: fields[24] as String?,
-      fee: fields[25] as String?,
+      fee: fields[25] as int?,
       trend: fields[26] as int?,
       enabled: fields[27] as int?,
       createdAt: fields[28] as DateTime?,

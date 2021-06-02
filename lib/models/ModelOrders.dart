@@ -439,9 +439,9 @@ class Shipping {
     this.quick,
   });
 
-  int? barq;
-  int? green;
-  int? quick;
+  dynamic? barq;
+  dynamic? green;
+  dynamic? quick;
 
   factory Shipping.fromJson(Map<String, dynamic> json) => Shipping(
     barq: json["BARQ"],

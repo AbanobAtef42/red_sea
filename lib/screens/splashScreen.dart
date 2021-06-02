@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app8/screens/StartShoppingScreen.dart';
@@ -65,18 +66,30 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final String assetName = 'images/splash.jpeg';
     Image svg = new Image.asset(
-      assetName, filterQuality: FilterQuality.high,fit: BoxFit.fill,
+      assetName, filterQuality: FilterQuality.high,fit: BoxFit.cover,
     );
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(padding: const EdgeInsets.all(16.0), child: svg),
-          ),
+        body: Stack(
+             children: [
+
+             Container(
+               height: MediaQuery.of(context).size.height ,
+               child: Container(
+
+                   decoration: BoxDecoration(image: new DecorationImage(
+
+
+                       alignment: Alignment.center, image: new AssetImage(
+                     assetName,
+                   ))),
+
+
+            ),
+             ),
+
         ]),
       ),
     );
