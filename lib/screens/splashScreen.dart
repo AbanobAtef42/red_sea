@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     SharedPrefs().priceUnit('');
-    SystemChrome.setEnabledSystemUIOverlays([]);
+   // SystemChrome.setEnabledSystemUIOverlays([]);
     //  SharedPrefs().exertedPriceUnit('');
     super.initState();
 

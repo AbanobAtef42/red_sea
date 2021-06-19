@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/models/ModelProducts.dart';
 import 'package:flutter_app8/screens/ProductDetailScreen.dart';
@@ -51,6 +52,12 @@ class _CartState extends State<Cart> {
   bool searchEmpty = false;
 
   late List<GlobalKey<State<StatefulWidget>>> tags;
+
+  double x = -1.0;
+  double y = 1.0;
+  double z = 1.0;
+
+  GlobalKey<AnimatedListState> _listKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -225,13 +232,15 @@ scrollBarConfig();
         List.generate(count*2, (value) => GlobalKey());
     return Padding(
       padding: EdgeInsets.all(0.0),
-      child: ListView.separated(
-        itemCount: count,
+      child: AnimatedList(
+        key: _listKey,
+        initialItemCount: count,
         scrollDirection: Axis.vertical,
         controller: _scrollController,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (BuildContext context, int index,Animation anim) {
+       _listKey.currentState?? _listKey.currentState!.insertItem(index);
           List<String> itemTags = [];
 
           if (_isSearching && _searchQuery.text.isNotEmpty) {
@@ -253,135 +262,145 @@ scrollBarConfig();
           if (name.length > 22) {
             name = name.substring(0, 22) + '...';
           }
-          return Dismissible(
-            onDismissed:(_)  =>  onDismissed(dataBox,modelProducts,index),
-            key:Key( modelProducts!.slug.toString()+modelProducts!.id.toString()),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                splashColor: colorPrimary,
-                onTap: () => Navigator.push(
-                  context,
-                  PageRouteBuilder<Null>(
-                      pageBuilder: (BuildContext context, Animation<double> animation,
-                          Animation<double> secondaryAnimation) {
-                        return AnimatedBuilder(
-                            animation: animation,
-                            builder: (BuildContext context, Widget? child) {
-                              return Opacity(
-                                opacity: animation.value,
-                                child:ProductDetail(
-                                  modelProducts: modelProducts,tags: itemTags,) ,
-                              );
-                            });
-                      },
-                      transitionDuration: Duration(milliseconds: 500)),
+          return SlideTransition(
+            position: anim.drive(Tween(begin: Offset(1,0),end: Offset(0,0))),
+            child: Dismissible(
+
+              background: Padding(
+                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0),
+                child: Container(
+                  color: Colors.red[600],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 4.5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Row(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 4.5/6,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Hero(
-                                  tag: modelProducts!.name.toString()+modelProducts!.slug.toString(),
-                                  child: CachedNetworkImage(
-                                       placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'), imageUrl: modelProducts!.images != null && modelProducts!.images!.isNotEmpty  ? 'https://flk.sa/'+ modelProducts!.images![0] : 'jj' ,
-                                    fit: BoxFit.cover,
-                                  //  width: MediaQuery.of(context).size.width / 3.7,
-                                    height: MediaQuery.of(context).size.height / 4.5,
+              ),
+              onDismissed:(_)  =>  onDismissed(dataBox,modelProducts,index),
+              key:Key( modelProducts!.slug.toString()+modelProducts!.id.toString()),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  splashColor: colorPrimary,
+                  onTap: () => Navigator.push(
+                    context,
+                    PageRouteBuilder<Null>(
+                        pageBuilder: (BuildContext context, Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          return AnimatedBuilder(
+                              animation: animation,
+                              builder: (BuildContext context, Widget? child) {
+                                return Opacity(
+                                  opacity: animation.value,
+                                  child:ProductDetail(
+                                    modelProducts: modelProducts,tags: itemTags,) ,
+                                );
+                              });
+                        },
+                        transitionDuration: Duration(milliseconds: 500)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 4.5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Row(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 4.5/6,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Hero(
+                                    tag: modelProducts!.name.toString()+modelProducts!.slug.toString(),
+                                    child: CachedNetworkImage(
+                                         placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'), imageUrl: modelProducts!.images != null && modelProducts!.images!.isNotEmpty  ? 'https://flk.sa/'+ modelProducts!.images![0] : 'jj' ,
+                                      fit: BoxFit.cover,
+                                    //  width: MediaQuery.of(context).size.width / 3.7,
+                                      height: MediaQuery.of(context).size.height / 4.5,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              /*mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,*/
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width -
-                                      MediaQuery.of(context).size.width / 2.8,
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.only(
-                                        end: listPadding, top: listPadding * 1.2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment : CrossAxisAlignment.start,
-                                         // width: MediaQuery.of(context).size.width / 1.8,
-                                          children:[ Hero(
-                                            tag: modelProducts!.name.toString(),
-                                            child: Material(
-                                              child: Text(
-                                                modelProducts!.name!,
-                                                style: TextStyle(
-                                                    fontSize: Theme.of(context)
-                                                        .textTheme
-                                                        .headline3!
-                                                        .fontSize),
+                            Expanded(
+                              child: Column(
+                                /*mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,*/
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width -
+                                        MediaQuery.of(context).size.width / 2.8,
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                          end: listPadding, top: listPadding * 1.2),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment : CrossAxisAlignment.start,
+                                           // width: MediaQuery.of(context).size.width / 1.8,
+                                            children:[ Hero(
+                                              tag: modelProducts!.name.toString(),
+                                              child: Material(
+                                                child: Text(
+                                                  modelProducts!.name!,
+                                                  style: TextStyle(
+                                                      fontSize: Theme.of(context)
+                                                          .textTheme
+                                                          .headline3!
+                                                          .fontSize),
+                                                ),
                                               ),
                                             ),
+                                              SizedBox(height: 12.0,),
+                                              Text(
+                                                modelProducts!.price! + ' '+sharedPrefs.exertedPriceUnitKey,
+                                                style: TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                          ]),
+                                          Spacer(
+                                            flex: 1,
                                           ),
-                                            SizedBox(height: 12.0,),
-                                            Text(
-                                              modelProducts!.price! + ' '+sharedPrefs.exertedPriceUnitKey,
-                                              style: TextStyle(
-                                                  fontSize: 14.0),
-                                            ),
-                                        ]),
-                                        Spacer(
-                                          flex: 1,
-                                        ),
-                                        rateWidget(modelProducts!),
-                                      ],
+                                          rateWidget(modelProducts!),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Spacer(
-                                  flex: 1,
-                                ),
-                                /*SizedBox(
-                                  width: MediaQuery.of(context).size.width -
-                                      MediaQuery.of(context).size.width / 2.8,
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.only(
-                                        end: listPadding,
-                                        bottom: listPadding * 1.2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Spacer(
-                                          flex: 1,
-                                        ),
-                                        Text(
-                                          modelProducts!.price! + ' '+sharedPrefs.exertedPriceUnitKey,
-                                          style: TextStyle(
-                                              fontSize: 14.0),
-                                        ),
-                                        //  rateWidget(modelProducts, index),
-                                      ],
-                                    ),
+                                  Spacer(
+                                    flex: 1,
                                   ),
-                                ),*/
-                              ],
-                            ),
-                          )
-                        ],
+                                  /*SizedBox(
+                                    width: MediaQuery.of(context).size.width -
+                                        MediaQuery.of(context).size.width / 2.8,
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                          end: listPadding,
+                                          bottom: listPadding * 1.2),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            modelProducts!.price! + ' '+sharedPrefs.exertedPriceUnitKey,
+                                            style: TextStyle(
+                                                fontSize: 14.0),
+                                          ),
+                                          //  rateWidget(modelProducts, index),
+                                        ],
+                                      ),
+                                    ),
+                                  ),*/
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -390,7 +409,7 @@ scrollBarConfig();
             ),
           );
         },
-        separatorBuilder: (context, index) => new Divider(),
+      //  separatorBuilder: (context, index) => new Divider(),
       ),
     );
 
@@ -545,6 +564,9 @@ scrollBarConfig();
       list = dataBox!.values.where((element) => element.name!.contains(_searchQuery.text)).toList();
       if(list.isEmpty) {
         searchEmpty = true;
+      }
+      else{
+        searchEmpty = false;
       }
     });
   }

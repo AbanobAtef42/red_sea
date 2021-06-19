@@ -84,8 +84,8 @@ class Api {
   ///
   /// This API doesn't have a key but often, APIs do require authentication
   final String _url = 'flk.sa';
-  //static var uri = "https://flk.sa";
-  static var uri = "https://www.redsea5stars.net";
+  static var uri = "https://flk.sa";
+  static var uri3 = "https://www.redsea5stars.net";
   static var uri2 = "https://flkwatches.flk.sa";
   String? token ;
 
@@ -1183,7 +1183,7 @@ if(jsonResponse == null)
 
   }
   Future<ModelOrders?> getOrdersApi(String category) async {
-    final String url = uri + '/api/$category+&page=1';
+    final String url = uri + '/api/$category+&page=$orderPage';
     //print('order pageeeeeee'+ ' $orderPage');
     //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     //  final String token = sharedPreferences.getString('tokenKey');

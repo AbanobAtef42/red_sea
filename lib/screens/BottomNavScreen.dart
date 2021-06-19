@@ -26,6 +26,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart' as intl;
 
+import 'customwidgets/keepAliveWidget.dart';
+
 class BottomNavHost extends StatefulWidget {
   static String name = 'BottomNavHost';
   static String searchQueryFun = '';
@@ -42,11 +44,12 @@ class BottomNavHost extends StatefulWidget {
   _BottomNavHostState createState() => _BottomNavHostState();
 }
 
-class _BottomNavHostState extends State<BottomNavHost> with SingleTickerProviderStateMixin {
+class _BottomNavHostState extends State<BottomNavHost>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   String search = '';
   String catQry = '';
- late List<Widget> _pages;
+   List<Widget>? _pages;
   int index = -1;
   var _textDirection;
   late TabController _tabController;
@@ -55,10 +58,9 @@ class _BottomNavHostState extends State<BottomNavHost> with SingleTickerProvider
 
   PageController _pageController = PageController();
 
-  bool keep = true ;
+  bool keep = true;
   @override
   void initState() {
-
     index = widget.catIndex;
     _tabController = TabController(vsync: this, length: 4);
     if (widget.searchQueryLink != '' || widget.catQuery != '') {
@@ -81,8 +83,8 @@ class _BottomNavHostState extends State<BottomNavHost> with SingleTickerProvider
       _tabController.index = index;
       _selectedIndex = index;
 
-    //  _pageController.jumpToPage(index,);
-          //duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+      //  _pageController.jumpToPage(index,);
+      //duration: Duration(milliseconds: 500), curve: Curves.easeOut);
       search = '';
       catQry = '';
       this.index = 0;
@@ -96,21 +98,23 @@ class _BottomNavHostState extends State<BottomNavHost> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-
     if (_textDirection == null) {
       _textDirection =
           intl.Bidi.isRtlLanguage(Localizations.localeOf(context).languageCode)
               ? TextDirection.rtl
               : TextDirection.ltr;
     }
-_pages = <Widget>[
-  Home( ()=>goToCats()),
-  Categories(catQry, search, index,new Key('ggg')),
-  Account(),
-  Orders(),
-];
+    if(_pages == null) {
+      _pages = <Widget>[
+        KeepAlivePage(key: ValueKey<int>(0), child: Home(() => goToCats())),
+        KeepAlivePage(key: ValueKey<int>(1),
+            child: Categories(catQry, search, index, new Key('ggg'))),
+        Account(),
+        Orders(),
+      ];
+    }
     getDialogue(context);
-    print('catqryFunnnnnnn2'+ ' ' + catQry);
+    print('catqryFunnnnnnn2' + ' ' + catQry);
     return WillPopScope(
       onWillPop: () async {
         if (_selectedIndex != 0) {
@@ -121,16 +125,13 @@ _pages = <Widget>[
         return false;
       },
       child: Scaffold(
-
-        body:
-        IndexedStack(
+        body: IndexedStack(
           // controller: _tabController,
           // physics: NeverScrollableScrollPhysics(),
 
-          children: _pages,
-index: _selectedIndex,
+          children: _pages!,
+          index: _selectedIndex,
         ),
-
 
         /*Center(
           child: _widgetOptions.elementAt(_selectedIndex),
@@ -187,22 +188,17 @@ index: _selectedIndex,
       ),
     );
   }
-   goToCats( )
-  {
 
+  goToCats() {
     setState(() {
-
       search = BottomNavHost.searchQueryFun;
       catQry = BottomNavHost.catQueryFun;
       this.index = BottomNavHost.catsIndex;
       keep = false;
       _tabController.index = 1;
       this._selectedIndex = 1;
-      _pages.removeAt(1);
-      _pages.insert(1,Categories(catQry, search, index,GlobalKey()));
-
-
+      _pages!.removeAt(1);
+      _pages!.insert(1, Categories(catQry, search, index, GlobalKey()));
     });
-
   }
 }

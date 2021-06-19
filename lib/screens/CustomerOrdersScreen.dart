@@ -813,9 +813,11 @@ class _OrdersState extends State<Orders> {
           setState(() {
             modelSettings =
                 Provider.of<ProviderUser>(context, listen: false).modelSettings;
-            SharedPrefs().priceUnit(modelSettings!.data![0].value.toString());
-            SharedPrefs()
-                .exertedPriceUnit(modelSettings!.data![0].value.toString());
+           if( modelSettings!.data != null) {
+             SharedPrefs().priceUnit(modelSettings!.data![0].value.toString());
+             SharedPrefs()
+                 .exertedPriceUnit(modelSettings!.data![0].value.toString());
+           }
             // print(modelSettings!.data.toString()+'--------');
           });
         }
@@ -833,6 +835,7 @@ class _OrdersState extends State<Orders> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
+      print('dataaaaaaaaaaaa   $pageKey');
       final newItems = await _getOrdersData(context, pageKey);
       print('dataaaaaaaaaaaa');
       final isLastPage = newItems.length < _pageSize;

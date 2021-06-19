@@ -62,6 +62,7 @@ class _AccountState extends State<Account> {
     if (sharedPrefs.nameKey != null) {
       _nameController.text = sharedPrefs.nameKey;
     }
+    print( 'User Idddd' +sharedPrefs.getCurrentUserId.toString());
     emailController.text = sharedPrefs.mailKey;
     phoneController.text = sharedPrefs.phoneKey;
 

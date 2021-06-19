@@ -8,6 +8,7 @@ import 'package:flutter_app8/models/ModelProducts.dart';
 import 'package:flutter_app8/values/api.dart';
 
 class ProviderHome with ChangeNotifier {
+  bool isLastPage = false;
   ModelAds? modelAds = new ModelAds();
   ModelCats? modelCats = new ModelCats();
   ModelCats? modelCats2 = new ModelCats();
@@ -25,6 +26,8 @@ String? sentOrder;
   bool? loadingCats;
 
   String? state;
+
+  int pageKey = 1;
 
   getAds() async {
     final Api api = Api();
@@ -102,8 +105,16 @@ String? sentOrder;
     index = this.index1;
     notifyListeners();
   }
-  getHomeState(bool newItemsDeleted , int proId){
-    this.newItemDeleted = newItemsDeleted;
-    this.proId = proId;
+  getHomeState(){
+
+    notifyListeners();
+  }
+  setIsLastPage(bool isLast){
+    this.isLastPage = isLast;
+    notifyListeners();
+  }
+  setPageKey(int pageKey){
+    this.pageKey = pageKey;
+    notifyListeners();
   }
 }
