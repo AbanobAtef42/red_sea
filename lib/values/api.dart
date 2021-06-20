@@ -583,6 +583,7 @@ if(jsonResponse == null)
 
   productsApi(String category, String? catQuery, String trendQuery,
       String searchQuery) async {
+    print('productPage $productPage');
     try {
       final String url = uri +
           '/api/$category?' +

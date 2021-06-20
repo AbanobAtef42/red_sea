@@ -76,9 +76,9 @@ class _HomeState extends State<Home> {*/
   FocusNode focusNode = FocusNode();
   ScrollController _scrollController = new ScrollController();
   static const int _pageSize = 10;
-  int pageKey = 2;
+  int pageKey = 1;
   final PagingController<int, Datum> _pagingController =
-  PagingController(firstPageKey: 0);
+  PagingController(firstPageKey:1);
   late var provider;
   late var provider2;
   late List<bool> _isFavorited;
@@ -112,13 +112,12 @@ class _HomeState extends State<Home> {*/
     boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
     _getPriceUnit(context, 'admin.\$');
     // _current = Provider.of<ProviderHome>(context).currentAdIndex;
-    _getProducts(context, 1);
-    _fetchPage(1, context);
-    /*_pagingController.addPageRequestListener((pageKey) {
 
-        _fetchPage(this.pageKey, context);
+ // _pagingController.addPageRequestListener((pageKey) {
 
-    });*/
+ // });
+
+
     modelSettings =
         Provider.of<ProviderUser>(context, listen: false).modelSettings;
     modelAds = Provider.of<ProviderHome>(context, listen: false).modelAds;
@@ -130,6 +129,8 @@ class _HomeState extends State<Home> {*/
         modelSettings == null) {
       _getPriceUnit(context, 'admin.\$');
       _getAds(context);
+      //_getProducts(context, 1);
+      _fetchPage(1, context,false);
     //  _getCats(context);
      // _getProducts(context, this.pageKey);
     }
@@ -236,12 +237,22 @@ class _HomeState extends State<Home> {*/
           radius: Radius.circular(8.0),
           child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollNotification ){
+            //  _pagingController.addPageRequestListener((pageKey) {
               if(scrollNotification is ScrollEndNotification &&
                   scrollNotification.metrics.extentAfter == 0 && !_providerHome!.isLastPage){
                // _providerHome!.setPageKey(++_providerHome!.pageKey);
-                _fetchPage(_providerHome!.pageKey, context);
+                int key = _providerHome!.pageKey;
+                print('pageKeyProvider  $key');
+
+
+                  _fetchPage(++pageKey, context,false);
+
+
+
+
 
               }
+                   // });
               return true;
             },
             child: RefreshIndicator(
@@ -249,9 +260,17 @@ class _HomeState extends State<Home> {*/
 
                     () {
                       _providerHome!.setIsLastPage(false);
-                      //_providerHome!.setPageKey(1);
+                    //  _providerHome!.setPageKey(1);
                          this.pageKey = 1;
-                      _pagingController.refresh();}
+                      //_pagingController.itemList!.clear();
+
+                      _fetchPage(1, context,true);
+                     // _pagingController.refresh();
+                      //_pagingController.itemList = [];
+
+
+
+                    }
               ),
               child: SingleChildScrollView(
                 controller: _scrollController,
@@ -308,6 +327,7 @@ class _HomeState extends State<Home> {*/
   }
 
   Future<List<Datum>> _getProducts(BuildContext context, int page) async {
+    Api.context = context;
     Api.productPage = page;
     provider = Provider.of<ProviderHome>(context, listen: false);
 
@@ -318,7 +338,7 @@ class _HomeState extends State<Home> {*/
       modelProducts = provider.modelProducts;
     });*/
     // }
-    return modelProducts!.data != null ?  modelProducts!.data!.toList():[];
+    return /*modelProducts!.data != null ? */ _providerHome!.modelProducts.data!.toList();/*:[];*/
   }
 
   Widget getAppWidget(BuildContext context) {
@@ -699,29 +719,43 @@ class _HomeState extends State<Home> {*/
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
-  Future<void> _fetchPage(int pageKey, BuildContext context) async {
+  Future<void> _fetchPage(int pageKey, BuildContext context,bool refresh) async {
+
+
     try {
       print('pagekeyssss  $pageKey');
       print('pagekeyssss this'+this.pageKey.toString());
+
       final newItems = await _getProducts(context, pageKey);
 
+      /*_pagingController.value = PagingState(
+          nextPageKey: pageKey++,
+          itemList: newItems );
+*/
+      if(refresh){
+        _pagingController.value = PagingState(
+             nextPageKey: ++pageKey,
+            itemList: newItems );
+        //_pagingController.itemList = newItems;
+      }
       // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
+      if (isLastPage && !refresh) {
 
         _pagingController.appendLastPage(newItems);
        // _providerHome!.setPageKey(1);
         _providerHome!.setIsLastPage(true);
 
-      } else {
+      } else if(!refresh)  {
         //_providerHome!.setPageKey(++_providerHome!.pageKey);
         //_providerHome!.setPageKey(++pageKey);
         final nextPageKey = _providerHome!.pageKey;
-       // _providerHome!.setPageKey(++_providerHome!.pageKey);
+print('execmorethan1   $nextPageKey');
         _pagingController.appendPage(newItems, nextPageKey.toInt());
 
+
       }
-      _providerHome!.setPageKey(++pageKey);
+     // _providerHome!.setPageKey(++pageKey);
     } catch (error) {
       _pagingController.error = error;
       Fluttertoast.showToast(
@@ -812,8 +846,10 @@ class _HomeState extends State<Home> {*/
       width: MediaQuery.of(context).size.width / 2,
       child: MyButton(
           onClicked: () async {
-            pageKey = 1;
-           // _pagingController.refresh();
+           // pageKey = 1;
+           // _fetchPage(1, context);
+            _providerHome!.setPageKey(1);
+            _pagingController.refresh();
           },
           child: Row(
             children: [
@@ -1007,7 +1043,7 @@ class _HomeState extends State<Home> {*/
 
   Icon onIconHeartStart(Datum modelProduct, int index) {
     bool isFavourite = _isFavorited[index];
-    print('fffffffffffdddd');
+   // print('fffffffffffdddd');
     List<Datum?> datums = boxFavs!.values
         .where((element) => element.id == modelProduct.id)
         .toList();
@@ -1016,7 +1052,7 @@ class _HomeState extends State<Home> {*/
     }
 
     if (_isFavorited[index]) {
-      print('ffffffffffffff');
+     // print('ffffffffffffff');
 
       Icon _iconHeart = new Icon(
         CupertinoIcons.heart_fill,
