@@ -54,6 +54,8 @@ class Home extends StatelessWidget {
   static ModelProducts modelProducts;*/
   final Function goToCats;
 
+   ProviderUser? _providerUser;
+
   Home(this.goToCats);
 
   /*@override
@@ -78,7 +80,7 @@ class _HomeState extends State<Home> {*/
   static const int _pageSize = 10;
   int pageKey = 1;
   final PagingController<int, Datum> _pagingController =
-  PagingController(firstPageKey:1);
+      PagingController(firstPageKey: 1);
   late var provider;
   late var provider2;
   late List<bool> _isFavorited;
@@ -94,8 +96,6 @@ class _HomeState extends State<Home> {*/
 
   late List<GlobalKey<State<StatefulWidget>>> tags;
 
-
-
   late ProviderHome newItemDeleted;
 
   bool isLoading = true;
@@ -105,7 +105,6 @@ class _HomeState extends State<Home> {*/
   bool? isExistFav;
 
   void initState(BuildContext context) {
-
     _isFavorited = [];
     _favoriteIds = [];
 
@@ -113,10 +112,8 @@ class _HomeState extends State<Home> {*/
     _getPriceUnit(context, 'admin.\$');
     // _current = Provider.of<ProviderHome>(context).currentAdIndex;
 
- // _pagingController.addPageRequestListener((pageKey) {
-
- // });
-
+    // _pagingController.addPageRequestListener((pageKe
+    // });
 
     modelSettings =
         Provider.of<ProviderUser>(context, listen: false).modelSettings;
@@ -130,9 +127,9 @@ class _HomeState extends State<Home> {*/
       _getPriceUnit(context, 'admin.\$');
       _getAds(context);
       //_getProducts(context, 1);
-      _fetchPage(1, context,false);
-    //  _getCats(context);
-     // _getProducts(context, this.pageKey);
+      _fetchPage(1, context, false);
+      //  _getCats(context);
+      // _getProducts(context, this.pageKey);
     }
     /*tags =
         List.generate(2, (value) => GlobalKey());*/
@@ -186,9 +183,11 @@ class _HomeState extends State<Home> {*/
     if (listPadding == null) {
       listPadding = MediaQuery.of(context).size.width / 25;
     }
-    if(_providerHome == null)
-    {
-      _providerHome = Provider.of<ProviderHome>(context,listen: false);
+    if (_providerHome == null) {
+      _providerHome = Provider.of<ProviderHome>(context, listen: false);
+    }
+    if (_providerUser == null) {
+      _providerUser = Provider.of<ProviderUser>(context, listen: false);
     }
     modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
@@ -199,19 +198,27 @@ class _HomeState extends State<Home> {*/
     return StatefulWrapper(
       onInit: () => initState(context),
       child: Scaffold(
-        appBar:
-        AppBar(
+        appBar: AppBar(
           centerTitle: true,
-
           elevation: 0,
           toolbarHeight: toolbarHeight,
           actions: [
-            IconButton(icon:Icon( Icons.search,color: Colors.black,), onPressed:()=> _showSearch),
-            IconButton(icon:Icon( CupertinoIcons.heart_fill,color: Colors.black,), onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Favourites() ),
-            ),),
-
+            IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.black,
+                ),
+                onPressed: () => _showSearch(context)),
+            IconButton(
+              icon: Icon(
+                CupertinoIcons.heart_fill,
+                color: Colors.black,
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Favourites()),
+              ),
+            ),
           ],
           leading: IconButton(
             icon: Icon(
@@ -225,63 +232,60 @@ class _HomeState extends State<Home> {*/
           ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
-          title:
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:[ Text('Red Sea',style: TextStyle(color: Colors.black,fontSize: 16.0),) ,SizedBox(width: 8.0,),
-                Image.asset("assets/redsea2.png",height: 40.0,), ]),),
+          title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              'Red Sea',
+              style: TextStyle(color: Colors.black, fontSize: 16.0),
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            Image.asset(
+              "assets/redsea2.png",
+              height: 40.0,
+            ),
+          ]),
+        ),
         body: RawScrollbar(
           thumbColor: colorPrimary,
           isAlwaysShown: isAlwaysShown,
           controller: _scrollController,
           radius: Radius.circular(8.0),
           child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollNotification ){
-            //  _pagingController.addPageRequestListener((pageKey) {
-              if(scrollNotification is ScrollEndNotification &&
-                  scrollNotification.metrics.extentAfter == 0 && !_providerHome!.isLastPage){
-               // _providerHome!.setPageKey(++_providerHome!.pageKey);
+            onNotification: (ScrollNotification scrollNotification) {
+              //  _pagingController.addPageRequestListener((pageKey) {
+              if (scrollNotification is ScrollEndNotification &&
+                  scrollNotification.metrics.extentAfter == 0 &&
+                  !_providerHome!.isLastPage) {
+                // _providerHome!.setPageKey(++_providerHome!.pageKey);
                 int key = _providerHome!.pageKey;
                 print('pageKeyProvider  $key');
 
-
-                  _fetchPage(++pageKey, context,false);
-
-
-
-
-
+                _fetchPage(++pageKey, context, false);
               }
-                   // });
+              // });
               return true;
             },
             child: RefreshIndicator(
-              onRefresh: () => Future.sync(
+              onRefresh: () => Future.sync(() {
+                _providerHome!.setIsLastPage(false);
+                //  _providerHome!.setPageKey(1);
+                this.pageKey = 1;
+                //_pagingController.itemList!.clear();
 
-                    () {
-                      _providerHome!.setIsLastPage(false);
-                    //  _providerHome!.setPageKey(1);
-                         this.pageKey = 1;
-                      //_pagingController.itemList!.clear();
-
-                      _fetchPage(1, context,true);
-                     // _pagingController.refresh();
-                      //_pagingController.itemList = [];
-
-
-
-                    }
-              ),
+                _fetchPage(1, context, true);
+                // _pagingController.refresh();
+                //_pagingController.itemList = [];
+              }),
               child: SingleChildScrollView(
                 controller: _scrollController,
-
                 child: Column(
                   /*crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,*/
                   children: [
                     Container(
-                      // height: statusBarHeight,
-                    ),
+                        // height: statusBarHeight,
+                        ),
                     getScreenUi(context),
                   ],
                 ),
@@ -338,7 +342,8 @@ class _HomeState extends State<Home> {*/
       modelProducts = provider.modelProducts;
     });*/
     // }
-    return /*modelProducts!.data != null ? */ _providerHome!.modelProducts.data!.toList();/*:[];*/
+    return /*modelProducts!.data != null ? */ _providerHome!.modelProducts.data!
+        .toList(); /*:[];*/
   }
 
   Widget getAppWidget(BuildContext context) {
@@ -355,14 +360,14 @@ class _HomeState extends State<Home> {*/
     if (isLoading) {
       //  hideScrollBar();
       return
-        //  MyTextWidgetLabel('loading.....', 'l', Colors.black, textLabelSize);
+          //  MyTextWidgetLabel('loading.....', 'l', Colors.black, textLabelSize);
 
-        Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            CircularProgressIndicator(),
-          ]),
-        );
+          Container(
+        height: MediaQuery.of(context).size.height,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          CircularProgressIndicator(),
+        ]),
+      );
     } else {
       List<Datum> products;
       // scrollBarConfig();
@@ -388,133 +393,133 @@ class _HomeState extends State<Home> {*/
         // 'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
         // 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
       ];
-      return
-         Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CarouselSlider2(modelAds: modelAds!,context: context,),
-              Container(
-                //color: colorPrimary,
-                height: 30.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0, left: 10.0),
-                child: PagedGridView<int, Datum>(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 100 / 170,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 2,
-                  ),
-                  pagingController: _pagingController,
-                  shrinkWrap: true,
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CarouselSlider2(
+              modelAds: modelAds!,
+              context: context,
+            ),
+            Container(
+              //color: colorPrimary,
+              height: 30.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+              child: PagedGridView<int, Datum>(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 100 / 170,
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                ),
+                pagingController: _pagingController,
+                shrinkWrap: true,
                 //  physics:AlwaysScrollableScrollPhysics() ,
-                    physics: NeverScrollableScrollPhysics(),
-                  builderDelegate: PagedChildBuilderDelegate<Datum>(
-                    itemBuilder: (context, modelProducts, index) {
-                      List<String> itemTags = [];
-                      /*itemTags.add(
+                physics: NeverScrollableScrollPhysics(),
+                builderDelegate: PagedChildBuilderDelegate<Datum>(
+                  itemBuilder: (context, modelProducts, index) {
+                    List<String> itemTags = [];
+                    /*itemTags.add(
                           products[index % products.length].slug
                               .toString());
                       itemTags.add(
                           products[index % products.length].name
                               .toString());*/
-                      String name = modelProducts.name!;
-                      if (name.length > 22) {
-                        name = name.substring(0, 22) + '...';
-                      }
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: colorPrimary,
-                          onTap: () => Navigator.push(
-                            context,
-                            PageRouteBuilder<Null>(
-                                pageBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secondaryAnimation) {
-                                  return AnimatedBuilder(
-                                      animation: animation,
-                                      builder: (BuildContext context,
-                                          Widget? child) {
-                                        return Opacity(
-                                          opacity: animation.value,
-                                          child: ProductDetail(
-                                            modelProducts: modelProducts,
-                                            tags: itemTags,
-                                          ),
-                                        );
-                                      });
-                                },
-                                transitionDuration:
-                                Duration(milliseconds: 500)),
-                          ),
-                          child: _buildItem(
-                              modelProducts, products, index, context),
+                    String name = modelProducts.name!;
+                    if (name.length > 22) {
+                      name = name.substring(0, 22) + '...';
+                    }
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: colorPrimary,
+                        onTap: () => Navigator.push(
+                          context,
+                          PageRouteBuilder<Null>(
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation) {
+                                return AnimatedBuilder(
+                                    animation: animation,
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      return Opacity(
+                                        opacity: animation.value,
+                                        child: ProductDetail(
+                                          modelProducts: modelProducts,
+                                          tags: itemTags,
+                                        ),
+                                      );
+                                    });
+                              },
+                              transitionDuration: Duration(milliseconds: 500)),
                         ),
-                      );
-                    },
-                    firstPageErrorIndicatorBuilder: (context) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: MediaQuery.of(context).size.height / 4,
+                        child:
+                            _buildItem(modelProducts, products, index, context),
+                      ),
+                    );
+                  },
+                  firstPageErrorIndicatorBuilder: (context) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 4,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Icon(
+                                  Icons.error_outline_outlined,
+                                  color: Colors.red,
+                                )),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 1.4,
                               child: FittedBox(
                                   fit: BoxFit.contain,
-                                  child: Icon(
-                                    Icons.error_outline_outlined,
-                                    color: Colors.red,
-                                  )),
-                            ),
-                            Container(
-                                width: MediaQuery.of(context).size.width / 1.4,
-                                child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: RichText(
-                                      textAlign: TextAlign.center,
-                                      text: TextSpan(
-                                          text: S
-                                              .of(context)
-                                              .anUnknownErrorOccuredn +
-                                              '\n',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .copyWith(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold),
-                                          children: [
-                                            TextSpan(
-                                                text: S
-                                                    .of(context)
-                                                    .plzChknternetConnection +
-                                                    '\n' +
-                                                    S.of(context).tryAgain,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6!
-                                                    .copyWith(height: 2))
-                                          ]),
-                                    ))),
-                            SizedBox(
-                              height: 12.0,
-                            ),
-                            retryButtonListWidget(context),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        text: S
+                                                .of(context)
+                                                .anUnknownErrorOccuredn +
+                                            '\n',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(
+                                                height: 1,
+                                                fontWeight: FontWeight.bold),
+                                        children: [
+                                          TextSpan(
+                                              text: S
+                                                      .of(context)
+                                                      .plzChknternetConnection +
+                                                  '\n' +
+                                                  S.of(context).tryAgain,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6!
+                                                  .copyWith(height: 2))
+                                        ]),
+                                  ))),
+                          SizedBox(
+                            height: 12.0,
+                          ),
+                          retryButtonListWidget(context),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
-            ]);
-
+            ),
+          ]);
     }
   }
 
@@ -562,11 +567,10 @@ class _HomeState extends State<Home> {*/
   }
 
   getScreenUi(BuildContext context) {
-    if (!internet &&
-        (modelAds == null || modelCats == null || modelProducts == null) ||
+    if (!internet && (modelAds == null || modelProducts == null) ||
         (modelCats != null &&
-            modelCats!.path == 'noint' &&
-            (modelAds == null || modelProducts == null)) &&
+                modelCats!.path == 'noint' &&
+                (modelAds == null || modelProducts == null)) &&
             !dataLoaded) {
       // hideScrollBar();
       return Container(
@@ -596,9 +600,9 @@ class _HomeState extends State<Home> {*/
         ),
       );
     } else if ((modelAds != null &&
-        modelCats != null &&
-        modelProducts != null &&
-        modelSettings != null) &&
+            modelCats != null &&
+            modelProducts != null &&
+            modelSettings != null) &&
         (modelAds!.path == 'slint' ||
             modelCats!.path == 'slint' ||
             modelProducts!.path == 'slint' ||
@@ -674,15 +678,18 @@ class _HomeState extends State<Home> {*/
       // setState(() {
       if (sharedPrefs.exertedPriceUnitKey.isEmpty) {
         // setState(() {
-        modelSettings = null;
+        _providerUser!.modelSettings = null;
         internet = false;
         // });
       } else {
         print('shared setting price');
-        modelSettings = new ModelSetting();
+        _providerUser!.modelSettings =
+            new ModelSetting();
+
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.exertedPriceUnitKey));
-        modelSettings!.data = datums;
+        _providerUser!.modelSettings!.data = datums;
+        _providerUser!.notifyListeners();
       }
       //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
       //  });
@@ -694,12 +701,15 @@ class _HomeState extends State<Home> {*/
 
         // if (this.mounted) {
         // setState(() {
-        modelSettings =
-            Provider.of<ProviderUser>(context, listen: false).modelSettings;
-        if( modelSettings!.data != null) {
-          SharedPrefs().priceUnit(modelSettings!.data![0].value.toString());
+        //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
+        if (Provider.of<ProviderUser>(context, listen: false)
+                .modelSettings!
+                .data !=
+            null) {
+          SharedPrefs().priceUnit(_providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs()
-              .exertedPriceUnit(modelSettings!.data![0].value.toString());
+              .exertedPriceUnit(_providerUser!.modelSettings!.data![0].value.toString());
+          print('priceunitttt' + modelSettings!.data![0].value.toString());
         }
         // print(modelSettings!.data.toString()+'--------');
         // });
@@ -707,10 +717,10 @@ class _HomeState extends State<Home> {*/
       } else {
         // setState(() {
         print('shared setting price');
-        modelSettings = new ModelSetting();
+        _providerUser!.modelSettings = new ModelSetting();
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.priceUnitKey));
-        modelSettings!.data = datums;
+        _providerUser!.modelSettings!.data = datums;
         // });
       }
     }
@@ -719,12 +729,11 @@ class _HomeState extends State<Home> {*/
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
-  Future<void> _fetchPage(int pageKey, BuildContext context,bool refresh) async {
-
-
+  Future<void> _fetchPage(
+      int pageKey, BuildContext context, bool refresh) async {
     try {
       print('pagekeyssss  $pageKey');
-      print('pagekeyssss this'+this.pageKey.toString());
+      print('pagekeyssss this' + this.pageKey.toString());
 
       final newItems = await _getProducts(context, pageKey);
 
@@ -732,30 +741,25 @@ class _HomeState extends State<Home> {*/
           nextPageKey: pageKey++,
           itemList: newItems );
 */
-      if(refresh){
-        _pagingController.value = PagingState(
-             nextPageKey: ++pageKey,
-            itemList: newItems );
+      if (refresh) {
+        _pagingController.value =
+            PagingState(nextPageKey: ++pageKey, itemList: newItems);
         //_pagingController.itemList = newItems;
       }
       // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage && !refresh) {
-
         _pagingController.appendLastPage(newItems);
-       // _providerHome!.setPageKey(1);
+        // _providerHome!.setPageKey(1);
         _providerHome!.setIsLastPage(true);
-
-      } else if(!refresh)  {
+      } else if (!refresh) {
         //_providerHome!.setPageKey(++_providerHome!.pageKey);
         //_providerHome!.setPageKey(++pageKey);
         final nextPageKey = _providerHome!.pageKey;
-print('execmorethan1   $nextPageKey');
+        print('execmorethan1   $nextPageKey');
         _pagingController.appendPage(newItems, nextPageKey.toInt());
-
-
       }
-     // _providerHome!.setPageKey(++pageKey);
+      // _providerHome!.setPageKey(++pageKey);
     } catch (error) {
       _pagingController.error = error;
       Fluttertoast.showToast(
@@ -769,22 +773,22 @@ print('execmorethan1   $nextPageKey');
 
   Widget getDiscountWidget(Datum modelProduct) {
     return (modelProduct != null &&
-        modelProduct.discount != 'null' &&
-        int.parse(modelProduct.discount.toString()) != 0)
+            modelProduct.discount != 'null' &&
+            int.parse(modelProduct.discount.toString()) != 0)
         ? RichText(
-        text: TextSpan(
-          text: (double.parse(modelProduct.price!) +
-              double.parse(modelProduct.discount!))
-              .toString(),
-          style: TextStyle(
-              fontSize: 14.0,
-              decoration: TextDecoration.lineThrough,
-              decorationColor: Colors.red,
-              decorationThickness: 2,
-              color: Colors.black45,
-              decorationStyle: TextDecorationStyle.solid,
-              height: 1.2),
-          /* children: [
+            text: TextSpan(
+            text: (double.parse(modelProduct.price!) +
+                    double.parse(modelProduct.discount!))
+                .toString(),
+            style: TextStyle(
+                fontSize: 14.0,
+                decoration: TextDecoration.lineThrough,
+                decorationColor: Colors.red,
+                decorationThickness: 2,
+                color: Colors.black45,
+                decorationStyle: TextDecorationStyle.solid,
+                height: 1.2),
+            /* children: [
                */ /* TextSpan(
                     text: ' ' + modelSettings!.data![0].value.toString(),
                     style: TextStyle(
@@ -794,10 +798,10 @@ print('execmorethan1   $nextPageKey');
                         decorationStyle: TextDecorationStyle.solid,
                         height: 1.2)),*/ /*
               ]*/
-        )
+          )
 
-      //
-    )
+            //
+            )
         : Text('');
   }
 
@@ -846,8 +850,8 @@ print('execmorethan1   $nextPageKey');
       width: MediaQuery.of(context).size.width / 2,
       child: MyButton(
           onClicked: () async {
-           // pageKey = 1;
-           // _fetchPage(1, context);
+            // pageKey = 1;
+            // _fetchPage(1, context);
             _providerHome!.setPageKey(1);
             _pagingController.refresh();
           },
@@ -875,142 +879,137 @@ print('execmorethan1   $nextPageKey');
     }
     _isFavorited.insert(index, false);
     _favoriteIds.insert(index, modelProducts.id!);
-    return  Selector<ProviderHome,ModelProducts>(
-        selector: (buildContext , countPro){
-          return ModelProducts();
-        },
-        builder:(context, data,child) {
-          return Container(
-            margin:
+    return Selector<ProviderHome, ModelProducts>(
+        selector: (buildContext, countPro) {
+      return ModelProducts();
+    }, builder: (context, data, child) {
+      return Container(
+        margin:
             EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
-            // width: MediaQuery.of(context).size.width/1.2,
-            //height: MediaQuery.of(context).size.height / 2.9,
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Column(
-                children: [
-                  Stack(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(0.0),
-                        child: Hero(
-                          tag: modelProducts.name.toString() +
-                              modelProducts.slug.toString(),
-                          child: CachedNetworkImage(
-                            placeholder: (con, str) =>
-                                Image.asset('images/plcholder.jpeg'),
-                            imageUrl: modelProducts.images!.isNotEmpty
-                                ? 'https://flk.sa/' + modelProducts.images![0]
-                                : 'jj',
-                            fit: BoxFit.cover,
-                            // width: MediaQuery.of(context).size.width / 3.7,
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 5,
-                          ),
-                        ),
+        // width: MediaQuery.of(context).size.width/1.2,
+        //height: MediaQuery.of(context).size.height / 2.9,
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            children: [
+              Stack(children: [
+                Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(0.0),
+                    child: Hero(
+                      tag: modelProducts.name.toString() +
+                          modelProducts.slug.toString(),
+                      child: CachedNetworkImage(
+                        placeholder: (con, str) =>
+                            Image.asset('images/plcholder.jpeg'),
+                        imageUrl: modelProducts.images!.isNotEmpty
+                            ? 'https://flk.sa/' + modelProducts.images![0]
+                            : 'jj',
+                        fit: BoxFit.cover,
+                        // width: MediaQuery.of(context).size.width / 3.7,
+                        height: MediaQuery.of(context).size.height / 5,
                       ),
                     ),
-                    getDiscRate(modelProducts),
-                    Positioned(
-                      left: 15,
-                      top: 15,
-                      child: GestureDetector(
-                        onTap: () {
-                          onIconHeartClick(modelProducts, index,context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              border: Border()),
-                          child: onIconHeartStart(modelProducts, index),
-                        ),
-                      ),
+                  ),
+                ),
+                getDiscRate(modelProducts),
+                Positioned(
+                  left: 15,
+                  top: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      onIconHeartClick(modelProducts, index, context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border()),
+                      child: onIconHeartStart(modelProducts, index),
                     ),
-                  ]),
-                  Container(
-                    // color: Colors.grey[50],
-                    decoration: new BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border(
-                            right: BorderSide(),
-                            left: BorderSide(),
-                            bottom: BorderSide())),
-                    padding: EdgeInsetsDirectional.only(top: 12.0, bottom: 18.0),
-                    child: Column(
-                      /*mainAxisAlignment: MainAxisAlignment.start,
+                  ),
+                ),
+              ]),
+              Container(
+                // color: Colors.grey[50],
+                decoration: new BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border(
+                        right: BorderSide(),
+                        left: BorderSide(),
+                        bottom: BorderSide())),
+                padding: EdgeInsetsDirectional.only(top: 12.0, bottom: 18.0),
+                child: Column(
+                  /*mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,*/
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.only(
-                              end: listPadding!, start: listPadding!),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                // width: MediaQuery.of(context).size.width / 1.8,
-                                child: Hero(
-                                  tag: modelProducts.name.toString(),
-                                  child: Material(
-                                    child: Text(
-                                      name,
-                                      style: TextStyle(
-                                          fontSize: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline3!
-                                              .fontSize),
-                                    ),
-                                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          end: listPadding!, start: listPadding!),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            // width: MediaQuery.of(context).size.width / 1.8,
+                            child: Hero(
+                              tag: modelProducts.name.toString(),
+                              child: Material(
+                                child: Text(
+                                  name,
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .headline3!
+                                          .fontSize),
                                 ),
                               ),
-                              Spacer(
-                                flex: 1,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          rateWidget(modelProducts, context),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          end: listPadding!,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // rateWidget(modelProducts),
+                            Spacer(
+                              flex: 1,
+                            ),
+                            Row(children: [
+                              Text(
+                                modelProducts.price! +
+                                    ' ' +
+                                    _providerUser!.modelSettings!.data![0].value!,
+                                style: TextStyle(fontSize: 14.0),
                               ),
-                              rateWidget(modelProducts, context),
-                            ],
-                          ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              getDiscountWidget(modelProducts),
+                            ])
+                          ],
                         ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        SizedBox(
-                          //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.only(
-                              end: listPadding!,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // rateWidget(modelProducts),
-                                Spacer(
-                                  flex: 1,
-                                ),
-                                Row(children: [
-                                  Text(
-                                    modelProducts.price! +
-                                        ' ' +
-                                        modelSettings!.data![0].value!,
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
-                                  SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  getDiscountWidget(modelProducts),
-                                ])
-                              ],
-                            ),
-                          ),
-                        ),
-                        /*Padding(
+                      ),
+                    ),
+                    /*Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Styles.getButton(
                           context,
@@ -1030,20 +1029,19 @@ print('execmorethan1   $nextPageKey');
                           () {},
                           Styles.getCartButtonStyle()),
                     )*/
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-    );
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Icon onIconHeartStart(Datum modelProduct, int index) {
     bool isFavourite = _isFavorited[index];
-   // print('fffffffffffdddd');
+    // print('fffffffffffdddd');
     List<Datum?> datums = boxFavs!.values
         .where((element) => element.id == modelProduct.id)
         .toList();
@@ -1052,7 +1050,7 @@ print('execmorethan1   $nextPageKey');
     }
 
     if (_isFavorited[index]) {
-     // print('ffffffffffffff');
+      // print('ffffffffffffff');
 
       Icon _iconHeart = new Icon(
         CupertinoIcons.heart_fill,
@@ -1072,7 +1070,7 @@ print('execmorethan1   $nextPageKey');
     }
   }
 
-  onIconHeartClick(Datum modelProducts, int index,BuildContext context) {
+  onIconHeartClick(Datum modelProducts, int index, BuildContext context) {
     print('fffffffffffdddd' + index.toString());
     Provider.of<ProviderHome>(context, listen: false).getHomeState();
     List<Datum?> datums = boxFavs!.values
@@ -1081,6 +1079,7 @@ print('execmorethan1   $nextPageKey');
     if (datums.length == 0) {
       print('ffffffffffffff');
       boxFavs!.add(modelProducts);
+      Provider.of<ProviderHome>(context,listen: false).notifyListeners();
       // setState(() {
       _isFavorited[index] = true;
       /*this._iconHeart = new Icon(
@@ -1098,29 +1097,30 @@ print('execmorethan1   $nextPageKey');
       Iterable<dynamic> key = boxFavs!.keys
           .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
       boxFavs!.delete(key.toList()[0]);
+      Provider.of<ProviderHome>(context,listen: false).notifyListeners();
       //  });
     }
   }
 
   getDiscRate(Datum modelProduct) {
     return (modelProduct != null &&
-        modelProduct.discount != 'null' &&
-        int.parse(modelProduct.discount.toString()) != 0)
+            modelProduct.discount != 'null' &&
+            int.parse(modelProduct.discount.toString()) != 0)
         ? Positioned(
-      right: 0,
-      top: 40,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius:
-            BorderRadius.only(topLeft: Radius.circular(15.0))),
-        child: Text(
-          '20%',
-          style: TextStyle(color: Colors.white, fontSize: 12.0),
-        ),
-      ),
-    )
+            right: 0,
+            top: 40,
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius:
+                      BorderRadius.only(topLeft: Radius.circular(15.0))),
+              child: Text(
+                '20%',
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
+              ),
+            ),
+          )
         : Text('');
   }
 }

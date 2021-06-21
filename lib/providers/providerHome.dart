@@ -9,11 +9,12 @@ import 'package:flutter_app8/values/api.dart';
 
 class ProviderHome with ChangeNotifier {
   bool isLastPage = false;
+  bool isLastPageCats = false;
   ModelAds? modelAds = new ModelAds();
   ModelCats? modelCats = new ModelCats();
   ModelCats? modelCats2 = new ModelCats();
   ModelProducts modelProducts = new ModelProducts();
-  ModelProducts modelProductsCats = new ModelProducts();
+  ModelProducts? modelProductsCats;
   ModelOrders? modelOrders;
   int index1 = 0;
    int proId = -1;
@@ -28,6 +29,7 @@ String? sentOrder;
   String? state;
 
   int pageKey = 2;
+  int pageKeyCats = 2;
 
   getAds() async {
     final Api api = Api();
@@ -113,8 +115,16 @@ String? sentOrder;
     this.isLastPage = isLast;
     notifyListeners();
   }
+  setIsLastPageCats(bool isLast){
+    this.isLastPage = isLast;
+    notifyListeners();
+  }
   setPageKey(int pageKey){
     this.pageKey = pageKey;
+    notifyListeners();
+  }
+  setPageKeyCats(int pageKey){
+    this.pageKeyCats = pageKey;
     notifyListeners();
   }
 }

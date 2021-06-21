@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/models/ModelProducts.dart';
 import 'package:flutter_app8/providers/providerHome.dart';
+import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/values/SharedPreferenceClass.dart';
 import 'package:flutter_app8/values/myConstants.dart';
@@ -30,6 +31,7 @@ class _FavouritesState extends State<Favourites> {
  late  ProviderHome newItemDeleted;
   List<Datum> list = [];
   bool isAlwaysShown = true;
+ late ProviderHome _providerHome;
   ScrollController _scrollController = new ScrollController();
   Widget? appBarTitle;
 
@@ -51,6 +53,7 @@ class _FavouritesState extends State<Favourites> {
   @override
   void initState() {
     super.initState();
+    //_providerHome = Provider.of<ProviderHome>(context);
     dataBox = Hive.box( sharedPrefs.mailKey + dataBoxNameFavs);
     list = dataBox.values.toList();
     newItemDeleted = Provider.of<ProviderHome>(context,listen: false);
@@ -584,7 +587,7 @@ children: List.generate(list.length, (index) {
                 top: 15,
                 child: GestureDetector(
                   onTap: () {
-                    onIconHeartClick(modelProducts);
+                    onIconHeartClick(modelProducts,context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
@@ -743,7 +746,7 @@ children: List.generate(list.length, (index) {
 
   }
 
-  onIconHeartClick(Datum modelProducts) {
+  onIconHeartClick(Datum modelProducts,BuildContext context) {
    // print('fffffffffffdddd' + index.toString());
     List<Datum?> datums = dataBox.values
         .where((element) => element.id == modelProducts.id)
@@ -751,6 +754,7 @@ children: List.generate(list.length, (index) {
     if (datums.length == 0 ) {
       print('ffffffffffffff');
       dataBox.add(modelProducts);
+      Provider.of<ProviderHome>(context,listen: false).notifyListeners();
       setState(() {
 
         /*this._iconHeart = new Icon(
@@ -759,6 +763,7 @@ children: List.generate(list.length, (index) {
         );*/
       });
     } else {
+      Provider.of<ProviderHome>(context,listen: false).notifyListeners();
       setState(() {
         /*this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
