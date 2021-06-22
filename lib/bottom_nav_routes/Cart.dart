@@ -434,7 +434,7 @@ scrollBarConfig();
             fit: BoxFit.contain,
             child: Icon(
               Icons.star_rate_rounded,
-              color: colorPrimary,
+              color: Colors.yellow[700],
               size: 14.0,
             ),
           ),

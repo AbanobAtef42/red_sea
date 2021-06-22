@@ -71,7 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return WillPopScope(
       onWillPop: ()async {
+        sharedPrefs.signedInThenOut(false);
         SystemNavigator.pop();
+
         return true;
       },
       child: SafeArea(
@@ -95,103 +97,106 @@ class _LoginScreenState extends State<LoginScreen> {
               key: _formKey,
               child: Center(
                 child: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Container(
+                   // height: MediaQuery.of(context).size.height,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
 
-                      children:[
-                        /*ClipPath(
-                          clipper: OvalBottomBorderClipper(),
-                          child: Container(
+                        children:[
+                          /*ClipPath(
+                            clipper: OvalBottomBorderClipper(),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 11,
+                              color: Colors.deepPurple,
+
+                            ),
+                          ),*/
+                          Container(
+                            height: MediaQuery.of(context).size.height / 6,
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 11,
-                            color: Colors.deepPurple,
+                            child:
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height /
+                                      registerTopViewHeight,
+                                  width: MediaQuery.of(context).size.height /
+                                      registerTopViewHeight,
+                                  child: Visibility(
+                                    visible: _visible,
+                                    child: CircularProgressIndicator(
+                                     // color: colorPrimary,
 
-                          ),
-                        ),*/
-                        Container(
-                          height: MediaQuery.of(context).size.height / 6,
-                          width: MediaQuery.of(context).size.width,
-                          child:
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height /
-                                    registerTopViewHeight,
-                                width: MediaQuery.of(context).size.height /
-                                    registerTopViewHeight,
-                                child: Visibility(
-                                  visible: _visible,
-                                  child: CircularProgressIndicator(
-                                   // color: colorPrimary,
-
+                                    ),
                                   ),
                                 ),
+                                SizedBox(height: 15.0,),
+                                Image.asset("assets/redsea2.png",height: 100.0,),
+                              ],
+                            ),
+                          ),
+                          SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+
+                              /*MyTextWidgetLabel(
+                                  S.of(context).loginLabel, "label", colorBorder, textLabelSize),*/
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height /
+                                      loginTextFieldLabelDivider),
+                              MyTextField(
+                                emailController,
+                                  S.of(context).email,
+                                Icons.person,
+                                false,
+                                " ",
+                                true,
+                                  TextInputType.emailAddress
                               ),
-                              SizedBox(height: 15.0,),
-                              Image.asset("assets/redsea2.png",height: 100.0,),
+                              SizedBox(height: 8), //MediaQuery.of(context).size.height / textFieldsDivider),
+                              MyTextField(
+                                passController,
+                                S.of(context).password,
+                                CupertinoIcons.eye_fill,
+                                true,
+                                "*",
+                                false,
+                                  TextInputType.visiblePassword
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: MyTextWidgetLabel(
+                                    S.of(context).forgotPassword, "l", colorBorder, 14.0),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height / textFieldButtonDividerLogin),
+                              MyButton(
+                                onClicked: () => onButtonClick(),
+                                child: Text(S.of(context).login),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height / textFieldButtonDividerLogin / 2),
+                              Styles.getButton(
+                                  context,
+                                  Text(
+                                    S.of(context).signupnow,
+                                    style: Styles.getTextAdsStyle(),
+                                  ),
+                                      ()=>goToRegister(),
+                                  Styles.getButtonCheckoutStyle()),
+                              SizedBox(height: MediaQuery.of(context).size.height / 4),
                             ],
                           ),
                         ),
-                        SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-
-                            /*MyTextWidgetLabel(
-                                S.of(context).loginLabel, "label", colorBorder, textLabelSize),*/
-                            SizedBox(
-                                height: MediaQuery.of(context).size.height /
-                                    loginTextFieldLabelDivider),
-                            MyTextField(
-                              emailController,
-                                S.of(context).email,
-                              Icons.person,
-                              false,
-                              " ",
-                              true,
-                                TextInputType.emailAddress
-                            ),
-                            SizedBox(height: 8), //MediaQuery.of(context).size.height / textFieldsDivider),
-                            MyTextField(
-                              passController,
-                              S.of(context).password,
-                              CupertinoIcons.eye_fill,
-                              true,
-                              "*",
-                              false,
-                                TextInputType.visiblePassword
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: MyTextWidgetLabel(
-                                  S.of(context).forgotPassword, "l", colorBorder, 14.0),
-                            ),
-                            SizedBox(
-                                height: MediaQuery.of(context).size.height / textFieldButtonDividerLogin),
-                            MyButton(
-                              onClicked: () => onButtonClick(),
-                              child: Text(S.of(context).login),
-                            ),
-                            SizedBox(
-                                height: MediaQuery.of(context).size.height / textFieldButtonDividerLogin / 2),
-                            Styles.getButton(
-                                context,
-                                Text(
-                                  S.of(context).signupnow,
-                                  style: Styles.getTextAdsStyle(),
-                                ),
-                                    ()=>goToRegister(),
-                                Styles.getButtonCheckoutStyle()),
-                            SizedBox(height: MediaQuery.of(context).size.height / 4),
-                          ],
-                        ),
-                      ),
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
               ),
@@ -210,6 +215,7 @@ if(kIsWeb && !await MyApplication.checkConnection())
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     if (!currentFocus.hasPrimaryFocus) {
+
       currentFocus.unfocus();
     }
     final FormState form = _formKey.currentState!;
@@ -255,8 +261,8 @@ if(kIsWeb && !await MyApplication.checkConnection())
             fontSize: textLabelSize);
       //  MyApplication.getDialogue(context, S.of(context).signed, '', DialogType.SUCCES);
         User? user = provider.modelUser!.user;
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1)));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,sharedPrefs.getCurrentUserLoggingHistory,'l')));
         // MyApplication.showAlertDialog(context, signed, '', '');
       }
     } else {

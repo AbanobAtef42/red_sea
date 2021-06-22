@@ -18,6 +18,7 @@ class SharedPrefs {
   String get getCurrentUserId => sharedPrefs!.getString(keyCurrentUserId) ?? "";
   bool get getCurrentUserSignedInStatus => sharedPrefs!.getBool(keySignedIn) ?? false;
   bool get getCurrentUserAppOpenTime => sharedPrefs!.getBool(keyFirstOpen) ?? true;
+  bool get getCurrentUserLoggingHistory => sharedPrefs!.getBool(keySignedInThenOut) ?? false;
 
   set token2(String value) {
     sharedPrefs!.setString(keyToken, value);
@@ -53,6 +54,9 @@ class SharedPrefs {
   void exertedPriceUnit(String unit) {
     sharedPrefs!.setString(keyExertedPriceUnit, unit);
   }
+  void signedInThenOut(bool signedOutAfterIn) {
+    sharedPrefs!.setBool(keySignedInThenOut, signedOutAfterIn);
+  }
 }
 
 final sharedPrefs =  SharedPrefs();
@@ -68,3 +72,4 @@ const String keyMail = "key_email";
 const String keyPhone = "key_phone";
 const String keyLang = "key_lang";
 const String keyCurrentUserId = "key_current_user_id";
+const String keySignedInThenOut = "key_signed_in_then_out";

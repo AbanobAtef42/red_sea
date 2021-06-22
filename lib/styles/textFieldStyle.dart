@@ -209,7 +209,7 @@ class _MyTextFieldState extends State<MyTextField>
                     ),
                     labelText: widget.labelText,
                     labelStyle: TextStyle(
-                        height: -10, fontSize: 14.0, color: colorBorder),
+                         fontSize: 14.0, color: colorBorder),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide.none,

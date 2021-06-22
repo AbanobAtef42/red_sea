@@ -427,8 +427,8 @@ children: List.generate(list.length, (index) {
             fit: BoxFit.contain,
             child: Icon(
               Icons.star_rate_rounded,
-              color: colorPrimary,
-              size: 14.0,
+              color: Colors.yellow[700],
+              size: 20.0,
             ),
           ),
           FittedBox(
@@ -704,25 +704,29 @@ children: List.generate(list.length, (index) {
       ),
     );
   }
-  getDiscRate(Datum modelProduct){
-    return (modelProduct != null &&
+  getDiscRate(Datum modelProduct) {
+    if (modelProduct != null &&
         modelProduct.discount != 'null' &&
-        int.parse(modelProduct.discount.toString()) != 0)
-        ? Positioned(
-      right: 0,
-      top: 40,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius:
-            BorderRadius.only(topLeft: Radius.circular(15.0))),
-        child: Text(
-          '20%',
-          style: TextStyle(color: Colors.white, fontSize: 12.0),
+        int.parse(modelProduct.discount.toString()) != 0) {
+      double disc = (( double.parse(modelProduct.discount!)) /double.parse(modelProduct.price!))*100 ;
+      int disc2 = disc.toInt();
+      return Positioned(
+        right: 0,
+        top: 40,
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0))),
+          child: Text(
+            '$disc2'+'%',
+            style: TextStyle(color: Colors.white, fontSize: 12.0),
+          ),
         ),
-      ),
-    ):Text('');
+      );
+    } else {
+      return Text('');
+    }
   }
 
   Icon onIconHeartStart(Datum modelProduct) {

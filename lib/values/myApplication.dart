@@ -111,7 +111,7 @@ class MyApplication {
         if(dialogType == DialogType.SUCCES)
         {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1)));
+              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,false,'c')));
         }
         },
       btnOkOnPress: () {},

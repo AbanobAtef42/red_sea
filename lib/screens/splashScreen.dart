@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
       else*/ if(sharedPrefs.getCurrentUserSignedInStatus)
       {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1)));
+            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,sharedPrefs.getCurrentUserLoggingHistory,'s')));
       }
       else{
         Navigator.pushReplacement(

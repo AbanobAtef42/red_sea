@@ -80,6 +80,7 @@ Future<void> main() async {
     enabled: true,
     builder: (context) =>*/ MyApp(
       appLanguage: appLanguage,
+
     ), // Wrap your app
   );
  // );
@@ -183,7 +184,11 @@ class _MyAppState extends State<MyApp> {
                   ),
 
                   initialRoute: _latestLink == null ? SplashScreen.name : BottomNavHost.name,
+routes: <String, WidgetBuilder>{
 
+//  '/': (BuildContext context) =>  SplashScreen(),
+  '/login': (BuildContext context) =>  LoginScreen(),
+},
                   locale: locale,
                   localizationsDelegates: [
                     GlobalCupertinoLocalizations.delegate,
@@ -242,7 +247,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   debugShowCheckedModeBanner: false,
-                  home: _latestLink == null ? SplashScreen() : BottomNavHost(_latestLink!.replaceAll('https://foryou.flk.sa/store/', '').replaceAll('_', ' '),'',-1),
+                  home:/* _latestLink == null ?*/ SplashScreen(), //: BottomNavHost(_latestLink!.replaceAll('https://foryou.flk.sa/store/', '').replaceAll('_', ' '),'',-1),
                 ),
               ),
           );

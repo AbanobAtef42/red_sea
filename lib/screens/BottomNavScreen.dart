@@ -36,9 +36,11 @@ class BottomNavHost extends StatefulWidget {
   final String searchQuery = '';
   final String catQuery;
   final int catIndex;
+  final bool signedInOut;
+  final String routeToBotNavHost;
   final String searchQueryLink;
 
-  BottomNavHost(this.searchQueryLink, this.catQuery, this.catIndex);
+  BottomNavHost(this.searchQueryLink, this.catQuery, this.catIndex,this.signedInOut,this.routeToBotNavHost);
 
   @override
   _BottomNavHostState createState() => _BottomNavHostState();
@@ -73,8 +75,17 @@ class _BottomNavHostState extends State<BottomNavHost>
         //  _pageController.jumpToPage(1);
         // _pageController.animateToPage(1, duration: Duration(milliseconds: 0), curve: Curves.easeOut);
       });
-    }
 
+    }
+    if(_pages == null) {
+      _pages = <Widget>[
+        KeepAlivePage( key: ValueKey<int>(0), child: Home(widget.signedInOut,widget.routeToBotNavHost)),
+        KeepAlivePage(key: ValueKey<int>(1),
+            child: Categories(catQry, search, index, new Key('ggg'))),
+        KeepAlivePage( key: ValueKey<int>(2), child: Account()),
+        KeepAlivePage( key: ValueKey<int>(3), child: Orders()),
+      ];
+    }
     super.initState();
   }
 
@@ -83,7 +94,7 @@ class _BottomNavHostState extends State<BottomNavHost>
       _tabController.index = index;
       _selectedIndex = index;
 
-      //  _pageController.jumpToPage(index,);
+        _pageController.jumpToPage(index,);
       //duration: Duration(milliseconds: 500), curve: Curves.easeOut);
       search = '';
       catQry = '';
@@ -105,13 +116,7 @@ class _BottomNavHostState extends State<BottomNavHost>
               : TextDirection.ltr;
     }
     if(_pages == null) {
-      _pages = <Widget>[
-        KeepAlivePage(key: ValueKey<int>(0), child: Home(() => goToCats())),
-        KeepAlivePage(key: ValueKey<int>(1),
-            child: Categories(catQry, search, index, new Key('ggg'))),
-        Account(),
-        Orders(),
-      ];
+
     }
     getDialogue(context);
     print('catqryFunnnnnnn2' + ' ' + catQry);
@@ -125,12 +130,12 @@ class _BottomNavHostState extends State<BottomNavHost>
         return false;
       },
       child: Scaffold(
-        body: IndexedStack(
-          // controller: _tabController,
-          // physics: NeverScrollableScrollPhysics(),
+        body: PageView(
+           controller: _pageController,
+           physics: NeverScrollableScrollPhysics(),
 
           children: _pages!,
-          index: _selectedIndex,
+         // index: _selectedIndex,
         ),
 
         /*Center(
@@ -197,8 +202,8 @@ class _BottomNavHostState extends State<BottomNavHost>
       keep = false;
       _tabController.index = 1;
       this._selectedIndex = 1;
-      _pages!.removeAt(1);
-      _pages!.insert(1, Categories(catQry, search, index, GlobalKey()));
+    //  _pages!.removeAt(1);
+    //  _pages!.insert(1, Categories(catQry, search, index, GlobalKey()));
     });
   }
 }

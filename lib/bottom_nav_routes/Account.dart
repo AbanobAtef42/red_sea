@@ -640,28 +640,7 @@ class _AccountState extends State<Account> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0,),
-              GestureDetector(
-                onTap:(){SharedPrefs().signedIn(false);
-                Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        LoginScreen()),
-              );},
-                child: Container(
-                  padding: const EdgeInsetsDirectional.only(top: 16.0,bottom: 16.0),
-                  width: MediaQuery.of(context).size.width /1.2,
-                  decoration: BoxDecoration(color: Colors.grey[300],shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Center(child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
 
-                  Icon(Icons.logout,color: Colors.black,) ,
-                  Text(S.of(context).signOut,style: TextStyle(color: Colors.black,fontSize: 16.0,fontWeight: FontWeight.w600),)
-                ],)),
-                ),
-              ),
               SizedBox(height: 20.0,),
               MyButton(onClicked: ()=> Navigator.push(
                 context,
@@ -679,10 +658,41 @@ class _AccountState extends State<Account> {
               ),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children:[Icon(Icons.edit,color: Colors.white,),SizedBox(width: 8.0,), Text(S.of(context).editPass),]),)
-            ],
+                    children:[Icon(Icons.edit,color: Colors.white,),SizedBox(width: 8.0,), Text(S.of(context).editPass),]),),
+              SizedBox(height: 20.0,),
+             // Material(
+               /* color: Colors.transparent,
+                child: InkWell(
+                  splashColor: colorPrimary,
+                  onTap:(){
+                    *//*Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LoginScreen()),
+                );*//*},*/
+                   MyButton(
+                    onClicked: (){SharedPrefs().signedIn(false);
+                    sharedPrefs.signedInThenOut(true);
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (r) => false);},
+                    /*padding: const EdgeInsetsDirectional.only(top: 16.0,bottom: 16.0),
+                    width: MediaQuery.of(context).size.width /1.2,
+                    decoration: BoxDecoration(color: Colors.grey[300],shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(10.0))),*/
+                    child: Center(child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                        Icon(Icons.logout,color: Colors.white,) ,
+                        Text(S.of(context).signOut,style: TextStyle(color: Colors.white,fontSize: 16.0,fontWeight: FontWeight.w600),)
+                      ],)),
+                  ),
+                ]),
+
+
           ),
           ),
+    );
+
 
         //  SizedBox(height: MediaQuery.of(context).size.width / 60),
         /*Container(
@@ -754,8 +764,7 @@ class _AccountState extends State<Account> {
                   ],
                 ),
               )*/
-      ),
-    );
+
   }
 
   List<DropdownMenuItem<ModelDropDown>> buildDropDownMenuItems(List listItems) {

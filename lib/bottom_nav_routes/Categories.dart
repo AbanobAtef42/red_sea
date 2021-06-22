@@ -1246,8 +1246,8 @@ rateWidget(Datum modelProducts, BuildContext context) {
           fit: BoxFit.contain,
           child: Icon(
             Icons.star_rate_rounded,
-            color: colorPrimary,
-            size: MediaQuery.of(context).size.width / RateTextDividerBy,
+            color: Colors.yellow[700],
+            size: 20.0,
           ),
         ),
         FittedBox(
@@ -1776,9 +1776,9 @@ _buildItem(Datum modelProducts, int index, BuildContext context) {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // rateWidget(modelProducts),
-                        Spacer(
+                        /*Spacer(
                           flex: 1,
-                        ),
+                        ),*/
                         Row(children: [
                           Text(
                             modelProducts.price! +
@@ -1825,25 +1825,28 @@ _buildItem(Datum modelProducts, int index, BuildContext context) {
 }
 
 getDiscRate(Datum modelProduct) {
-  return (modelProduct != null &&
-          modelProduct.discount != 'null' &&
-          int.parse(modelProduct.discount.toString()) != 0)
-      ? Positioned(
-          right: 0,
-          top: 40,
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(15.0))),
-            child: Text(
-              '20%',
-              style: TextStyle(color: Colors.white, fontSize: 12.0),
-            ),
-          ),
-        )
-      : Text('');
+  if (modelProduct != null &&
+      modelProduct.discount != 'null' &&
+      int.parse(modelProduct.discount.toString()) != 0) {
+    double disc = (( double.parse(modelProduct.discount!)) /double.parse(modelProduct.price!))*100 ;
+    int disc2 = disc.toInt();
+    return Positioned(
+      right: 0,
+      top: 40,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0))),
+        child: Text(
+          '$disc2'+'%',
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
+        ),
+      ),
+    );
+  } else {
+    return Text('');
+  }
 }
 
 Icon onIconHeartStart(Datum modelProduct, int index) {
@@ -1961,7 +1964,7 @@ class TheSearch extends SearchDelegate<String?> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => BottomNavHost(query, '', -1)));
+                builder: (context) => BottomNavHost(query, '', -1,false,'ca')));
       });
     }
     return (Container());
