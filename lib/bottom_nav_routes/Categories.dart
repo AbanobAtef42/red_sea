@@ -45,23 +45,78 @@ class Categories extends StatelessWidget {
   final String catQuery;
   final String searchQuery;
   final int catIndex;
-  final Key rebuild;
+  final bool signedInOut;
+  final String sourceRoute;
   static const int _pageSize = 10;
-  ProviderHome? _providerHome;
-  ProviderUser? _providerUser;
+  static ProviderHome? _providerHome;
+ static ProviderUser? _providerUser;
   static String name = 'category';
 
   static String catQuery2 = '';
   static String searchQuery2 = '';
-  Categories(this.catQuery, this.searchQuery, this.catIndex, this.rebuild)
-      : super(key: rebuild);
+ static List<Datum> allItems = [];
+
+ static ModelCats? modelCats;
+  static ModelProducts? modelProducts;
+  static ModelProducts? modelProducts2;
+  static double? listPadding;
+/*String catQuery = '';
+  String trendQuery = '';
+  String searchQuery = '';*/
+  static double? statusBarHeight;
+  static bool dataLoaded = false;
+  static bool listen = true;
+  static int index1 = 0;
+  static Icon _searchIcon = new Icon(Icons.search);
+  static FocusNode? focusNode = FocusNode();
+// IconButton _searchIconButton = new IconButton();
+  final TextEditingController textEditingController = new TextEditingController();
+  static ProviderHome? provider;
+
+  static bool loading = false;
+  static bool adsSlow = false;
+  static bool catsSlow = false;
+  static bool prosSlow = false;
+  static bool internet = true;
+
+  static var x = 0;
+
+
+  static ScrollController _scrollController = ScrollController();
+  static int pageKey = 1;
+
+  final PagingController<int, Datum> _pagingController =
+  PagingController(firstPageKey: 1);
+  final PagingController<int, Datum> _pagingControllerCats =
+  PagingController(firstPageKey: 1);
+  final PagingController<int, Datum> _pagingControllerSearch =
+  PagingController(firstPageKey: 0);
+
+
+  static bool? isAlwaysShown;
+
+  static bool internetp = true;
+
+  static ModelSetting? modelSettings;
+
+  static late List<GlobalKey<State<StatefulWidget>>> tags;
+
+  static bool isReadOnly = false;
+
+  static bool showCursor = true;
+
+  static late List<bool> _isFavorited;
+  static late List<int> _favoriteIds;
+  final Box<Datum>? boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
+  Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,this.sourceRoute);
+
 
   void initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
     catQuery2 = catQuery;
     searchQuery2 = searchQuery;
-    boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
+
     provider = Provider.of<ProviderHome>(context, listen: false);
     focusNode = new FocusNode();
     isAlwaysShown = true;
@@ -75,17 +130,19 @@ class Categories extends StatelessWidget {
     if (catIndex != -1) {
       index1 = catIndex;
     }
-    modelSettings =
-        Provider.of<ProviderUser>(context, listen: false).modelSettings;
+    modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
 
-    modelProducts =
-        Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
-    if (modelCats == null || modelProducts == null || modelSettings == null) {
-      _getCats(context);
-      _getPriceUnit(context, 'admin.\$');
+    modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
+
+    modelCats = Provider.of<ProviderHome>(context, listen: false).modelCats2;
+    if (modelCats == null  || modelSettings == null) {
+
       //_getProducts(context, -1, pageKey);
-      _fetchPage(1, context, false);
+
     }
+    _getCats(context);
+    _getPriceUnit(context, 'admin.\$');
+    _fetchPage(1, context, false);
     /*_pagingControllerCats.addPageRequestListener((pageKey) {
       print('execpagingcats' + pageKey.toString());
       _fetchPageCats(this.pageKey);
@@ -108,6 +165,19 @@ class Categories extends StatelessWidget {
     });
 
     MyApplication.initCache();
+  }
+  _getCats(BuildContext context) async {
+    // final provider = Provider.of<ProviderHome>(context, listen: false);
+    if (!await MyApplication.checkConnection()) {
+      await Provider.of<ProviderHome>(context, listen: false).getCats2();
+
+      modelCats = _providerHome!.modelCats2;
+      internet = false;
+    } else {
+      await Provider.of<ProviderHome>(context, listen: false).getCats2();
+
+      modelCats = _providerHome!.modelCats2;
+    }
   }
 
   onListItemTap(ModelCats? modelCats, int index, BuildContext context,
@@ -179,7 +249,29 @@ class Categories extends StatelessWidget {
       // _getProducts(context, -1,pageKey);
     }
   }
+  onIconHeartClick(Datum modelProducts, int index, BuildContext context) {
+    print('fffffffffffdddd' + index.toString());
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProducts.id)
+        .toList();
+    if (datums.length == 0) {
+      print('ffffffffffffff');
+      boxFavs!.add(modelProducts);
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+    } else {
+      // setState(() {
+      /*this._iconHeart = new Icon(
+          CupertinoIcons.heart_fill,
+          color: Colors.grey,
+        );*/
 
+      Iterable<dynamic> key = boxFavs!.keys
+          .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
+      boxFavs!.delete(key.toList()[0]);
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+      // });
+    }
+  }
   retryButtonWidget(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 2,
@@ -313,11 +405,19 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('building.....cats');
     if (_providerHome == null) {
       _providerHome = Provider.of<ProviderHome>(context, listen: false);
     }
     if (_providerUser == null) {
       _providerUser = Provider.of<ProviderUser>(context, listen: false);
+    }
+    if (allItems.isEmpty && signedInOut && sourceRoute == 'l') {
+      print('building.....    $pageKey');
+      _providerHome!.isLastPage = false;
+      // this.pageKey = 1;
+      _fetchPage(1, context, true);
+      _getCats(context);
     }
     // TODO: implement build
     return StatefulWrapper(
@@ -433,7 +533,45 @@ class Categories extends StatelessWidget {
       ),
     );
   }
+  Future<void> _showSearch(BuildContext context) async {
+    FocusScope.of(context).requestFocus(focusNode);
+    await showSearch(
+      context: context,
+      delegate:
+      TheSearch(contextPage: context, controller: textEditingController),
+      query: textEditingController.text.toString(),
+    );
+  }
+  Icon onIconHeartStart(Datum modelProduct, int index) {
+   // bool isFavourite = _isFavorited[index];
+    // print('fffffffffffdddd');
+    List<Datum?> datums = boxFavs!.values
+        .where((element) => element.id == modelProduct.id)
+        .toList();
+  /*  if (datums.length > 0) {
+      _isFavorited[index] = true;
+    }*/
 
+    if (true) {
+      // print('ffffffffffffff');
+
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.red,
+      );
+      //isExistFav = true;
+      return _iconHeart;
+
+      //});
+    } else {
+      Icon _iconHeart = new Icon(
+        CupertinoIcons.heart_fill,
+        color: Colors.grey,
+      );
+     // isExistFav = true;
+      return _iconHeart;
+    }
+  }
   Widget getAppWidget(BuildContext context) {
     /*Fluttertoast.showToast(
         msg: '22 : _getAppWidget ',
@@ -445,9 +583,9 @@ class Categories extends StatelessWidget {
         fontSize: textLabelSize);*/
     modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
-    modelProducts =
-        Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
-    if (_providerHome!.modelCats == null || _providerHome!.modelProductsCats == null || modelSettings == null) {
+    modelProducts = Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
+    modelCats = Provider.of<ProviderHome>(context, listen: true).modelCats2;
+    if ( modelCats == null  || modelSettings == null) {
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -455,6 +593,7 @@ class Categories extends StatelessWidget {
         ]),
       );
     }
+
     /* setState(() {
         provider = Provider.of<ProviderHome>(context,listen: false);
         loading = false;
@@ -547,7 +686,188 @@ class Categories extends StatelessWidget {
       ],
     );
   }
+  retryButtonListWidget(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 2,
+      child: MyButton(
+          onClicked: () async {
+            pageKey = 1;
+            _pagingController.refresh();
+          },
+          child: Row(
+            children: [
+              Text(
+                'ReTry',
+                style: TextStyle(fontSize: 14.0),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
+                child: Icon(Icons.refresh),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          )),
+    );
+  }
+  _buildItem(Datum modelProducts, int index, BuildContext context) {
+    String name = modelProducts.name!;
+    if (name.length > 13) {
+      name = name.substring(0, 12) + '...';
+    }
 
+    return Container(
+      margin: EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
+      // width: MediaQuery.of(context).size.width/1.2,
+      //height: MediaQuery.of(context).size.height / 2.9,
+      child: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Column(
+          children: [
+            Stack(children: [
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(0.0),
+                  child: Hero(
+                    tag: modelProducts.name.toString() +
+                        modelProducts.slug.toString(),
+                    child: CachedNetworkImage(
+                      placeholder: (con, str) =>
+                          Image.asset('images/plcholder.jpeg'),
+                      imageUrl: modelProducts.images!.isNotEmpty
+                          ? 'https://flk.sa/' + modelProducts.images![0]
+                          : 'jj',
+                      fit: BoxFit.cover,
+                      // width: MediaQuery.of(context).size.width / 3.7,
+                      height: MediaQuery.of(context).size.height / 5,
+                    ),
+                  ),
+                ),
+              ),
+              getDiscRate(modelProducts),
+              Positioned(
+                left: 15,
+                top: 15,
+                child: GestureDetector(
+                  onTap: () {
+                    onIconHeartClick(modelProducts, index, context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border()),
+                    child: onIconHeartStart(modelProducts, index),
+                  ),
+                ),
+              ),
+            ]),
+            Container(
+              // color: Colors.grey[50],
+              decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border(
+                      right: BorderSide(),
+                      left: BorderSide(),
+                      bottom: BorderSide())),
+              padding: EdgeInsetsDirectional.only(top: 12.0, bottom: 18.0),
+              child: Column(
+                /*mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,*/
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        end: listPadding!, start: listPadding!),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          // width: MediaQuery.of(context).size.width / 1.8,
+                          child: Hero(
+                            tag: modelProducts.name.toString(),
+                            child: Material(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .headline3!
+                                        .fontSize),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        rateWidget(modelProducts, context),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        end: listPadding!,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // rateWidget(modelProducts),
+                          /*Spacer(
+                          flex: 1,
+                        ),*/
+                          Row(children: [
+                            Text(
+                              modelProducts.price! +
+                                  ' ' +
+                                  modelSettings!.data![0].value!,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            getDiscountWidget(modelProducts),
+                          ])
+                        ],
+                      ),
+                    ),
+                  ),
+                  /*Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Styles.getButton(
+                        context,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              S.of(context).cartAdd,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Icon(Icons.add_shopping_cart)
+                          ],
+                        ),
+                            () {},
+                        Styles.getCartButtonStyle()),
+                  )*/
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
   Widget _getProductWidget(ModelProducts? modelProducts, BuildContext context) {
     //loading = provider.loadedCats;
     // List<Datum> list = modelProducts.data;
@@ -585,7 +905,7 @@ class Categories extends StatelessWidget {
           ],
         ),
       );
-    } else if (modelProducts!.path == 'slint') {
+    } else if (modelProducts != null && modelProducts.path == 'slint') {
       /*Fluttertoast.showToast(
           msg: S.of(context).slowInternet,
           toastLength: Toast.LENGTH_SHORT,
@@ -1138,7 +1458,7 @@ class Categories extends StatelessWidget {
       // print('pagekeyssss this' + this.pageKey.toString());
 
       final newItems = await _getProducts(context, index-1, pageKey);
-
+      allItems.addAll(newItems);
       /*_pagingController.value = PagingState(
           nextPageKey: pageKey++,
           itemList: newItems );
@@ -1146,11 +1466,13 @@ class Categories extends StatelessWidget {
       if (refresh) {
         _pagingController.value =
             PagingState(nextPageKey: ++pageKey, itemList: newItems);
+        allItems.addAll(newItems);
         //_pagingController.itemList = newItems;
       }
       // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage && !refresh) {
+        allItems.addAll(newItems);
         _pagingController.appendLastPage(newItems);
         // _providerHome!.setPageKey(1);
         _providerHome!.setIsLastPage(true);
@@ -1179,59 +1501,8 @@ class Categories extends StatelessWidget {
   _CategoriesState createState() => _CategoriesState();*/
 }
 
-ModelCats? modelCats;
-ModelProducts? modelProducts;
-ModelProducts? modelProducts2;
-double? listPadding;
-/*String catQuery = '';
-  String trendQuery = '';
-  String searchQuery = '';*/
-double? statusBarHeight;
-bool dataLoaded = false;
-bool listen = true;
-int index1 = 0;
-Icon _searchIcon = new Icon(Icons.search);
-FocusNode? focusNode;
-// IconButton _searchIconButton = new IconButton();
-final TextEditingController textEditingController = new TextEditingController();
-ProviderHome? provider;
 
-bool loading = false;
-bool adsSlow = false;
-bool catsSlow = false;
-bool prosSlow = false;
-bool internet = true;
 
-var x = 0;
-
-var _appBarTitle;
-ScrollController _scrollController = ScrollController();
-int pageKey = 1;
-
-final PagingController<int, Datum> _pagingController =
-    PagingController(firstPageKey: 1);
-final PagingController<int, Datum> _pagingControllerCats =
-    PagingController(firstPageKey: 1);
-final PagingController<int, Datum> _pagingControllerSearch =
-    PagingController(firstPageKey: 0);
-PagingController<int, Datum> _pagingControllerMain =
-    PagingController(firstPageKey: 0);
-
-bool? isAlwaysShown;
-
-bool internetp = true;
-
-ModelSetting? modelSettings;
-
-late List<GlobalKey<State<StatefulWidget>>> tags;
-
-bool isReadOnly = false;
-
-bool showCursor = true;
-
-late List<bool> _isFavorited;
-late List<int> _favoriteIds;
-late Box<Datum>? boxFavs;
 
 /*@override
   void didChangeDependencies() {
@@ -1264,19 +1535,7 @@ rateWidget(Datum modelProducts, BuildContext context) {
   }
 }
 
-_getCats(BuildContext context) async {
-  // final provider = Provider.of<ProviderHome>(context, listen: false);
-  if (!await MyApplication.checkConnection()) {
-    await Provider.of<ProviderHome>(context, listen: false).getCats2();
 
-    modelCats = provider!.modelCats2;
-    internet = false;
-  } else {
-    await Provider.of<ProviderHome>(context, listen: false).getCats2();
-
-    modelCats = provider!.modelCats2;
-  }
-}
 
 /*_getProducts(BuildContext context) async {
     Fluttertoast.showToast(
@@ -1301,13 +1560,7 @@ _getCats(BuildContext context) async {
   //  }
   }*/
 
-_getProductsByCat(BuildContext context, String catQuery) async {
-  // modelProducts2 = null;
-  final provider = Provider.of<ProviderHome>(context);
-  await Provider.of<ProviderHome>(context).getProducts('', '', catQuery);
-  modelProducts2 = provider.modelProducts;
-  // _getProductWidget();
-}
+
 
 /*getProductWidget2() {
 
@@ -1629,200 +1882,11 @@ Widget getDiscountWidget(Datum modelProduct) {
       : Text('');
 }
 
-Future<void> _showSearch(BuildContext context) async {
-  FocusScope.of(context).requestFocus(focusNode);
-  await showSearch(
-    context: context,
-    delegate:
-        TheSearch(contextPage: context, controller: textEditingController),
-    query: textEditingController.text.toString(),
-  );
-}
 
-retryButtonListWidget(BuildContext context) {
-  return SizedBox(
-    width: MediaQuery.of(context).size.width / 2,
-    child: MyButton(
-        onClicked: () async {
-          pageKey = 1;
-          _pagingController.refresh();
-        },
-        child: Row(
-          children: [
-            Text(
-              'ReTry',
-              style: TextStyle(fontSize: 14.0),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.only(start: 8.0),
-              child: Icon(Icons.refresh),
-            )
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-        )),
-  );
-}
 
-_buildItem(Datum modelProducts, int index, BuildContext context) {
-  String name = modelProducts.name!;
-  if (name.length > 13) {
-    name = name.substring(0, 12) + '...';
-  }
-  _isFavorited.insert(index, false);
-  _favoriteIds.insert(index, modelProducts.id!);
-  return Container(
-    margin: EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
-    // width: MediaQuery.of(context).size.width/1.2,
-    //height: MediaQuery.of(context).size.height / 2.9,
-    child: Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: Column(
-        children: [
-          Stack(children: [
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(0.0),
-                child: Hero(
-                  tag: modelProducts.name.toString() +
-                      modelProducts.slug.toString(),
-                  child: CachedNetworkImage(
-                    placeholder: (con, str) =>
-                        Image.asset('images/plcholder.jpeg'),
-                    imageUrl: modelProducts.images!.isNotEmpty
-                        ? 'https://flk.sa/' + modelProducts.images![0]
-                        : 'jj',
-                    fit: BoxFit.cover,
-                    // width: MediaQuery.of(context).size.width / 3.7,
-                    height: MediaQuery.of(context).size.height / 5,
-                  ),
-                ),
-              ),
-            ),
-            getDiscRate(modelProducts),
-            Positioned(
-              left: 15,
-              top: 15,
-              child: GestureDetector(
-                onTap: () {
-                  onIconHeartClick(modelProducts, index, context);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border()),
-                  child: onIconHeartStart(modelProducts, index),
-                ),
-              ),
-            ),
-          ]),
-          Container(
-            // color: Colors.grey[50],
-            decoration: new BoxDecoration(
-                color: Colors.transparent,
-                border: Border(
-                    right: BorderSide(),
-                    left: BorderSide(),
-                    bottom: BorderSide())),
-            padding: EdgeInsetsDirectional.only(top: 12.0, bottom: 18.0),
-            child: Column(
-              /*mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,*/
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                      end: listPadding!, start: listPadding!),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        // width: MediaQuery.of(context).size.width / 1.8,
-                        child: Hero(
-                          tag: modelProducts.name.toString(),
-                          child: Material(
-                            child: Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .fontSize),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      rateWidget(modelProducts, context),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                SizedBox(
-                  //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      end: listPadding!,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // rateWidget(modelProducts),
-                        /*Spacer(
-                          flex: 1,
-                        ),*/
-                        Row(children: [
-                          Text(
-                            modelProducts.price! +
-                                ' ' +
-                                modelSettings!.data![0].value!,
-                            style: TextStyle(fontSize: 14.0),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          getDiscountWidget(modelProducts),
-                        ])
-                      ],
-                    ),
-                  ),
-                ),
-                /*Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Styles.getButton(
-                        context,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              S.of(context).cartAdd,
-                              style: TextStyle(fontSize: 14.0),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Icon(Icons.add_shopping_cart)
-                          ],
-                        ),
-                            () {},
-                        Styles.getCartButtonStyle()),
-                  )*/
-              ],
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}
+
+
+
 
 getDiscRate(Datum modelProduct) {
   if (modelProduct != null &&
@@ -1849,60 +1913,9 @@ getDiscRate(Datum modelProduct) {
   }
 }
 
-Icon onIconHeartStart(Datum modelProduct, int index) {
-  bool isFavourite = _isFavorited[index];
-  print('fffffffffffdddd');
-  List<Datum?> datums = boxFavs!.values
-      .where((element) => element.id == modelProduct.id)
-      .toList();
-  if (datums.length > 0) {
-    _isFavorited[index] = true;
-  }
 
-  if (_isFavorited[index]) {
-    print('ffffffffffffff');
 
-    Icon _iconHeart = new Icon(
-      CupertinoIcons.heart_fill,
-      color: Colors.red,
-    );
 
-    return _iconHeart;
-
-    //});
-  } else {
-    Icon _iconHeart = new Icon(
-      CupertinoIcons.heart_fill,
-      color: Colors.grey,
-    );
-
-    return _iconHeart;
-  }
-}
-
-onIconHeartClick(Datum modelProducts, int index, BuildContext context) {
-  print('fffffffffffdddd' + index.toString());
-  List<Datum?> datums = boxFavs!.values
-      .where((element) => element.id == modelProducts.id)
-      .toList();
-  if (datums.length == 0) {
-    print('ffffffffffffff');
-    boxFavs!.add(modelProducts);
-    Provider.of<ProviderHome>(context, listen: false).notifyListeners();
-  } else {
-    // setState(() {
-    /*this._iconHeart = new Icon(
-          CupertinoIcons.heart_fill,
-          color: Colors.grey,
-        );*/
-    _isFavorited[index] = false;
-    Iterable<dynamic> key = boxFavs!.keys
-        .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
-    boxFavs!.delete(key.toList()[0]);
-    Provider.of<ProviderHome>(context, listen: false).notifyListeners();
-    // });
-  }
-}
 
 class TheSearch extends SearchDelegate<String?> {
   TheSearch({this.contextPage, this.controller});

@@ -7,6 +7,10 @@ class StatefulWrapper extends StatefulWidget {
   const StatefulWrapper({required this.onInit, required this.child});
   @override
   _StatefulWrapperState createState() => _StatefulWrapperState();
+
+  static _StatefulWrapperState of(BuildContext context) {
+    return context.findAncestorStateOfType<_StatefulWrapperState>()!;
+  }
 }
 class _StatefulWrapperState extends State<StatefulWrapper> {
   @override
@@ -21,4 +25,8 @@ class _StatefulWrapperState extends State<StatefulWrapper> {
 
     return widget.child;
   }
+  void rebuild() {
+    setState(() {});
+  }
+
 }

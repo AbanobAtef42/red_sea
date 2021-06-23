@@ -7,7 +7,9 @@ import 'package:flutter_app8/bottom_nav_routes/Cart.dart';
 import 'package:flutter_app8/bottom_nav_routes/Categories.dart';
 import 'package:flutter_app8/bottom_nav_routes/Home.dart';
 import 'package:flutter_app8/generated/l10n.dart';
+import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/screens/CustomerOrdersScreen.dart';
+import 'package:flutter_app8/screens/customwidgets/stateFulWrapper.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/values/myConstants.dart';
@@ -25,6 +27,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart' as intl;
+import 'package:provider/provider.dart';
 
 import 'customwidgets/keepAliveWidget.dart';
 
@@ -81,7 +84,7 @@ class _BottomNavHostState extends State<BottomNavHost>
       _pages = <Widget>[
         KeepAlivePage( key: ValueKey<int>(0), child: Home(widget.signedInOut,widget.routeToBotNavHost)),
         KeepAlivePage(key: ValueKey<int>(1),
-            child: Categories(catQry, search, index, new Key('ggg'))),
+            child: Categories(catQry, search, index,widget.signedInOut,widget.routeToBotNavHost)),
         KeepAlivePage( key: ValueKey<int>(2), child: Account()),
         KeepAlivePage( key: ValueKey<int>(3), child: Orders()),
       ];
@@ -90,6 +93,7 @@ class _BottomNavHostState extends State<BottomNavHost>
   }
 
   void _onItemTapped(int index) {
+
     setState(() {
       _tabController.index = index;
       _selectedIndex = index;
@@ -100,6 +104,10 @@ class _BottomNavHostState extends State<BottomNavHost>
       catQry = '';
       this.index = 0;
     });
+    if((index == 1 ) && widget.signedInOut && widget.routeToBotNavHost == 'l')
+    {
+     // StatefulWrapper.of(context).rebuild();
+    }
   }
 
   void _goToCats(int index) {

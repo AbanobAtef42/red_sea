@@ -725,7 +725,7 @@ class _HomeState extends State<Home> {*/
               _providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs().exertedPriceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
-          print('priceunitttt' + modelSettings!.data![0].value.toString());
+
         }
         // print(modelSettings!.data.toString()+'--------');
         // });
@@ -1124,7 +1124,7 @@ class _HomeState extends State<Home> {*/
     if (modelProduct != null &&
         modelProduct.discount != 'null' &&
         int.parse(modelProduct.discount.toString()) != 0) {
-      double disc = (( double.parse(modelProduct.discount!)) /double.parse(modelProduct.price!))*100 ;
+      double disc = (( double.parse(modelProduct.discount!) /(double.parse(modelProduct.price!)+double.parse(modelProduct.discount!))))*100 ;
       int disc2 = disc.toInt();
       return Positioned(
         right: 0,

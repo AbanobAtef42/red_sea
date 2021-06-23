@@ -62,10 +62,10 @@ class Orders extends StatelessWidget {
      modelOrders = Provider.of<ProviderHome>(context, listen: false).modelOrders;
      if(modelOrders == null || modelSettings == null) {
        _getPriceUnit(context, 'admin.\$');
-       
+
      }
-    
-      _fetchPage(pageKey,context,false);
+
+     _fetchPage(pageKey,context,false);
   
 
 
@@ -222,7 +222,7 @@ class Orders extends StatelessWidget {
   }
 
   Widget getAppWidget(BuildContext context) {
-    if (_providerUser!.modelSettings == null || _providerHome!.modelOrders == null) {
+    if (_providerUser!.modelSettings == null /*|| _providerHome!.modelOrders == null*/) {
       return
         //  MyTextWidgetLabel('loading.....', 'l', Colors.black, textLabelSize);
         Theme(

@@ -11,8 +11,8 @@ class ProviderHome with ChangeNotifier {
   bool isLastPage = false;
   bool isLastPageCats = false;
   ModelAds? modelAds = new ModelAds();
-  ModelCats? modelCats = new ModelCats();
-  ModelCats? modelCats2 = new ModelCats();
+  ModelCats? modelCats;
+  ModelCats? modelCats2;
   ModelProducts modelProducts = new ModelProducts();
   ModelProducts? modelProductsCats;
   ModelOrders? modelOrders;
