@@ -326,7 +326,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             backgroundColor: colorPrimary,
             textColor: Colors.white,
             gravity: ToastGravity.BOTTOM);
-        User? user = provider.modelUser!.user;
+//        User? user = provider.modelUser!.user;
         Navigator.push(
           context,
           MaterialPageRoute(

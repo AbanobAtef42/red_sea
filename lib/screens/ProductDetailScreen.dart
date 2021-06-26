@@ -577,7 +577,7 @@ class _ProductDetailState extends State<ProductDetail> {
             splashColor: Colors.grey,
             onPressed: () => onPressMinus()),
         Spacer(),
-        Visibility(visible: _visible, child: CircularProgressIndicator()),
+        Visibility(visible: _visible, child: CircularProgressIndicator(color: Colors.black,)),
         Spacer(),
       ],
     );

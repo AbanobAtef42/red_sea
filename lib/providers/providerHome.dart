@@ -13,7 +13,7 @@ class ProviderHome with ChangeNotifier {
   ModelAds? modelAds = new ModelAds();
   ModelCats? modelCats;
   ModelCats? modelCats2;
-  ModelProducts modelProducts = new ModelProducts();
+  ModelProducts? modelProducts;
   ModelProducts? modelProductsCats;
   ModelOrders? modelOrders;
   int index1 = 0;
@@ -30,6 +30,7 @@ String? sentOrder;
 
   int pageKey = 2;
   int pageKeyCats = 2;
+
 
   getAds() async {
     final Api api = Api();

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/screens/BottomNavScreen.dart';
+import 'package:flutter_app8/screens/customwidgets/stateFulWrapper.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/values/myConstants.dart';
@@ -111,7 +112,8 @@ class MyApplication {
         if(dialogType == DialogType.SUCCES)
         {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,false,'c')));
+              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,true,'l')));
+          StatefulWrapper.of(context).rebuild();
         }
         },
       btnOkOnPress: () {},

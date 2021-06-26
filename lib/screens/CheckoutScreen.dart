@@ -560,7 +560,7 @@ key: cityKey,
             "product_id": widget.modelProducts!.id,
             "qnt": widget.qnt,
             "price": widget.modelProducts!.price.toString(),
-            "discount": widget.modelProducts!.discount.toString(),
+            "discount": widget.modelProducts!.discount == "null" ? 0 : widget.modelProducts!.discount ,
             "options": []
           }
         ],
@@ -912,10 +912,10 @@ key: cityKey,
         children: [
           Theme(
               data: Theme.of(context).copyWith(
-                  accentColor: Colors.white
+                  primaryColor: Colors.white
 
               ),
-              child: CircularProgressIndicator()),
+              child: CircularProgressIndicator(color: Colors.white,)),
           SizedBox(width: 13,),
           Container(margin: EdgeInsets.only(left: 7),child:Text(S.of(context).sendingOrder ,style: TextStyle(color: Colors.white),)),
         ],),
@@ -943,7 +943,7 @@ key: cityKey,
 
           },
           child: Row(children: [
-            Text('ReTry',style: TextStyle(fontSize: 14.0),
+            Text(S.of(context).retry,style: TextStyle(fontSize: 14.0),
 
             ),
             Padding(

@@ -57,6 +57,7 @@ class Home extends StatelessWidget {
   final String sourceRoute;
 
   ProviderUser? _providerUser;
+  ProviderUser? _providerUser2;
 
   Home(this.signedInOut, this.sourceRoute);
 
@@ -94,7 +95,9 @@ class _HomeState extends State<Home> {*/
   bool isAlwaysShown = true;
   bool dataLoaded = false;
   ProviderHome? _providerHome;
+  ProviderHome? _providerHome2;
   ModelSetting? modelSettings;
+
 
   late List<GlobalKey<State<StatefulWidget>>> tags;
 
@@ -107,14 +110,14 @@ class _HomeState extends State<Home> {*/
 
   bool? isExistFav;
 
-  void initState(BuildContext context) {
+   initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
 
     boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
     _getPriceUnit(context, 'admin.\$');
     // _current = Provider.of<ProviderHome>(context).currentAdIndex;
-
+    print('pagekeyssss  $pageKey');
     // _pagingController.addPageRequestListener((pageKe
     // });
 
@@ -190,10 +193,12 @@ class _HomeState extends State<Home> {*/
     }
     if (_providerHome == null) {
       _providerHome = Provider.of<ProviderHome>(context, listen: false);
+      _providerHome2 = Provider.of<ProviderHome>(context, listen: true);
     }
 
     if (_providerUser == null) {
       _providerUser = Provider.of<ProviderUser>(context, listen: false);
+      _providerUser2 = Provider.of<ProviderUser>(context, listen: true);
     }
     if (allItems.isEmpty && signedInOut && sourceRoute == 'l' && this.pageKey == 1) {
       print('building.....    $pageKey');
@@ -201,14 +206,14 @@ class _HomeState extends State<Home> {*/
      // this.pageKey = 1;
       _fetchPage(1, context, true);
     }
-    modelSettings =
+    /*modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
     modelAds = Provider.of<ProviderHome>(context, listen: true).modelAds;
     modelProducts =
-        Provider.of<ProviderHome>(context, listen: true).modelProducts;
+        Provider.of<ProviderHome>(context, listen: true).modelProducts;*/
 
     return StatefulWrapper(
-      onInit: () => initState(context),
+      onInit:  initState(context),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -289,17 +294,23 @@ class _HomeState extends State<Home> {*/
                 // _pagingController.refresh();
                 //_pagingController.itemList = [];
               }),
-              child: SingleChildScrollView(
+              child: RawScrollbar(
+                thumbColor: colorPrimary,
+                isAlwaysShown: isAlwaysShown,
                 controller: _scrollController,
-                child: Column(
-                  /*crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,*/
-                  children: [
-                    Container(
-                        // height: statusBarHeight,
-                        ),
-                    getScreenUi(context),
-                  ],
+                radius: Radius.circular(8.0),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    /*crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,*/
+                    children: [
+                      Container(
+                          // height: statusBarHeight,
+                          ),
+                      getScreenUi(context),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -354,17 +365,17 @@ class _HomeState extends State<Home> {*/
       modelProducts = provider.modelProducts;
     });*/
     // }
-    return /*modelProducts!.data != null ? */ _providerHome!.modelProducts.data!
+    return /*modelProducts!.data != null ? */ _providerHome!.modelProducts!.data!
         .toList(); /*:[];*/
   }
 
   Widget getAppWidget(BuildContext context) {
-    /*modelSettings =
+  /*final  modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
-    modelAds = Provider.of<ProviderHome>(context, listen: true).modelAds;
-    modelProducts =
+   final modelAds = Provider.of<ProviderHome>(context, listen: true).modelAds;
+ final   modelProducts =
         Provider.of<ProviderHome>(context, listen: true).modelProducts;*/
-    if (modelAds == null || modelProducts == null || modelSettings == null) {
+    if (_providerHome2!.modelAds == null || _providerHome2!.modelProducts == null || _providerUser2!.modelSettings == null) {
       isLoading = true;
     } else {
       isLoading = false;
@@ -382,7 +393,7 @@ class _HomeState extends State<Home> {*/
       );
     } else {
       List<Datum> products;
-      // scrollBarConfig();
+       scrollBarConfig();
 
       modelProducts!.data != null
           ? products = modelProducts!.data!
@@ -665,8 +676,11 @@ class _HomeState extends State<Home> {*/
   scrollBarConfig() {
     if (isAlwaysShown) {
       Timer.periodic(Duration(milliseconds: 2100), (timer) {
+
         isAlwaysShown = false;
+        _providerHome!.notifyListeners();
       });
+
     }
   }
 
@@ -748,8 +762,8 @@ class _HomeState extends State<Home> {*/
   Future<void> _fetchPage(
       int pageKey, BuildContext context, bool refresh) async {
     try {
-      print('pagekeyssss  $pageKey');
-      print('pagekeyssss this' + this.pageKey.toString());
+     // print('pagekeyssss  $pageKey');
+    //  print('pagekeyssss this' + this.pageKey.toString());
 
       final newItems = await _getProducts(context, pageKey);
 
@@ -781,12 +795,12 @@ class _HomeState extends State<Home> {*/
       // _providerHome!.setPageKey(++pageKey);
     } catch (error) {
       _pagingController.error = error;
-      Fluttertoast.showToast(
+      /*Fluttertoast.showToast(
           msg: error.toString(),
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: colorPrimary,
           textColor: Colors.white,
-          gravity: ToastGravity.BOTTOM);
+          gravity: ToastGravity.BOTTOM);*/
     }
   }
 
@@ -851,7 +865,7 @@ class _HomeState extends State<Home> {*/
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(
@@ -877,7 +891,7 @@ class _HomeState extends State<Home> {*/
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(
@@ -1097,9 +1111,10 @@ class _HomeState extends State<Home> {*/
     if (datums.length == 0) {
       print('ffffffffffffff');
       boxFavs!.add(modelProducts);
-      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+
       // setState(() {
       _isFavorited[index] = true;
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
       /*this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
           color: Colors.red,
@@ -1206,7 +1221,8 @@ class TheSearch extends SearchDelegate<String?> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    BottomNavHost(query, '', -1, false, 'h')));
+                    BottomNavHost(query, '', -1, true, 'l')));
+        StatefulWrapper.of(context).rebuild();
       });
     }
     return (Container());

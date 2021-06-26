@@ -84,8 +84,8 @@ class Api {
   ///
   /// This API doesn't have a key but often, APIs do require authentication
   final String _url = 'flk.sa';
-  static var uri = "https://flk.sa";
-  static var uri3 = "https://www.redsea5stars.net";
+  static var uri3 = "https://flk.sa";
+  static var uri = "https://www.redsea5stars.net";
   static var uri2 = "https://flkwatches.flk.sa";
   String? token ;
 

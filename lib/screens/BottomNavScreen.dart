@@ -95,10 +95,10 @@ class _BottomNavHostState extends State<BottomNavHost>
   void _onItemTapped(int index) {
 
     setState(() {
-      _tabController.index = index;
+    // _tabController.index = index;
       _selectedIndex = index;
 
-        _pageController.jumpToPage(index,);
+      //  _pageController.jumpToPage(index,);
       //duration: Duration(milliseconds: 500), curve: Curves.easeOut);
       search = '';
       catQry = '';
@@ -138,12 +138,12 @@ class _BottomNavHostState extends State<BottomNavHost>
         return false;
       },
       child: Scaffold(
-        body: PageView(
-           controller: _pageController,
-           physics: NeverScrollableScrollPhysics(),
+        body: IndexedStack(
+          // controller: _pageController,
+          // physics: NeverScrollableScrollPhysics(),
 
           children: _pages!,
-         // index: _selectedIndex,
+          index: _selectedIndex,
         ),
 
         /*Center(

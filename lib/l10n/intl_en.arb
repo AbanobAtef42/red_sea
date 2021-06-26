@@ -94,5 +94,6 @@
   "pending": "Pending",
   "charged": "Charged",
   "done": "Done",
-  "desc": "description"
+  "desc": "description",
+  "retry": "ReTry"
 }

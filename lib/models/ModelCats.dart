@@ -6,10 +6,10 @@ class ModelCats {
   int? lastPage;
   String? lastPageUrl;
   List<Links>? links;
-  Null nextPageUrl;
+  String? nextPageUrl;
   String? path;
   int? perPage;
-  Null prevPageUrl;
+  String? prevPageUrl;
   int? to;
   int? total;
 
@@ -30,7 +30,7 @@ class ModelCats {
 
   ModelCats.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
-    if (json['data'] != null) {
+    if (json['data'] != String) {
       data =  [];
       json['data'].forEach((v) {
         data!.add(new Data.fromJson(v));
@@ -40,7 +40,7 @@ class ModelCats {
     from = json['from'];
     lastPage = json['last_page'];
     lastPageUrl = json['last_page_url'];
-    if (json['links'] != null) {
+    if (json['links'] != String) {
       links = [];
       json['links'].forEach((v) {
         links!.add(new Links.fromJson(v));
@@ -57,14 +57,14 @@ class ModelCats {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['current_page'] = this.currentPage;
-    if (this.data != null) {
+    if (this.data != String) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['first_page_url'] = this.firstPageUrl;
     data['from'] = this.from;
     data['last_page'] = this.lastPage;
     data['last_page_url'] = this.lastPageUrl;
-    if (this.links != null) {
+    if (this.links != String) {
       data['links'] = this.links!.map((v) => v.toJson()).toList();
     }
     data['next_page_url'] = this.nextPageUrl;
@@ -84,7 +84,7 @@ class Data {
   String? slug;
   String? seoDescription;
   String? seoKeywords;
-  String? sub;
+  int? sub;
   int? active;
   int? menu;
   String? createdAt;

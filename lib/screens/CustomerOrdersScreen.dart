@@ -99,7 +99,7 @@ class Orders extends StatelessWidget {
     }
     scrollBarConfig();
     return StatefulWrapper(
-      onInit: ()=> initState(context),
+      onInit:  initState(context),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: Styles.getAppBarStyleOrders(
@@ -294,7 +294,7 @@ class Orders extends StatelessWidget {
                       scrollNotification.metrics.extentAfter == 0 &&
                       !_providerHome!.isLastPageCats) {
                     // _providerHome!.setPageKey(++_providerHome!.pageKey);
-                    int key = _providerHome!.pageKey;
+                //    int key = ++pageKey;
                     print('pageKeyProvider  $key');
 
                     _fetchPage(++pageKey, context, false);
@@ -1043,7 +1043,7 @@ class Orders extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(
@@ -1070,7 +1070,7 @@ class Orders extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(

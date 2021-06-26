@@ -89,11 +89,12 @@
   "sendingOrder": "جارِ إرسال الطلب...",
   "anUnknownErrorOccuredn": "حدث خطأ ما",
   "plzChknternetConnection": "من فضلك تفحص إتصال الجهاز بالإنترنت",
-  "tryAgain": "أعد المحاولة",
+  "tryAgain": " ثم أعد المحاولة",
   "forgotPassword": "هل نسيت كلمة المرور؟",
   "enterNewPassword": "أدخل كلمة المرور الجديدة",
   "pending": "إكتمال الطلب",
   "charged": "شحن الطلب",
   "done": "التسليم",
-  "desc": "الوصف"
+  "desc": "الوصف",
+  "retry": "أعد المحاولة"
 }

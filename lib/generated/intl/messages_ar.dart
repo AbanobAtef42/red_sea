@@ -129,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "registerLabel": MessageLookupByLibrary.simpleMessage("إنشاء حسابك"),
         "registered":
             MessageLookupByLibrary.simpleMessage("تم إنشاء الحساب بنجاح"),
+        "retry": MessageLookupByLibrary.simpleMessage("أعد المحاولة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
         "searchInFlk": MessageLookupByLibrary.simpleMessage("إبحث في فلك"),
         "sendingOrder":
@@ -147,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "swiToBrw": MessageLookupByLibrary.simpleMessage("إسحب الصور للتصفح"),
         "timeOut":
             MessageLookupByLibrary.simpleMessage("حدث خطأ\nإنقطع الإتصال"),
-        "tryAgain": MessageLookupByLibrary.simpleMessage("أعد المحاولة"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage(" ثم أعد المحاولة"),
         "update": MessageLookupByLibrary.simpleMessage("تعديل"),
         "wish": MessageLookupByLibrary.simpleMessage("المنتجات المفضلة"),
         "wrongEmailOrPass": MessageLookupByLibrary.simpleMessage(

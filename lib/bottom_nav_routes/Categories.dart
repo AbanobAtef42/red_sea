@@ -93,7 +93,7 @@ class Categories extends StatelessWidget {
   PagingController(firstPageKey: 0);
 
 
-  static bool? isAlwaysShown;
+  static bool isAlwaysShown  = true;
 
   static bool internetp = true;
 
@@ -111,7 +111,7 @@ class Categories extends StatelessWidget {
   Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,this.sourceRoute);
 
 
-  void initState(BuildContext context) {
+   initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
     catQuery2 = catQuery;
@@ -135,7 +135,7 @@ class Categories extends StatelessWidget {
     modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
 
     modelCats = Provider.of<ProviderHome>(context, listen: false).modelCats2;
-    if (modelCats == null  || modelSettings == null) {
+    if (modelCats == null  /*|| modelSettings == null*/) {
 
       //_getProducts(context, -1, pageKey);
 
@@ -292,7 +292,7 @@ class Categories extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(
@@ -402,7 +402,16 @@ class Categories extends StatelessWidget {
          provider = Provider.of<ProviderHome>(context,listen: false);
        });*/
   }
+  scrollBarConfig() {
+    if (isAlwaysShown) {
+      Timer.periodic(Duration(milliseconds: 2100), (timer) {
 
+        isAlwaysShown = false;
+     //   _providerHome!.notifyListeners();
+      });
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     print('building.....cats');
@@ -421,7 +430,7 @@ class Categories extends StatelessWidget {
     }
     // TODO: implement build
     return StatefulWrapper(
-      onInit: ()=> initState(context),
+      onInit: initState(context),
       child: Scaffold(
         /*appBar: AppBar(
                   title: Text(cats,
@@ -542,24 +551,25 @@ class Categories extends StatelessWidget {
       query: textEditingController.text.toString(),
     );
   }
+
   Icon onIconHeartStart(Datum modelProduct, int index) {
-   // bool isFavourite = _isFavorited[index];
+    bool isFavourite = _isFavorited[index];
     // print('fffffffffffdddd');
     List<Datum?> datums = boxFavs!.values
         .where((element) => element.id == modelProduct.id)
         .toList();
-  /*  if (datums.length > 0) {
+    if (datums.length > 0) {
       _isFavorited[index] = true;
-    }*/
+    }
 
-    if (true) {
+    if (_isFavorited[index]) {
       // print('ffffffffffffff');
 
       Icon _iconHeart = new Icon(
         CupertinoIcons.heart_fill,
         color: Colors.red,
       );
-      //isExistFav = true;
+
       return _iconHeart;
 
       //});
@@ -568,7 +578,7 @@ class Categories extends StatelessWidget {
         CupertinoIcons.heart_fill,
         color: Colors.grey,
       );
-     // isExistFav = true;
+
       return _iconHeart;
     }
   }
@@ -697,7 +707,7 @@ class Categories extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'ReTry',
+                S.of(context).retry,
                 style: TextStyle(fontSize: 14.0),
               ),
               Padding(
@@ -714,7 +724,7 @@ class Categories extends StatelessWidget {
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
     }
-
+    _isFavorited.insert(index, false);
     return Container(
       margin: EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
       // width: MediaQuery.of(context).size.width/1.2,
@@ -813,12 +823,12 @@ class Categories extends StatelessWidget {
                     //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
                     child: Padding(
                       padding: EdgeInsetsDirectional.only(
-                        end: listPadding!,
+                        start: listPadding!,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+
                         children: [
                           // rateWidget(modelProducts),
                           /*Spacer(
@@ -997,56 +1007,114 @@ class Categories extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
-            child: PagedGridView<int, Datum>(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 100 / 170,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-              ),
-              pagingController: _pagingController,
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              //  physics: NeverScrollableScrollPhysics(),
-              builderDelegate: PagedChildBuilderDelegate<Datum>(
-                itemBuilder: (context, modelProducts, index) {
-                  List<String> itemTags = [];
+            child: RawScrollbar(
+              thumbColor: colorPrimary,
+              isAlwaysShown: isAlwaysShown,
+              controller: _scrollController,
+              radius: Radius.circular(8.0),
+              child: PagedGridView<int, Datum>(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 100 / 170,
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                ),
+                pagingController: _pagingController,
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
+                //  physics: NeverScrollableScrollPhysics(),
+                builderDelegate: PagedChildBuilderDelegate<Datum>(
+                  itemBuilder: (context, modelProducts, index) {
+                    List<String> itemTags = [];
 
-                  String name = modelProducts.name!;
-                  if (name.length > 22) {
-                    name = name.substring(0, 22) + '...';
-                  }
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      splashColor: colorPrimary,
-                      onTap: () => Navigator.push(
-                        context,
-                        PageRouteBuilder<Null>(
-                            pageBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secondaryAnimation) {
-                              return AnimatedBuilder(
-                                  animation: animation,
-                                  builder:
-                                      (BuildContext context, Widget? child) {
-                                    return Opacity(
-                                      opacity: animation.value,
-                                      child: ProductDetail(
-                                        modelProducts: modelProducts,
-                                        tags: itemTags,
-                                      ),
-                                    );
-                                  });
-                            },
-                            transitionDuration: Duration(milliseconds: 500)),
+                    String name = modelProducts.name!;
+                    if (name.length > 22) {
+                      name = name.substring(0, 22) + '...';
+                    }
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: colorPrimary,
+                        onTap: () => Navigator.push(
+                          context,
+                          PageRouteBuilder<Null>(
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation) {
+                                return AnimatedBuilder(
+                                    animation: animation,
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      return Opacity(
+                                        opacity: animation.value,
+                                        child: ProductDetail(
+                                          modelProducts: modelProducts,
+                                          tags: itemTags,
+                                        ),
+                                      );
+                                    });
+                              },
+                              transitionDuration: Duration(milliseconds: 500)),
+                        ),
+                        child: _buildItem(modelProducts, index, context),
                       ),
-                      child: _buildItem(modelProducts, index, context),
-                    ),
-                  );
-                },
-                firstPageErrorIndicatorBuilder: (context) {
-                  return Container(
+                    );
+                  },
+                  firstPageErrorIndicatorBuilder: (context) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 4,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Icon(
+                                  Icons.error_outline_outlined,
+                                  color: Colors.red,
+                                )),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 1.4,
+                              child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        text:
+                                            S.of(context).anUnknownErrorOccuredn +
+                                                '\n',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(
+                                                height: 1,
+                                                fontWeight: FontWeight.bold),
+                                        children: [
+                                          TextSpan(
+                                              text: S
+                                                      .of(context)
+                                                      .plzChknternetConnection +
+                                                  '\n' +
+                                                  S.of(context).tryAgain,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6!
+                                                  .copyWith(height: 2))
+                                        ]),
+                                  ))),
+                          SizedBox(
+                            height: 12.0,
+                          ),
+                          retryButtonListWidget(context),
+                        ],
+                      ),
+                    );
+                  },
+                  noItemsFoundIndicatorBuilder: (_) => Container(
                     height: MediaQuery.of(context).size.height / 1.5,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1054,73 +1122,21 @@ class Categories extends StatelessWidget {
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 4,
+                          height: MediaQuery.of(context).size.height / 3,
                           child: FittedBox(
                               fit: BoxFit.contain,
                               child: Icon(
-                                Icons.error_outline_outlined,
-                                color: Colors.red,
+                                Icons.search_off_outlined,
+                                color: colorPrimary,
                               )),
                         ),
                         Container(
-                            width: MediaQuery.of(context).size.width / 1.4,
+                            width: MediaQuery.of(context).size.width / 2,
                             child: FittedBox(
                                 fit: BoxFit.contain,
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                      text:
-                                          S.of(context).anUnknownErrorOccuredn +
-                                              '\n',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold),
-                                      children: [
-                                        TextSpan(
-                                            text: S
-                                                    .of(context)
-                                                    .plzChknternetConnection +
-                                                '\n' +
-                                                S.of(context).tryAgain,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(height: 2))
-                                      ]),
-                                ))),
-                        SizedBox(
-                          height: 12.0,
-                        ),
-                        retryButtonListWidget(context),
+                                child: Text(S.of(context).noResults))),
                       ],
                     ),
-                  );
-                },
-                noItemsFoundIndicatorBuilder: (_) => Container(
-                  height: MediaQuery.of(context).size.height / 1.5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Icon(
-                              Icons.search_off_outlined,
-                              color: colorPrimary,
-                            )),
-                      ),
-                      Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(S.of(context).noResults))),
-                    ],
                   ),
                 ),
               ),
@@ -1486,12 +1502,12 @@ class Categories extends StatelessWidget {
       // _providerHome!.setPageKey(++pageKey);
     } catch (error) {
       _pagingController.error = error;
-      Fluttertoast.showToast(
+      /*Fluttertoast.showToast(
           msg: error.toString(),
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: colorPrimary,
           textColor: Colors.white,
-          gravity: ToastGravity.BOTTOM);
+          gravity: ToastGravity.BOTTOM);*/
     }
   }
 
@@ -1807,17 +1823,7 @@ rateWidget2(ModelProducts modelProducts, int index) {
 
 onPressed() {}
 
-scrollBarConfig() {
-  /*if (isAlwaysShown!) {
-    Timer.periodic(Duration(milliseconds: 2100), (timer) {
-      *//*if (this.mounted) {
-          setState(() {
-            isAlwaysShown = false;
-          });
-        }*//*
-    });
-  }*/
-}
+
 
 hideScrollBar() {
   /*setState(() {
@@ -1977,7 +1983,9 @@ class TheSearch extends SearchDelegate<String?> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => BottomNavHost(query, '', -1,false,'ca')));
+                builder: (context) => BottomNavHost(query, '', -1,true,'l')));
+        StatefulWrapper.of(context).rebuild();
+
       });
     }
     return (Container());

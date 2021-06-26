@@ -130,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Register Your Account"),
         "registered":
             MessageLookupByLibrary.simpleMessage("Registered Successfully"),
+        "retry": MessageLookupByLibrary.simpleMessage("ReTry"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "searchInFlk": MessageLookupByLibrary.simpleMessage("Search In Flk"),
         "sendingOrder":

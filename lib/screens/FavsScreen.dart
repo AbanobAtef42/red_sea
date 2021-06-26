@@ -759,13 +759,13 @@ children: List.generate(list.length, (index) {
       print('ffffffffffffff');
       dataBox.add(modelProducts);
       Provider.of<ProviderHome>(context,listen: false).notifyListeners();
-      setState(() {
+      /*setState(() {
 
-        /*this._iconHeart = new Icon(
+        *//*this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
           color: Colors.red,
-        );*/
-      });
+        );*//*
+      });*/
     } else {
       Provider.of<ProviderHome>(context,listen: false).notifyListeners();
       setState(() {

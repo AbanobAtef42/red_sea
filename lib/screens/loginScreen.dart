@@ -7,6 +7,7 @@ import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/main.dart';
 import 'package:flutter_app8/models/ModelProducts.dart';
 import 'package:flutter_app8/models/modelUser.dart';
+import 'package:flutter_app8/providers/providerHome.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
 import 'package:flutter_app8/screens/BottomNavScreen.dart';
 import 'package:flutter_app8/screens/RegisterScreen.dart';
@@ -27,6 +28,7 @@ import 'package:intl/intl.dart' as intl;
 
 import '../styles/buttonStyle.dart';
 import '../styles/styles.dart';
+import 'customwidgets/stateFulWrapper.dart';
 
 class LoginScreen extends StatefulWidget {
   static var name = 'login';
@@ -260,9 +262,13 @@ if(kIsWeb && !await MyApplication.checkConnection())
             timeInSecForIosWeb: 3,
             fontSize: textLabelSize);
       //  MyApplication.getDialogue(context, S.of(context).signed, '', DialogType.SUCCES);
-        User? user = provider.modelUser!.user;
+      //  User? user = provider.modelUser!.user;
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,sharedPrefs.getCurrentUserLoggingHistory,'l')));
+
+        StatefulWrapper.of(context).rebuild();
+
         // MyApplication.showAlertDialog(context, signed, '', '');
       }
     } else {
