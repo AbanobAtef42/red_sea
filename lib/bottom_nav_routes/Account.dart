@@ -5,6 +5,7 @@ import 'package:flutter_app8/generated/l10n.dart';
 import 'package:flutter_app8/models/ModelDropDown.dart';
 import 'package:flutter_app8/providers/providerLanguage.dart';
 import 'package:flutter_app8/providers/providerUser.dart';
+import 'package:flutter_app8/screens/BottomNavScreen.dart';
 import 'package:flutter_app8/screens/CustomerOrdersScreen.dart';
 import 'package:flutter_app8/screens/FavsScreen.dart';
 import 'package:flutter_app8/screens/PassWordResetScreen.dart';
@@ -672,10 +673,15 @@ class _AccountState extends State<Account> {
                           LoginScreen()),
                 );*//*},*/
                    MyButton(
-                    onClicked: (){SharedPrefs().signedIn(false);
-                    sharedPrefs.signedInThenOut(true);
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (r) => false);},
-                    /*padding: const EdgeInsetsDirectional.only(top: 16.0,bottom: 16.0),
+                    onClicked: () {
+                      SharedPrefs().signedIn(false);
+                      sharedPrefs.signedInThenOut(true);
+                      BottomNavHost.of(context).signOut();
+                      /*Navigator.of(context, rootNavigator: true)
+                          .pushReplacement(MaterialPageRoute(
+                          builder: (context) => new LoginScreen()));*/
+                    },
+                     /*padding: const EdgeInsetsDirectional.only(top: 16.0,bottom: 16.0),
                     width: MediaQuery.of(context).size.width /1.2,
                     decoration: BoxDecoration(color: Colors.grey[300],shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(10.0))),*/
                     child: Center(child: Row(

@@ -30,6 +30,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 import 'customwidgets/keepAliveWidget.dart';
+import 'loginScreen.dart';
 
 class BottomNavHost extends StatefulWidget {
   static String name = 'BottomNavHost';
@@ -47,10 +48,16 @@ class BottomNavHost extends StatefulWidget {
 
   @override
   _BottomNavHostState createState() => _BottomNavHostState();
+
+  static _BottomNavHostState of(BuildContext context) {
+    return context.findAncestorStateOfType<_BottomNavHostState>()!;
+  }
 }
 
 class _BottomNavHostState extends State<BottomNavHost>
     with SingleTickerProviderStateMixin {
+
+
   int _selectedIndex = 0;
   String search = '';
   String catQry = '';
@@ -213,5 +220,10 @@ class _BottomNavHostState extends State<BottomNavHost>
     //  _pages!.removeAt(1);
     //  _pages!.insert(1, Categories(catQry, search, index, GlobalKey()));
     });
+  }
+  void signOut(){
+    Navigator.of(context, rootNavigator: true)
+        .pushReplacement(MaterialPageRoute(
+        builder: (context) => new LoginScreen()));
   }
 }

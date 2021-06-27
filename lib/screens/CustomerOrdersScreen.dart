@@ -81,10 +81,10 @@ class Orders extends StatelessWidget {
     if (_providerUser == null) {
       _providerUser = Provider.of<ProviderUser>(context, listen: false);
     }
-    modelSettings =
+    /*modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
     modelOrders =
-        Provider.of<ProviderHome>(context, listen: true).modelOrders;
+        Provider.of<ProviderHome>(context, listen: true).modelOrders;*/
     if (listPadding == null) {
       listPadding = MediaQuery
           .of(context)
@@ -97,7 +97,7 @@ class Orders extends StatelessWidget {
           .padding
           .top;
     }
-    scrollBarConfig();
+   // scrollBarConfig();
     return StatefulWrapper(
       onInit:  initState(context),
       child: Scaffold(
@@ -222,7 +222,9 @@ class Orders extends StatelessWidget {
   }
 
   Widget getAppWidget(BuildContext context) {
-    if (_providerUser!.modelSettings == null /*|| _providerHome!.modelOrders == null*/) {
+    modelSettings = Provider.of<ProviderUser>(context, listen: true).modelSettings;
+     // modelOrders =  Provider.of<ProviderHome>(context, listen: true).modelOrders;
+    if (modelSettings == null ) {
       return
         //  MyTextWidgetLabel('loading.....', 'l', Colors.black, textLabelSize);
         Theme(
@@ -950,6 +952,8 @@ class Orders extends StatelessWidget {
         // setState(() {
         _providerUser!.modelSettings = null;
         internet = false;
+        modelSettings = _providerUser!.modelSettings;
+          // _providerUser!.notifyListeners();
         // });
       } else {
         print('shared setting price');
@@ -958,7 +962,8 @@ class Orders extends StatelessWidget {
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.exertedPriceUnitKey));
         _providerUser!.modelSettings!.data = datums;
-        _providerUser!.notifyListeners();
+        modelSettings = _providerUser!.modelSettings;
+        // _providerUser!.notifyListeners();
       }
       //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
       //  });
@@ -979,7 +984,9 @@ class Orders extends StatelessWidget {
               _providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs().exertedPriceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
-          print('priceunitttt' + modelSettings!.data![0].value.toString());
+          modelSettings = _providerUser!.modelSettings;
+           //  _providerUser!.notifyListeners();
+
         }
         // print(modelSettings!.data.toString()+'--------');
         // });
@@ -991,6 +998,8 @@ class Orders extends StatelessWidget {
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.priceUnitKey));
         _providerUser!.modelSettings!.data = datums;
+        modelSettings = _providerUser!.modelSettings;
+     //   _providerUser!.notifyListeners();
         // });
       }
     }

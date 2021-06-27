@@ -23,6 +23,7 @@ import 'package:flutter_app8/screens/BottomNavScreen.dart';
 import 'package:flutter_app8/screens/FavsScreen.dart';
 import 'package:flutter_app8/screens/ProductDetailScreen.dart';
 import 'package:flutter_app8/screens/customwidgets/stateFulWrapper.dart';
+import 'package:flutter_app8/screens/customwidgets/stateFulWrapperCats.dart';
 import 'package:flutter_app8/styles/buttonStyle.dart';
 import 'package:flutter_app8/styles/styles.dart';
 import 'package:flutter_app8/styles/textWidgetStyle.dart';
@@ -111,7 +112,7 @@ class Categories extends StatelessWidget {
   Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,this.sourceRoute);
 
 
-   initState(BuildContext context) {
+ void  initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
     catQuery2 = catQuery;
@@ -135,11 +136,13 @@ class Categories extends StatelessWidget {
     modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
 
     modelCats = Provider.of<ProviderHome>(context, listen: false).modelCats2;
-    if (modelCats == null  /*|| modelSettings == null*/) {
+    if (modelCats == null  || modelSettings == null || modelProducts == null) {
 
       //_getProducts(context, -1, pageKey);
 
     }
+    pageKey = 1;
+    index1 = 0;
     _getCats(context);
     _getPriceUnit(context, 'admin.\$');
     _fetchPage(1, context, false);
@@ -155,7 +158,15 @@ class Categories extends StatelessWidget {
     _pagingControllerSearch.addPageRequestListener((pageKey) {
       _fetchPageSearch(pageKey);
     });*/
-
+    if ( signedInOut && sourceRoute == 'l') {
+      print('building.....    $pageKey');
+      _providerHome!.isLastPage = false;
+      pageKey = 1;
+      index1 = 0;
+      //onListItemTap(modelCats, 0, context, _providerHome);
+     // _fetchPage(1, context, true);
+      // _getCats(context);
+    }
     _scrollController.addListener(() {
       FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -173,10 +184,12 @@ class Categories extends StatelessWidget {
 
       modelCats = _providerHome!.modelCats2;
       internet = false;
+      _providerHome!.notifyListeners();
     } else {
       await Provider.of<ProviderHome>(context, listen: false).getCats2();
 
       modelCats = _providerHome!.modelCats2;
+      _providerHome!.notifyListeners();
     }
   }
 
@@ -316,6 +329,8 @@ class Categories extends StatelessWidget {
         // setState(() {
         _providerUser!.modelSettings = null;
         internet = false;
+        modelSettings = _providerUser!.modelSettings;
+        _providerUser!.notifyListeners();
         // });
       } else {
         print('shared setting price');
@@ -324,6 +339,7 @@ class Categories extends StatelessWidget {
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.exertedPriceUnitKey));
         _providerUser!.modelSettings!.data = datums;
+        modelSettings = _providerUser!.modelSettings;
         _providerUser!.notifyListeners();
       }
       //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
@@ -338,14 +354,16 @@ class Categories extends StatelessWidget {
         // setState(() {
         //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
         if (Provider.of<ProviderUser>(context, listen: false)
-                .modelSettings!
-                .data !=
+            .modelSettings!
+            .data !=
             null) {
           SharedPrefs().priceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs().exertedPriceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
-          print('priceunitttt' + modelSettings!.data![0].value.toString());
+          modelSettings = _providerUser!.modelSettings;
+             _providerUser!.notifyListeners();
+
         }
         // print(modelSettings!.data.toString()+'--------');
         // });
@@ -357,6 +375,8 @@ class Categories extends StatelessWidget {
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.priceUnitKey));
         _providerUser!.modelSettings!.data = datums;
+        modelSettings = _providerUser!.modelSettings;
+        _providerUser!.notifyListeners();
         // });
       }
     }
@@ -421,16 +441,10 @@ class Categories extends StatelessWidget {
     if (_providerUser == null) {
       _providerUser = Provider.of<ProviderUser>(context, listen: false);
     }
-    if (allItems.isEmpty && signedInOut && sourceRoute == 'l') {
-      print('building.....    $pageKey');
-      _providerHome!.isLastPage = false;
-      // this.pageKey = 1;
-      _fetchPage(1, context, true);
-      _getCats(context);
-    }
+
     // TODO: implement build
     return StatefulWrapper(
-      onInit: initState(context),
+      onInit:()=> initState(context),
       child: Scaffold(
         /*appBar: AppBar(
                   title: Text(cats,
@@ -595,7 +609,7 @@ class Categories extends StatelessWidget {
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
     modelProducts = Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
     modelCats = Provider.of<ProviderHome>(context, listen: true).modelCats2;
-    if ( modelCats == null  || modelSettings == null) {
+    if ( modelCats == null ||  modelSettings == null || modelProducts == null) {
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [

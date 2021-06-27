@@ -10,7 +10,7 @@ import 'package:flutter_app8/values/api.dart';
 class ProviderHome with ChangeNotifier {
   bool isLastPage = false;
   bool isLastPageCats = false;
-  ModelAds? modelAds = new ModelAds();
+  ModelAds? modelAds;
   ModelCats? modelCats;
   ModelCats? modelCats2;
   ModelProducts? modelProducts;

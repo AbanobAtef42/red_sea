@@ -110,12 +110,12 @@ class _HomeState extends State<Home> {*/
 
   bool? isExistFav;
 
-   initState(BuildContext context) {
+  void initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
 
     boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
-    _getPriceUnit(context, 'admin.\$');
+  //  _getPriceUnit(context, 'admin.\$');
     // _current = Provider.of<ProviderHome>(context).currentAdIndex;
     print('pagekeyssss  $pageKey');
     // _pagingController.addPageRequestListener((pageKe
@@ -130,13 +130,16 @@ class _HomeState extends State<Home> {*/
         // Provider.of<ProviderHome>(context,listen: false).modelCats == null ||
         modelProducts == null ||
         modelSettings == null) {
-      _getPriceUnit(context, 'admin.\$');
-      _getAds(context);
-      //_getProducts(context, 1);
-      _fetchPage(1, context, false);
+
       //  _getCats(context);
       // _getProducts(context, this.pageKey);
     }
+    pageKey = 1;
+    _providerHome!.isLastPage = false;
+    _getPriceUnit(context, 'admin.\$');
+    _getAds(context);
+    //_getProducts(context, 1);
+    _fetchPage(1, context, false);
     /*tags =
         List.generate(2, (value) => GlobalKey());*/
 
@@ -193,27 +196,28 @@ class _HomeState extends State<Home> {*/
     }
     if (_providerHome == null) {
       _providerHome = Provider.of<ProviderHome>(context, listen: false);
-      _providerHome2 = Provider.of<ProviderHome>(context, listen: true);
+     // _providerHome2 = Provider.of<ProviderHome>(context, listen: true);
     }
 
     if (_providerUser == null) {
       _providerUser = Provider.of<ProviderUser>(context, listen: false);
-      _providerUser2 = Provider.of<ProviderUser>(context, listen: true);
+     // _providerUser2 = Provider.of<ProviderUser>(context, listen: true);
     }
-    if (allItems.isEmpty && signedInOut && sourceRoute == 'l' && this.pageKey == 1) {
+    if ( signedInOut && sourceRoute == 'l' && this.pageKey == 1) {
       print('building.....    $pageKey');
       _providerHome!.setIsLastPage(false);
+      allItems.clear();
      // this.pageKey = 1;
       _fetchPage(1, context, true);
     }
-    /*modelSettings =
+    modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
     modelAds = Provider.of<ProviderHome>(context, listen: true).modelAds;
     modelProducts =
-        Provider.of<ProviderHome>(context, listen: true).modelProducts;*/
+        Provider.of<ProviderHome>(context, listen: true).modelProducts;
 
     return StatefulWrapper(
-      onInit:  initState(context),
+      onInit: ()=> initState(context),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -291,6 +295,7 @@ class _HomeState extends State<Home> {*/
                 //_pagingController.itemList!.clear();
 
                 _fetchPage(1, context, true);
+                _getAds(context);
                 // _pagingController.refresh();
                 //_pagingController.itemList = [];
               }),
@@ -331,6 +336,7 @@ class _HomeState extends State<Home> {*/
       // setState(() {
       modelAds = provider.modelAds;
       internet = false;
+      _providerHome!.notifyListeners();
       // });
       // }
     } else {
@@ -338,6 +344,7 @@ class _HomeState extends State<Home> {*/
       //if (this.mounted) {
       // setState(() {
       modelAds = provider.modelAds;
+      _providerHome!.notifyListeners();
       //  });
       //}
     }
@@ -360,11 +367,16 @@ class _HomeState extends State<Home> {*/
 
     await Provider.of<ProviderHome>(context, listen: false)
         .getProducts('', '', '');
+    if(page == 1) {
+      modelProducts = _providerHome!.modelProducts;
+     // _providerHome!.notifyListeners();
+    }
     //if (this.mounted) {
     /*setState(() {
       modelProducts = provider.modelProducts;
     });*/
     // }
+    print('pros exec times');
     return /*modelProducts!.data != null ? */ _providerHome!.modelProducts!.data!
         .toList(); /*:[];*/
   }
@@ -375,7 +387,7 @@ class _HomeState extends State<Home> {*/
    final modelAds = Provider.of<ProviderHome>(context, listen: true).modelAds;
  final   modelProducts =
         Provider.of<ProviderHome>(context, listen: true).modelProducts;*/
-    if (_providerHome2!.modelAds == null || _providerHome2!.modelProducts == null || _providerUser2!.modelSettings == null) {
+    if (modelAds == null || modelProducts == null || modelSettings == null) {
       isLoading = true;
     } else {
       isLoading = false;
@@ -678,7 +690,7 @@ class _HomeState extends State<Home> {*/
       Timer.periodic(Duration(milliseconds: 2100), (timer) {
 
         isAlwaysShown = false;
-        _providerHome!.notifyListeners();
+     //   _providerHome!.notifyListeners();
       });
 
     }
@@ -710,6 +722,8 @@ class _HomeState extends State<Home> {*/
         // setState(() {
         _providerUser!.modelSettings = null;
         internet = false;
+        modelSettings = _providerUser!.modelSettings;
+        _providerUser!.notifyListeners();
         // });
       } else {
         print('shared setting price');
@@ -718,6 +732,7 @@ class _HomeState extends State<Home> {*/
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.exertedPriceUnitKey));
         _providerUser!.modelSettings!.data = datums;
+        modelSettings = _providerUser!.modelSettings;
         _providerUser!.notifyListeners();
       }
       //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
@@ -739,6 +754,8 @@ class _HomeState extends State<Home> {*/
               _providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs().exertedPriceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
+          modelSettings = _providerUser!.modelSettings;
+          _providerUser!.notifyListeners();
 
         }
         // print(modelSettings!.data.toString()+'--------');
@@ -751,6 +768,8 @@ class _HomeState extends State<Home> {*/
         List<Datum2> datums = [];
         datums.add(Datum2(value: sharedPrefs.priceUnitKey));
         _providerUser!.modelSettings!.data = datums;
+        modelSettings = _providerUser!.modelSettings;
+        //_providerUser!.notifyListeners();
         // });
       }
     }
@@ -1114,7 +1133,8 @@ class _HomeState extends State<Home> {*/
 
       // setState(() {
       _isFavorited[index] = true;
-      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+      _pagingController.itemList = allItems;
+     // Provider.of<ProviderHome>(context, listen: false).notifyListeners();
       /*this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
           color: Colors.red,
@@ -1130,7 +1150,9 @@ class _HomeState extends State<Home> {*/
       Iterable<dynamic> key = boxFavs!.keys
           .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
       boxFavs!.delete(key.toList()[0]);
+      _pagingController.itemList = allItems;
       Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+
       //  });
     }
   }
