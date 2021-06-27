@@ -128,9 +128,13 @@ class Categories extends StatelessWidget {
       textEditingController.text = searchQuery.toString();
     }
 
-    if (catIndex != -1) {
+    if (catIndex == -1) {
       index1 = catIndex;
     }
+    else
+      {
+        index1 = 0;
+      }
     modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
 
     modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
@@ -142,7 +146,7 @@ class Categories extends StatelessWidget {
 
     }
     pageKey = 1;
-    index1 = 0;
+
     _getCats(context);
     _getPriceUnit(context, 'admin.\$');
     _fetchPage(1, context, false);
@@ -1997,7 +2001,7 @@ class TheSearch extends SearchDelegate<String?> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => BottomNavHost(query, '', -1,true,'l')));
+                builder: (context) => BottomNavHost(query, '', -1,false,'l')));
         StatefulWrapper.of(context).rebuild();
 
       });

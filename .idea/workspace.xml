@@ -22,17 +22,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="335bfc8d-4431-479c-bd5b-86c1f5bbcf65" name="Default Changelist" comment="new endpoint">
-      <change afterPath="$PROJECT_DIR$/lib/screens/customwidgets/stateFulWrapperCats.dart" afterDir="false" />
+    <list default="true" id="335bfc8d-4431-479c-bd5b-86c1f5bbcf65" name="Default Changelist" comment="final home and categories">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/bottom_nav_routes/Account.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bottom_nav_routes/Account.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/bottom_nav_routes/Categories.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bottom_nav_routes/Categories.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/bottom_nav_routes/Home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bottom_nav_routes/Home.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/providers/providerHome.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/providers/providerHome.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/BottomNavScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/BottomNavScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/CustomerOrdersScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/CustomerOrdersScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/loginScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/loginScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/splashScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/splashScreen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624721388722</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="final home and categories">
+      <created>1624805821754</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1624805821754</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -178,7 +181,8 @@
     <MESSAGE value="Categories Pagination and refresh" />
     <MESSAGE value="Orders Pagination and refresh" />
     <MESSAGE value="new endpoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="new endpoint" />
+    <MESSAGE value="final home and categories" />
+    <option name="LAST_COMMIT_MESSAGE" value="final home and categories" />
   </component>
   <component name="WindowStateProjectService">
     <state x="822" y="260" key="AndroidProcessChooserDialog" timestamp="1624197993559">
@@ -261,11 +265,12 @@
     <state width="2006" height="268" key="GridCell.Tab.0.right/0.25.2048.1095@0.25.2048.1095" timestamp="1622040961246" />
     <state width="2006" height="260" key="GridCell.Tab.0.right/0.25.2048.988@0.25.2048.988" timestamp="1624116941342" />
     <state width="2006" height="238" key="GridCell.Tab.0.right/0.25.2048.994@0.25.2048.994" timestamp="1624805613124" />
-    <state x="624" y="258" key="Vcs.Push.Dialog.v2" timestamp="1624721396735">
-      <screen x="0" y="25" width="2048" height="1015" />
+    <state x="624" y="257" key="Vcs.Push.Dialog.v2" timestamp="1624805842794">
+      <screen x="0" y="25" width="2048" height="1011" />
     </state>
     <state x="624" y="255" key="Vcs.Push.Dialog.v2/0.25.2048.1001@0.25.2048.1001" timestamp="1624202938443" />
     <state x="624" y="256" key="Vcs.Push.Dialog.v2/0.25.2048.1006@0.25.2048.1006" timestamp="1624287084788" />
+    <state x="624" y="257" key="Vcs.Push.Dialog.v2/0.25.2048.1011@0.25.2048.1011" timestamp="1624805842794" />
     <state x="624" y="258" key="Vcs.Push.Dialog.v2/0.25.2048.1015@0.25.2048.1015" timestamp="1624721396735" />
     <state x="624" y="259" key="Vcs.Push.Dialog.v2/0.25.2048.1020@0.25.2048.1020" timestamp="1622216708873" />
     <state x="624" y="260" key="Vcs.Push.Dialog.v2/0.25.2048.1023@0.25.2048.1023" timestamp="1622649404415" />

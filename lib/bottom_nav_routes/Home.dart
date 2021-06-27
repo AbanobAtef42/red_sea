@@ -1243,7 +1243,7 @@ class TheSearch extends SearchDelegate<String?> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    BottomNavHost(query, '', -1, true, 'l')));
+                    BottomNavHost(query, '', -1, false, 'l')));
         StatefulWrapper.of(context).rebuild();
       });
     }

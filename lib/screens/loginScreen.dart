@@ -265,7 +265,7 @@ if(kIsWeb && !await MyApplication.checkConnection())
       //  User? user = provider.modelUser!.user;
 
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,false,'l')));
+            context, MaterialPageRoute(builder: (context) => BottomNavHost('','',0,false,'l')));
 
         StatefulWrapper.of(context).rebuild();
 
