@@ -10,6 +10,7 @@ import 'package:flutter_app8/values/api.dart';
 class ProviderHome with ChangeNotifier {
   bool isLastPage = false;
   bool isLastPageCats = false;
+  bool isLoadedCats = false;
   ModelAds? modelAds;
   ModelCats? modelCats;
   ModelCats? modelCats2;
@@ -117,7 +118,11 @@ String? sentOrder;
     notifyListeners();
   }
   setIsLastPageCats(bool isLast){
-    this.isLastPage = isLast;
+    this.isLastPageCats = isLast;
+    notifyListeners();
+  }
+  setIsLoaded(bool loaded){
+    this.isLoadedCats = loaded;
     notifyListeners();
   }
   setPageKey(int pageKey){

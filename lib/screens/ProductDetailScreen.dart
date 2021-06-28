@@ -477,6 +477,7 @@ class _ProductDetailState extends State<ProductDetail> {
     if (this._iconHeart.icon == CupertinoIcons.heart) {
       print('ffffffffffffff');
       boxFavs!.add(widget.modelProducts!);
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
       setState(() {
         this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
@@ -493,6 +494,7 @@ class _ProductDetailState extends State<ProductDetail> {
             (element) => boxFavs!.get(element)!.id == widget.modelProducts!.id);
         boxFavs!.delete(key.toList()[0]);
       });
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
     }
   }
 

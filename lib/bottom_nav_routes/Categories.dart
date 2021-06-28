@@ -128,13 +128,14 @@ class Categories extends StatelessWidget {
       textEditingController.text = searchQuery.toString();
     }
 
-    if (catIndex == -1) {
+    /*if (catIndex == -1) {
       index1 = catIndex;
     }
     else
       {
         index1 = 0;
-      }
+      }*/
+    index1 = catIndex;
     modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
 
     modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
@@ -210,7 +211,7 @@ class Categories extends StatelessWidget {
     //   provider = Provider.of<ProviderHome>(context, listen: false);
 
     modelProducts = provider!.modelProductsCats;
-    if (index1 != index) {
+    if (index1 != index && _providerHome!.isLoadedCats) {
       index1 = index;
       searchQuery2 = '';
       catQuery2 = index == 0 ? '' : modelCats!.data![index - 1].slug!;
@@ -220,11 +221,15 @@ class Categories extends StatelessWidget {
 
       loading = true;
       pageKey = 1;
+      allItems.clear();
       // this.modelCats = provider.modelCats;
       //modelProducts = new ModelProducts();
-
-      // print('catQuery2' + modelCats!.data![index].slug!);
+      _providerHome!.isLoadedCats = false;
       _providerHome!.notifyListeners();
+     //_providerHome!.setIsLoaded(false);
+      // print('catQuery2' + modelCats!.data![index].slug!);
+
+
       _fetchPage(pageKey, context, false);
       _pagingController.refresh();
     }
@@ -389,7 +394,7 @@ class Categories extends StatelessWidget {
   _getProducts(BuildContext context, int index, int page) async {
     Api.context = context;
     Api.productPage = page;
-    print('catqur2' + catQuery2);
+    print('catqur2' + catQuery2.toString());
     print('searchqur2' + searchQuery2);
     await Provider.of<ProviderHome>(context, listen: false)
         .getProductsCats(catQuery2, searchQuery2, '');
@@ -397,8 +402,8 @@ class Categories extends StatelessWidget {
     /*if(this.mounted && index == -1){
        modelProducts = new ModelProducts();
      }*/
-    print('catttttt' + catQuery);
-    if (index == -1 ||
+    print('catttttt' + catQuery2);
+    if ( index == -1 ||
         (modelCats != null && catQuery2 == modelCats!.data![index].slug)) {
       if (!await MyApplication.checkConnection()) {
         modelProducts = _providerHome!.modelProductsCats;
@@ -420,7 +425,7 @@ class Categories extends StatelessWidget {
         return _providerHome!.modelProductsCats!.data;
       }
     }
-    return modelProducts!.data;
+   // return _providerHome!.modelProductsCats!.data;
     //  modelProducts2 = modelProducts;
     /* setState(() {
          provider = Provider.of<ProviderHome>(context,listen: false);
@@ -600,6 +605,27 @@ class Categories extends StatelessWidget {
       return _iconHeart;
     }
   }
+  _getIndexedStack(BuildContext context){
+    modelSettings =
+        Provider.of<ProviderUser>(context, listen: true).modelSettings;
+    modelProducts = Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
+    modelCats = Provider.of<ProviderHome>(context, listen: true).modelCats2;
+    if ( modelCats == null ||  modelSettings == null || modelProducts == null) {
+      return Container(
+        height: MediaQuery.of(context).size.height / 1.5,
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          CircularProgressIndicator(),
+        ]),
+      );
+    }
+  List<Widget> pages =   List.generate(modelCats!.data!.length, (index) => getAppWidget(context));
+   // getAppWidget(context);
+    return IndexedStack(
+      children:
+        pages,
+      index: index1,
+    );
+  }
   Widget getAppWidget(BuildContext context) {
     /*Fluttertoast.showToast(
         msg: '22 : _getAppWidget ',
@@ -738,6 +764,7 @@ class Categories extends StatelessWidget {
     );
   }
   _buildItem(Datum modelProducts, int index, BuildContext context) {
+    _providerHome!.isLoadedCats = true;
     String name = modelProducts.name!;
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
@@ -1079,6 +1106,7 @@ class Categories extends StatelessWidget {
                     );
                   },
                   firstPageErrorIndicatorBuilder: (context) {
+                    _providerHome!.isLoadedCats = true;
                     return Container(
                       height: MediaQuery.of(context).size.height / 1.5,
                       child: Column(
@@ -1132,31 +1160,50 @@ class Categories extends StatelessWidget {
                       ),
                     );
                   },
-                  noItemsFoundIndicatorBuilder: (_) => Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 3,
-                          child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Icon(
-                                Icons.search_off_outlined,
-                                color: colorPrimary,
-                              )),
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width / 2,
+                  noItemsFoundIndicatorBuilder: (_) {
+                    _providerHome!.isLoadedCats = true;
+                  return  Container(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width / 2,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 3,
                             child: FittedBox(
                                 fit: BoxFit.contain,
-                                child: Text(S.of(context).noResults))),
-                      ],
-                    ),
-                  ),
+                                child: Icon(
+                                  Icons.search_off_outlined,
+                                  color: colorPrimary,
+                                )),
+                          ),
+                          Container(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 2,
+                              child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(S
+                                      .of(context)
+                                      .noResults))),
+                        ],
+                      ),
+                    );
+
+                  }
                 ),
+
               ),
             ),
           ),
@@ -1479,6 +1526,7 @@ class Categories extends StatelessWidget {
     }
 
     return getAppWidget(context);
+   // return _getIndexedStack(context);
   }
 
   Future<void> _fetchPage(
@@ -1498,24 +1546,34 @@ class Categories extends StatelessWidget {
           itemList: newItems );
 */
       if (refresh) {
+        allItems.addAll(newItems);
         _pagingController.value =
             PagingState(nextPageKey: ++pageKey, itemList: newItems);
-        allItems.addAll(newItems);
+
         //_pagingController.itemList = newItems;
       }
       // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage && !refresh) {
-        allItems.addAll(newItems);
+       // allItems.addAll(newItems);
         _pagingController.appendLastPage(newItems);
         // _providerHome!.setPageKey(1);
-        _providerHome!.setIsLastPage(true);
+        _providerHome!.setIsLastPageCats(true);
       } else if (!refresh) {
+        allItems.addAll(newItems);
         //_providerHome!.setPageKey(++_providerHome!.pageKey);
         //_providerHome!.setPageKey(++pageKey);
         final nextPageKey = _providerHome!.pageKey;
         print('execmorethan1   $nextPageKey');
-        _pagingController.appendPage(newItems, nextPageKey.toInt());
+        if(pageKey == 1){
+          allItems.clear();
+          allItems.addAll(newItems);
+          _pagingController.value =
+              PagingState(nextPageKey: ++pageKey, itemList: allItems);
+        }
+        else {
+          _pagingController.appendPage(newItems, nextPageKey.toInt());
+        }
       }
       // _providerHome!.setPageKey(++pageKey);
     } catch (error) {
@@ -1935,6 +1993,7 @@ getDiscRate(Datum modelProduct) {
   } else {
     return Text('');
   }
+
 }
 
 

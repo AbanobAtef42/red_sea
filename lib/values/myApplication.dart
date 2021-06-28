@@ -112,7 +112,7 @@ class MyApplication {
         if(dialogType == DialogType.SUCCES)
         {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',-1,true,'l')));
+              context, MaterialPageRoute(builder: (context) => BottomNavHost('','',0,false,'l')));
           StatefulWrapper.of(context).rebuild();
         }
         },

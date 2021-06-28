@@ -111,8 +111,9 @@ class _BottomNavHostState extends State<BottomNavHost>
       catQry = '';
       this.index = 0;
     });
-    if((index == 1 ) && widget.signedInOut && widget.routeToBotNavHost == 'l')
+    if((index == 0 ||  index == 1 || index == 3 ))
     {
+     // StatefulWrapper.of(context).rebuild();
      // StatefulWrapper.of(context).rebuild();
     }
   }

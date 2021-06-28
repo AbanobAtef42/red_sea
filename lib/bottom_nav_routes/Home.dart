@@ -1133,8 +1133,8 @@ class _HomeState extends State<Home> {*/
 
       // setState(() {
       _isFavorited[index] = true;
-      _pagingController.itemList = allItems;
-     // Provider.of<ProviderHome>(context, listen: false).notifyListeners();
+     // _pagingController.itemList = allItems;
+      Provider.of<ProviderHome>(context, listen: false).notifyListeners();
       /*this._iconHeart = new Icon(
           CupertinoIcons.heart_fill,
           color: Colors.red,
@@ -1150,7 +1150,7 @@ class _HomeState extends State<Home> {*/
       Iterable<dynamic> key = boxFavs!.keys
           .where((element) => boxFavs!.get(element)!.id == modelProducts.id);
       boxFavs!.delete(key.toList()[0]);
-      _pagingController.itemList = allItems;
+     // _pagingController.itemList = allItems;
       Provider.of<ProviderHome>(context, listen: false).notifyListeners();
 
       //  });
