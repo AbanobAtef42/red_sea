@@ -50,14 +50,14 @@ class Categories extends StatelessWidget {
   final String sourceRoute;
   static const int _pageSize = 10;
   static ProviderHome? _providerHome;
- static ProviderUser? _providerUser;
+  static ProviderUser? _providerUser;
   static String name = 'category';
 
   static String catQuery2 = '';
   static String searchQuery2 = '';
- static List<Datum> allItems = [];
+  static List<Datum> allItems = [];
 
- static ModelCats? modelCats;
+  static ModelCats? modelCats;
   static ModelProducts? modelProducts;
   static ModelProducts? modelProducts2;
   static double? listPadding;
@@ -71,7 +71,8 @@ class Categories extends StatelessWidget {
   static Icon _searchIcon = new Icon(Icons.search);
   static FocusNode? focusNode = FocusNode();
 // IconButton _searchIconButton = new IconButton();
-  final TextEditingController textEditingController = new TextEditingController();
+  final TextEditingController textEditingController =
+      new TextEditingController();
   static ProviderHome? provider;
 
   static bool loading = false;
@@ -82,19 +83,17 @@ class Categories extends StatelessWidget {
 
   static var x = 0;
 
-
   static ScrollController _scrollController = ScrollController();
   static int pageKey = 1;
 
   final PagingController<int, Datum> _pagingController =
-  PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1);
   final PagingController<int, Datum> _pagingControllerCats =
-  PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1);
   final PagingController<int, Datum> _pagingControllerSearch =
-  PagingController(firstPageKey: 0);
+      PagingController(firstPageKey: 0);
 
-
-  static bool isAlwaysShown  = true;
+  static bool isAlwaysShown = true;
 
   static bool internetp = true;
 
@@ -109,10 +108,10 @@ class Categories extends StatelessWidget {
   static late List<bool> _isFavorited;
   static late List<int> _favoriteIds;
   final Box<Datum>? boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
-  Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,this.sourceRoute);
+  Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,
+      this.sourceRoute);
 
-
- void  initState(BuildContext context) {
+  void initState(BuildContext context) {
     _isFavorited = [];
     _favoriteIds = [];
     catQuery2 = catQuery;
@@ -136,13 +135,14 @@ class Categories extends StatelessWidget {
         index1 = 0;
       }*/
     index1 = catIndex;
-    modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
+    modelSettings =
+        Provider.of<ProviderUser>(context, listen: false).modelSettings;
 
-    modelProducts = Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
+    modelProducts =
+        Provider.of<ProviderHome>(context, listen: false).modelProductsCats;
 
     modelCats = Provider.of<ProviderHome>(context, listen: false).modelCats2;
-    if (modelCats == null  || modelSettings == null || modelProducts == null) {
-
+    if (modelCats == null || modelSettings == null || modelProducts == null) {
       //_getProducts(context, -1, pageKey);
 
     }
@@ -163,13 +163,13 @@ class Categories extends StatelessWidget {
     _pagingControllerSearch.addPageRequestListener((pageKey) {
       _fetchPageSearch(pageKey);
     });*/
-    if ( signedInOut && sourceRoute == 'l') {
+    if (signedInOut && sourceRoute == 'l') {
       print('building.....    $pageKey');
       _providerHome!.isLastPage = false;
       pageKey = 1;
       index1 = 0;
       //onListItemTap(modelCats, 0, context, _providerHome);
-     // _fetchPage(1, context, true);
+      // _fetchPage(1, context, true);
       // _getCats(context);
     }
     _scrollController.addListener(() {
@@ -182,23 +182,8 @@ class Categories extends StatelessWidget {
 
     MyApplication.initCache();
   }
-  _getCats(BuildContext context) async {
-    // final provider = Provider.of<ProviderHome>(context, listen: false);
-    if (!await MyApplication.checkConnection()) {
-      await Provider.of<ProviderHome>(context, listen: false).getCats2();
 
-      modelCats = _providerHome!.modelCats2;
-      internet = false;
-      _providerHome!.notifyListeners();
-    } else {
-      await Provider.of<ProviderHome>(context, listen: false).getCats2();
-
-      modelCats = _providerHome!.modelCats2;
-      _providerHome!.notifyListeners();
-    }
-  }
-
-  onListItemTap(ModelCats? modelCats, int index, BuildContext context,
+  void onListItemTap(ModelCats? modelCats, int index, BuildContext context,
       ProviderHome? providerHome) async {
     /*final provider = Provider.of<ProviderHome>(context);
     provider.getCatIndex(index);*/
@@ -211,7 +196,8 @@ class Categories extends StatelessWidget {
     //   provider = Provider.of<ProviderHome>(context, listen: false);
 
     modelProducts = provider!.modelProductsCats;
-    if (index1 != index && _providerHome!.isLoadedCats) {
+    if (index1 !=
+        index && (_pagingController.value.status == PagingStatus.completed || _pagingController.value.status != PagingStatus.loadingFirstPage )) {
       index1 = index;
       searchQuery2 = '';
       catQuery2 = index == 0 ? '' : modelCats!.data![index - 1].slug!;
@@ -226,14 +212,29 @@ class Categories extends StatelessWidget {
       //modelProducts = new ModelProducts();
       _providerHome!.isLoadedCats = false;
       _providerHome!.notifyListeners();
-     //_providerHome!.setIsLoaded(false);
+      //_providerHome!.setIsLoaded(false);
       // print('catQuery2' + modelCats!.data![index].slug!);
-
 
       _fetchPage(pageKey, context, false);
       _pagingController.refresh();
     }
     //_getProducts(context, index1, pageKey);
+  }
+
+  _getCats(BuildContext context) async {
+    // final provider = Provider.of<ProviderHome>(context, listen: false);
+    if (!await MyApplication.checkConnection()) {
+      await Provider.of<ProviderHome>(context, listen: false).getCats2();
+
+      modelCats = _providerHome!.modelCats2;
+      internet = false;
+      _providerHome!.notifyListeners();
+    } else {
+      await Provider.of<ProviderHome>(context, listen: false).getCats2();
+
+      modelCats = _providerHome!.modelCats2;
+      _providerHome!.notifyListeners();
+    }
   }
 
   onSubmitted(String query, BuildContext context) async {
@@ -271,6 +272,7 @@ class Categories extends StatelessWidget {
       // _getProducts(context, -1,pageKey);
     }
   }
+
   onIconHeartClick(Datum modelProducts, int index, BuildContext context) {
     print('fffffffffffdddd' + index.toString());
     List<Datum?> datums = boxFavs!.values
@@ -294,6 +296,7 @@ class Categories extends StatelessWidget {
       // });
     }
   }
+
   retryButtonWidget(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 2,
@@ -363,16 +366,15 @@ class Categories extends StatelessWidget {
         // setState(() {
         //   modelSettings = Provider.of<ProviderUser>(context, listen: false).modelSettings;
         if (Provider.of<ProviderUser>(context, listen: false)
-            .modelSettings!
-            .data !=
+                .modelSettings!
+                .data !=
             null) {
           SharedPrefs().priceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
           SharedPrefs().exertedPriceUnit(
               _providerUser!.modelSettings!.data![0].value.toString());
           modelSettings = _providerUser!.modelSettings;
-             _providerUser!.notifyListeners();
-
+          _providerUser!.notifyListeners();
         }
         // print(modelSettings!.data.toString()+'--------');
         // });
@@ -403,7 +405,7 @@ class Categories extends StatelessWidget {
        modelProducts = new ModelProducts();
      }*/
     print('catttttt' + catQuery2);
-    if ( index == -1 ||
+    if (index == -1 ||
         (modelCats != null && catQuery2 == modelCats!.data![index].slug)) {
       if (!await MyApplication.checkConnection()) {
         modelProducts = _providerHome!.modelProductsCats;
@@ -425,22 +427,22 @@ class Categories extends StatelessWidget {
         return _providerHome!.modelProductsCats!.data;
       }
     }
-   // return _providerHome!.modelProductsCats!.data;
+    // return _providerHome!.modelProductsCats!.data;
     //  modelProducts2 = modelProducts;
     /* setState(() {
          provider = Provider.of<ProviderHome>(context,listen: false);
        });*/
   }
+
   scrollBarConfig() {
     if (isAlwaysShown) {
       Timer.periodic(Duration(milliseconds: 2100), (timer) {
-
         isAlwaysShown = false;
-     //   _providerHome!.notifyListeners();
+        //   _providerHome!.notifyListeners();
       });
-
     }
   }
+
   @override
   Widget build(BuildContext context) {
     print('building.....cats');
@@ -453,7 +455,7 @@ class Categories extends StatelessWidget {
 
     // TODO: implement build
     return StatefulWrapper(
-      onInit:()=> initState(context),
+      onInit: () => initState(context),
       child: Scaffold(
         /*appBar: AppBar(
                   title: Text(cats,
@@ -565,12 +567,13 @@ class Categories extends StatelessWidget {
       ),
     );
   }
+
   Future<void> _showSearch(BuildContext context) async {
     FocusScope.of(context).requestFocus(focusNode);
     await showSearch(
       context: context,
       delegate:
-      TheSearch(contextPage: context, controller: textEditingController),
+          TheSearch(contextPage: context, controller: textEditingController),
       query: textEditingController.text.toString(),
     );
   }
@@ -605,12 +608,14 @@ class Categories extends StatelessWidget {
       return _iconHeart;
     }
   }
-  _getIndexedStack(BuildContext context){
+
+  _getIndexedStack(BuildContext context) {
     modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
-    modelProducts = Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
+    modelProducts =
+        Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
     modelCats = Provider.of<ProviderHome>(context, listen: true).modelCats2;
-    if ( modelCats == null ||  modelSettings == null || modelProducts == null) {
+    if (modelCats == null || modelSettings == null || modelProducts == null) {
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -618,14 +623,15 @@ class Categories extends StatelessWidget {
         ]),
       );
     }
-  List<Widget> pages =   List.generate(modelCats!.data!.length, (index) => getAppWidget(context));
-   // getAppWidget(context);
+    List<Widget> pages = List.generate(
+        modelCats!.data!.length, (index) => getAppWidget(context));
+    // getAppWidget(context);
     return IndexedStack(
-      children:
-        pages,
+      children: pages,
       index: index1,
     );
   }
+
   Widget getAppWidget(BuildContext context) {
     /*Fluttertoast.showToast(
         msg: '22 : _getAppWidget ',
@@ -637,9 +643,10 @@ class Categories extends StatelessWidget {
         fontSize: textLabelSize);*/
     modelSettings =
         Provider.of<ProviderUser>(context, listen: true).modelSettings;
-    modelProducts = Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
+    modelProducts =
+        Provider.of<ProviderHome>(context, listen: true).modelProductsCats;
     modelCats = Provider.of<ProviderHome>(context, listen: true).modelCats2;
-    if ( modelCats == null ||  modelSettings == null || modelProducts == null) {
+    if (modelCats == null || modelSettings == null || modelProducts == null) {
       return Container(
         height: MediaQuery.of(context).size.height / 1.5,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -653,7 +660,9 @@ class Categories extends StatelessWidget {
         loading = false;
       });*/
     // loading = false;
-    List cats = _providerHome!.modelCats2!.data == null ? [] : _providerHome!.modelCats2!.data!;
+    List cats = _providerHome!.modelCats2!.data == null
+        ? []
+        : _providerHome!.modelCats2!.data!;
 
 /*setState(() {
   provider = Provider.of<ProviderHome>(context, listen: true);
@@ -672,7 +681,8 @@ class Categories extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   if (index == index1) {
                     return GestureDetector(
-                      onTap: () =>onListItemTap(modelCats, index, context, provider),
+                      onTap: () =>
+                          onListItemTap(modelCats, index, context, provider),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -740,6 +750,7 @@ class Categories extends StatelessWidget {
       ],
     );
   }
+
   retryButtonListWidget(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 2,
@@ -763,15 +774,19 @@ class Categories extends StatelessWidget {
           )),
     );
   }
+
   _buildItem(Datum modelProducts, int index, BuildContext context) {
-    _providerHome!.isLoadedCats = true;
     String name = modelProducts.name!;
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
     }
+    if (index == _providerHome!.modelProducts!.data!.length) {
+      _providerHome!.isLoadedCats = true;
+    }
     _isFavorited.insert(index, false);
     return Container(
-      margin: EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
+      margin:
+          EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
       // width: MediaQuery.of(context).size.width/1.2,
       //height: MediaQuery.of(context).size.height / 2.9,
       child: Padding(
@@ -873,7 +888,6 @@ class Categories extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: [
                           // rateWidget(modelProducts),
                           /*Spacer(
@@ -923,6 +937,7 @@ class Categories extends StatelessWidget {
       ),
     );
   }
+
   Widget _getProductWidget(ModelProducts? modelProducts, BuildContext context) {
     //loading = provider.loadedCats;
     // List<Datum> list = modelProducts.data;
@@ -1008,7 +1023,7 @@ class Categories extends StatelessWidget {
       );
     }
 
-   /* if (modelProducts.data != null &&
+    /* if (modelProducts.data != null &&
         modelProducts.data!.length == 0 &&
         false) {
       hideScrollBar();
@@ -1047,7 +1062,7 @@ class Categories extends StatelessWidget {
             () {
               pageKey = 1;
               _fetchPage(pageKey, context, true);
-             // _pagingController.refresh();
+              // _pagingController.refresh();
             },
           ),
           child: Padding(
@@ -1069,141 +1084,122 @@ class Categories extends StatelessWidget {
                 physics: ScrollPhysics(),
                 //  physics: NeverScrollableScrollPhysics(),
                 builderDelegate: PagedChildBuilderDelegate<Datum>(
-                  itemBuilder: (context, modelProducts, index) {
-                    List<String> itemTags = [];
+                    itemBuilder: (context, modelProducts, index) {
+                  List<String> itemTags = [];
 
-                    String name = modelProducts.name!;
-                    if (name.length > 22) {
-                      name = name.substring(0, 22) + '...';
-                    }
-                    return Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: colorPrimary,
-                        onTap: () => Navigator.push(
-                          context,
-                          PageRouteBuilder<Null>(
-                              pageBuilder: (BuildContext context,
-                                  Animation<double> animation,
-                                  Animation<double> secondaryAnimation) {
-                                return AnimatedBuilder(
-                                    animation: animation,
-                                    builder:
-                                        (BuildContext context, Widget? child) {
-                                      return Opacity(
-                                        opacity: animation.value,
-                                        child: ProductDetail(
-                                          modelProducts: modelProducts,
-                                          tags: itemTags,
-                                        ),
-                                      );
-                                    });
-                              },
-                              transitionDuration: Duration(milliseconds: 500)),
-                        ),
-                        child: _buildItem(modelProducts, index, context),
-                      ),
-                    );
-                  },
-                  firstPageErrorIndicatorBuilder: (context) {
-                    _providerHome!.isLoadedCats = true;
-                    return Container(
-                      height: MediaQuery.of(context).size.height / 1.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            height: MediaQuery.of(context).size.height / 4,
-                            child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Icon(
-                                  Icons.error_outline_outlined,
-                                  color: Colors.red,
-                                )),
-                          ),
-                          Container(
-                              width: MediaQuery.of(context).size.width / 1.4,
-                              child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                        text:
-                                            S.of(context).anUnknownErrorOccuredn +
-                                                '\n',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(
-                                                height: 1,
-                                                fontWeight: FontWeight.bold),
-                                        children: [
-                                          TextSpan(
-                                              text: S
-                                                      .of(context)
-                                                      .plzChknternetConnection +
-                                                  '\n' +
-                                                  S.of(context).tryAgain,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6!
-                                                  .copyWith(height: 2))
-                                        ]),
-                                  ))),
-                          SizedBox(
-                            height: 12.0,
-                          ),
-                          retryButtonListWidget(context),
-                        ],
-                      ),
-                    );
-                  },
-                  noItemsFoundIndicatorBuilder: (_) {
-                    _providerHome!.isLoadedCats = true;
-                  return  Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 1.5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 2,
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 3,
-                            child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Icon(
-                                  Icons.search_off_outlined,
-                                  color: colorPrimary,
-                                )),
-                          ),
-                          Container(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 2,
-                              child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(S
-                                      .of(context)
-                                      .noResults))),
-                        ],
-                      ),
-                    );
-
+                  String name = modelProducts.name!;
+                  if (name.length > 22) {
+                    name = name.substring(0, 22) + '...';
                   }
-                ),
-
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: colorPrimary,
+                      onTap: () => Navigator.push(
+                        context,
+                        PageRouteBuilder<Null>(
+                            pageBuilder: (BuildContext context,
+                                Animation<double> animation,
+                                Animation<double> secondaryAnimation) {
+                              return AnimatedBuilder(
+                                  animation: animation,
+                                  builder:
+                                      (BuildContext context, Widget? child) {
+                                    return Opacity(
+                                      opacity: animation.value,
+                                      child: ProductDetail(
+                                        modelProducts: modelProducts,
+                                        tags: itemTags,
+                                      ),
+                                    );
+                                  });
+                            },
+                            transitionDuration: Duration(milliseconds: 500)),
+                      ),
+                      child: _buildItem(modelProducts, index, context),
+                    ),
+                  );
+                }, firstPageErrorIndicatorBuilder: (context) {
+                  // _providerHome!.isLoadedCats = true;
+                  return Container(
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 4,
+                          child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Icon(
+                                Icons.error_outline_outlined,
+                                color: Colors.red,
+                              )),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                      text:
+                                          S.of(context).anUnknownErrorOccuredn +
+                                              '\n',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6!
+                                          .copyWith(
+                                              height: 1,
+                                              fontWeight: FontWeight.bold),
+                                      children: [
+                                        TextSpan(
+                                            text: S
+                                                    .of(context)
+                                                    .plzChknternetConnection +
+                                                '\n' +
+                                                S.of(context).tryAgain,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6!
+                                                .copyWith(height: 2))
+                                      ]),
+                                ))),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        retryButtonListWidget(context),
+                      ],
+                    ),
+                  );
+                }, noItemsFoundIndicatorBuilder: (_) {
+                  _providerHome!.isLoadedCats = true;
+                  return Container(
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Icon(
+                                Icons.search_off_outlined,
+                                color: colorPrimary,
+                              )),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(S.of(context).noResults))),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ),
           ),
@@ -1526,7 +1522,7 @@ class Categories extends StatelessWidget {
     }
 
     return getAppWidget(context);
-   // return _getIndexedStack(context);
+    // return _getIndexedStack(context);
   }
 
   Future<void> _fetchPage(
@@ -1539,7 +1535,7 @@ class Categories extends StatelessWidget {
       print('pagekeyssss  $pageKey');
       // print('pagekeyssss this' + this.pageKey.toString());
 
-      final newItems = await _getProducts(context, index-1, pageKey);
+      final newItems = await _getProducts(context, index - 1, pageKey);
       allItems.addAll(newItems);
       /*_pagingController.value = PagingState(
           nextPageKey: pageKey++,
@@ -1555,7 +1551,7 @@ class Categories extends StatelessWidget {
       // _isFavorited.addAll(List.filled(newItems.length, false));
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage && !refresh) {
-       // allItems.addAll(newItems);
+        // allItems.addAll(newItems);
         _pagingController.appendLastPage(newItems);
         // _providerHome!.setPageKey(1);
         _providerHome!.setIsLastPageCats(true);
@@ -1565,13 +1561,12 @@ class Categories extends StatelessWidget {
         //_providerHome!.setPageKey(++pageKey);
         final nextPageKey = _providerHome!.pageKey;
         print('execmorethan1   $nextPageKey');
-        if(pageKey == 1){
+        if (pageKey == 1) {
           allItems.clear();
           allItems.addAll(newItems);
           _pagingController.value =
               PagingState(nextPageKey: ++pageKey, itemList: allItems);
-        }
-        else {
+        } else {
           _pagingController.appendPage(newItems, nextPageKey.toInt());
         }
       }
@@ -1592,9 +1587,6 @@ class Categories extends StatelessWidget {
   /*@override
   _CategoriesState createState() => _CategoriesState();*/
 }
-
-
-
 
 /*@override
   void didChangeDependencies() {
@@ -1627,8 +1619,6 @@ rateWidget(Datum modelProducts, BuildContext context) {
   }
 }
 
-
-
 /*_getProducts(BuildContext context) async {
     Fluttertoast.showToast(
         msg: '11 : _getProductWidget ',
@@ -1651,8 +1641,6 @@ rateWidget(Datum modelProducts, BuildContext context) {
    // ProductWidget('', '', '');
   //  }
   }*/
-
-
 
 /*getProductWidget2() {
 
@@ -1899,8 +1887,6 @@ rateWidget2(ModelProducts modelProducts, int index) {
 
 onPressed() {}
 
-
-
 hideScrollBar() {
   /*setState(() {
       isAlwaysShown = false;
@@ -1964,17 +1950,13 @@ Widget getDiscountWidget(Datum modelProduct) {
       : Text('');
 }
 
-
-
-
-
-
-
 getDiscRate(Datum modelProduct) {
   if (modelProduct != null &&
       modelProduct.discount != 'null' &&
       int.parse(modelProduct.discount.toString()) != 0) {
-    double disc = (( double.parse(modelProduct.discount!)) /double.parse(modelProduct.price!))*100 ;
+    double disc = ((double.parse(modelProduct.discount!)) /
+            double.parse(modelProduct.price!)) *
+        100;
     int disc2 = disc.toInt();
     return Positioned(
       right: 0,
@@ -1985,7 +1967,7 @@ getDiscRate(Datum modelProduct) {
             color: Colors.red,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0))),
         child: Text(
-          '$disc2'+'%',
+          '$disc2' + '%',
           style: TextStyle(color: Colors.white, fontSize: 12.0),
         ),
       ),
@@ -1993,12 +1975,7 @@ getDiscRate(Datum modelProduct) {
   } else {
     return Text('');
   }
-
 }
-
-
-
-
 
 class TheSearch extends SearchDelegate<String?> {
   TheSearch({this.contextPage, this.controller});
@@ -2057,12 +2034,15 @@ class TheSearch extends SearchDelegate<String?> {
     } else {
       //  controller!.text = query.toString();
       SchedulerBinding.instance!.addPostFrameCallback((_) {
+        Provider.of<ProviderHome>(context, listen: false).setIsLoaded(false);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => BottomNavHost(query, '', -1,false,'l')));
-        StatefulWrapper.of(context).rebuild();
+                builder: (context) =>
+                    BottomNavHost(query, '', -1, false, 'l')));
 
+        //  BottomNavHost.of(context).goToCats();
+        StatefulWrapper.of(context).rebuild();
       });
     }
     return (Container());

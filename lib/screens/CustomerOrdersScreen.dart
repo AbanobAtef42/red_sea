@@ -61,10 +61,10 @@ class Orders extends StatelessWidget {
          Provider.of<ProviderUser>(context, listen: false).modelSettings;
      modelOrders = Provider.of<ProviderHome>(context, listen: false).modelOrders;
      if(modelOrders == null || modelSettings == null) {
-       _getPriceUnit(context, 'admin.\$');
+
 
      }
-
+     _getPriceUnit(context, 'admin.\$');
      _fetchPage(pageKey,context,false);
   
 

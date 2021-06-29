@@ -214,7 +214,7 @@ class _BottomNavHostState extends State<BottomNavHost>
     setState(() {
       search = BottomNavHost.searchQueryFun;
       catQry = BottomNavHost.catQueryFun;
-      this.index = BottomNavHost.catsIndex;
+      this.index = -1;
       keep = false;
       _tabController.index = 1;
       this._selectedIndex = 1;
