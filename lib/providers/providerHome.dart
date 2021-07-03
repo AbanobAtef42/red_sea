@@ -123,6 +123,7 @@ String? sentOrder;
   }
   setIsLoaded(bool loaded){
     this.isLoadedCats = loaded;
+
     notifyListeners();
   }
   setPageKey(int pageKey){

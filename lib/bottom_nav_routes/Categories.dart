@@ -86,7 +86,7 @@ class Categories extends StatelessWidget {
   static ScrollController _scrollController = ScrollController();
   static int pageKey = 1;
 
-  final PagingController<int, Datum> _pagingController =
+   PagingController<int, Datum> _pagingController =
       PagingController(firstPageKey: 1);
   final PagingController<int, Datum> _pagingControllerCats =
       PagingController(firstPageKey: 1);
@@ -106,8 +106,11 @@ class Categories extends StatelessWidget {
   static bool showCursor = true;
 
   static late List<bool> _isFavorited;
+  //static late List<PagingController<int,Datum>> _pagingControllers;
   static late List<int> _favoriteIds;
   final Box<Datum>? boxFavs = Hive.box(sharedPrefs.mailKey + dataBoxNameFavs);
+
+  int pagingIndex = 0;
   Categories(this.catQuery, this.searchQuery, this.catIndex, this.signedInOut,
       this.sourceRoute);
 
@@ -147,10 +150,11 @@ class Categories extends StatelessWidget {
 
     }
     pageKey = 1;
-
+//_pagingControllers = [PagingController<int, Datum>(firstPageKey: 1)];
     _getCats(context);
     _getPriceUnit(context, 'admin.\$');
-    _fetchPage(1, context, false);
+    _fetchPage(1, context, true);
+
     /*_pagingControllerCats.addPageRequestListener((pageKey) {
       print('execpagingcats' + pageKey.toString());
       _fetchPageCats(this.pageKey);
@@ -169,7 +173,7 @@ class Categories extends StatelessWidget {
       pageKey = 1;
       index1 = 0;
       //onListItemTap(modelCats, 0, context, _providerHome);
-      // _fetchPage(1, context, true);
+       _fetchPage(1, context, true);
       // _getCats(context);
     }
     _scrollController.addListener(() {
@@ -197,11 +201,12 @@ class Categories extends StatelessWidget {
 
     modelProducts = provider!.modelProductsCats;
     if (index1 !=
-        index && (_pagingController.value.status == PagingStatus.completed || _pagingController.value.status != PagingStatus.loadingFirstPage )) {
+        index && allItems.isNotEmpty && _pagingController.value.status != PagingStatus.loadingFirstPage /*(_pagingController.value.status == PagingStatus.completed || _pagingController.value.status != PagingStatus.loadingFirstPage )*/) {
+
       index1 = index;
       searchQuery2 = '';
       catQuery2 = index == 0 ? '' : modelCats!.data![index - 1].slug!;
-
+     // _pagingController = PagingController(firstPageKey: 1);
 
       // _pagingControllerMain = _pagingControllerCats;
 
@@ -210,13 +215,16 @@ class Categories extends StatelessWidget {
       allItems.clear();
       // this.modelCats = provider.modelCats;
       //modelProducts = new ModelProducts();
-      _providerHome!.isLoadedCats = false;
+
+      _providerHome!.isLastPageCats = false;
+     // _providerHome!.isLoadedCats = false;
       _providerHome!.notifyListeners();
       //_providerHome!.setIsLoaded(false);
       // print('catQuery2' + modelCats!.data![index].slug!);
 
-      _fetchPage(pageKey, context, false);
+      _fetchPage(1, context, true);
       _pagingController.refresh();
+
     }
     //_getProducts(context, index1, pageKey);
   }
@@ -664,6 +672,8 @@ class Categories extends StatelessWidget {
         ? []
         : _providerHome!.modelCats2!.data!;
 
+   // _pagingControllers.addAll( List.generate(cats.length-1, (index) => PagingController<int,Datum>(firstPageKey: 1)));
+
 /*setState(() {
   provider = Provider.of<ProviderHome>(context, listen: true);
 });*/
@@ -780,9 +790,12 @@ class Categories extends StatelessWidget {
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
     }
-    if (index == _providerHome!.modelProducts!.data!.length) {
+    if (index == _providerHome!.modelProducts!.data!.length-1) {
       _providerHome!.isLoadedCats = true;
+     // _providerHome!.notifyListeners();
     }
+   // pagingIndex = ++index;
+
     _isFavorited.insert(index, false);
     return Container(
       margin:
@@ -1046,12 +1059,12 @@ class Categories extends StatelessWidget {
         onNotification: (ScrollNotification scrollNotification) {
           //  _pagingController.addPageRequestListener((pageKey) {
           if (scrollNotification is ScrollEndNotification &&
-              scrollNotification.metrics.extentAfter == 0 &&
-              !_providerHome!.isLastPageCats) {
+              scrollNotification.metrics.extentAfter == 0 && scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent &&
+              !_providerHome!.isLastPageCats && _pagingController.value.status != PagingStatus.loadingFirstPage) {
             // _providerHome!.setPageKey(++_providerHome!.pageKey);
             int key = _providerHome!.pageKey;
             print('pageKeyProvider  $key');
-
+            allItems.clear();
             _fetchPage(++pageKey, context, false);
           }
           // });
@@ -1072,134 +1085,146 @@ class Categories extends StatelessWidget {
               isAlwaysShown: isAlwaysShown,
               controller: _scrollController,
               radius: Radius.circular(8.0),
-              child: PagedGridView<int, Datum>(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 100 / 170,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                ),
-                pagingController: _pagingController,
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                //  physics: NeverScrollableScrollPhysics(),
-                builderDelegate: PagedChildBuilderDelegate<Datum>(
-                    itemBuilder: (context, modelProducts, index) {
-                  List<String> itemTags = [];
+              child: SingleChildScrollView(
+                child: PagedGridView<int, Datum>(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 100 / 170,
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 2,
+                  ),
+                  pagingController: _pagingController,
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  //  physics: NeverScrollableScrollPhysics(),
+                  builderDelegate: PagedChildBuilderDelegate<Datum>(
+                      itemBuilder: (context, modelProducts, index) {
+                    List<String> itemTags = [];
 
-                  String name = modelProducts.name!;
-                  if (name.length > 22) {
-                    name = name.substring(0, 22) + '...';
-                  }
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      splashColor: colorPrimary,
-                      onTap: () => Navigator.push(
-                        context,
-                        PageRouteBuilder<Null>(
-                            pageBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secondaryAnimation) {
-                              return AnimatedBuilder(
-                                  animation: animation,
-                                  builder:
-                                      (BuildContext context, Widget? child) {
-                                    return Opacity(
-                                      opacity: animation.value,
-                                      child: ProductDetail(
-                                        modelProducts: modelProducts,
-                                        tags: itemTags,
-                                      ),
-                                    );
-                                  });
-                            },
-                            transitionDuration: Duration(milliseconds: 500)),
+                    String name = modelProducts.name!;
+                    if (name.length > 22) {
+                      name = name.substring(0, 22) + '...';
+                    }
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: colorPrimary,
+                        onTap: () => Navigator.push(
+                          context,
+                          PageRouteBuilder<Null>(
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation) {
+                                return AnimatedBuilder(
+                                    animation: animation,
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      return Opacity(
+                                        opacity: animation.value,
+                                        child: ProductDetail(
+                                          modelProducts: modelProducts,
+                                          tags: itemTags,
+                                        ),
+                                      );
+                                    });
+                              },
+                              transitionDuration: Duration(milliseconds: 500)),
+                        ),
+                        child: _buildItem(modelProducts, index, context),
                       ),
-                      child: _buildItem(modelProducts, index, context),
-                    ),
-                  );
-                }, firstPageErrorIndicatorBuilder: (context) {
-                  // _providerHome!.isLoadedCats = true;
-                  return Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 4,
-                          child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Icon(
-                                Icons.error_outline_outlined,
-                                color: Colors.red,
-                              )),
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width / 1.4,
-                            child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                      text:
-                                          S.of(context).anUnknownErrorOccuredn +
-                                              '\n',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold),
-                                      children: [
-                                        TextSpan(
-                                            text: S
-                                                    .of(context)
-                                                    .plzChknternetConnection +
-                                                '\n' +
-                                                S.of(context).tryAgain,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(height: 2))
-                                      ]),
-                                ))),
-                        SizedBox(
-                          height: 12.0,
-                        ),
-                        retryButtonListWidget(context),
-                      ],
-                    ),
-                  );
-                }, noItemsFoundIndicatorBuilder: (_) {
-                  _providerHome!.isLoadedCats = true;
-                  return Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 3,
-                          child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Icon(
-                                Icons.search_off_outlined,
-                                color: colorPrimary,
-                              )),
-                        ),
-                        Container(
+                    );
+                  }, firstPageErrorIndicatorBuilder: (context) {
+                    // _providerHome!.isLoadedCats = true;
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
                             width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 4,
                             child: FittedBox(
                                 fit: BoxFit.contain,
-                                child: Text(S.of(context).noResults))),
-                      ],
-                    ),
-                  );
-                }),
+                                child: Icon(
+                                  Icons.error_outline_outlined,
+                                  color: Colors.red,
+                                )),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 1.4,
+                              child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        text:
+                                            S.of(context).anUnknownErrorOccuredn +
+                                                '\n',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(
+                                                height: 1,
+                                                fontWeight: FontWeight.bold),
+                                        children: [
+                                          TextSpan(
+                                              text: S
+                                                      .of(context)
+                                                      .plzChknternetConnection +
+                                                  '\n' +
+                                                  S.of(context).tryAgain,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6!
+                                                  .copyWith(height: 2))
+                                        ]),
+                                  ))),
+                          SizedBox(
+                            height: 12.0,
+                          ),
+                          retryButtonListWidget(context),
+                        ],
+                      ),
+                    );
+                  }, noItemsFoundIndicatorBuilder: (_) {
+                    _providerHome!.isLoadedCats = true;
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Icon(
+                                  Icons.search_off_outlined,
+                                  color: colorPrimary,
+                                )),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(S.of(context).noResults))),
+                        ],
+                      ),
+                    );
+                  },
+                    /*newPageProgressIndicatorBuilder: (_)
+                    {
+                      _providerHome!.isLoadedCats = false;
+                      return  SizedBox(
+                        height: 30.0,
+                          width: 30.0,
+                          child: CircularProgressIndicator());
+
+                    }*/
+                  ),
+                ),
               ),
             ),
           ),
@@ -1531,25 +1556,36 @@ class Categories extends StatelessWidget {
     if (catQuery == '') {
       index = 0;
     }
+
+
     try {
       print('pagekeyssss  $pageKey');
       // print('pagekeyssss this' + this.pageKey.toString());
 
       final newItems = await _getProducts(context, index - 1, pageKey);
       allItems.addAll(newItems);
+      _providerHome!.setIsLoaded(true);
+//Timer(Duration(seconds: 2),()=> allItems.addAll(newItems) );
+
       /*_pagingController.value = PagingState(
           nextPageKey: pageKey++,
           itemList: newItems );
-*/
-      if (refresh) {
-        allItems.addAll(newItems);
+*/final isLastPage = newItems.length < _pageSize;
+      if (refresh && !isLastPage) {
+      //  allItems.addAll(newItems);
         _pagingController.value =
             PagingState(nextPageKey: ++pageKey, itemList: newItems);
+       // allItems.addAll(newItems);
 
         //_pagingController.itemList = newItems;
+      } else
+      if(isLastPage && refresh){
+        _pagingController.appendLastPage(newItems);
+      //  _providerHome!.setIsLastPageCats(true);
+        print('exec lala');
       }
       // _isFavorited.addAll(List.filled(newItems.length, false));
-      final isLastPage = newItems.length < _pageSize;
+
       if (isLastPage && !refresh) {
         // allItems.addAll(newItems);
         _pagingController.appendLastPage(newItems);
@@ -1565,7 +1601,7 @@ class Categories extends StatelessWidget {
           allItems.clear();
           allItems.addAll(newItems);
           _pagingController.value =
-              PagingState(nextPageKey: ++pageKey, itemList: allItems);
+              PagingState(nextPageKey: ++pageKey, itemList: newItems);
         } else {
           _pagingController.appendPage(newItems, nextPageKey.toInt());
         }
@@ -2034,7 +2070,8 @@ class TheSearch extends SearchDelegate<String?> {
     } else {
       //  controller!.text = query.toString();
       SchedulerBinding.instance!.addPostFrameCallback((_) {
-        Provider.of<ProviderHome>(context, listen: false).setIsLoaded(false);
+        Provider.of<ProviderHome>(context, listen: false).setIsLoaded(true);
+       // Provider.of<ProviderHome>(context, listen: false).setIsLastPageCats(false);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
