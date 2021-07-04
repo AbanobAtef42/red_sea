@@ -551,155 +551,177 @@ children: List.generate(list.length, (index) {
     if (name.length > 13) {
       name = name.substring(0, 12) + '...';
     }
-
-    return Container(
-      margin:
-      EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
-      // width: MediaQuery.of(context).size.width/1.2,
-      //height: MediaQuery.of(context).size.height / 2.9,
-      child: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Column(
-          children: [
-            Stack(children: [
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(0.0),
-                  child: Hero(
-                    tag: modelProducts.name.toString() +
-                        modelProducts.slug.toString(),
-                    child: CachedNetworkImage(
-                      placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
-                      imageUrl: modelProducts.images!.isNotEmpty
-                          ? 'https://flk.sa/' + modelProducts.images![0]
-                          : 'jj',
-                      fit: BoxFit.cover,
-                      // width: MediaQuery.of(context).size.width / 3.7,
-                      height: MediaQuery.of(context).size.height / 5,
-                    ),
-                  ),
-                ),
-              ),
-              getDiscRate(modelProducts),
-              Positioned(
-                left: 15,
-                top: 15,
-                child: GestureDetector(
-                  onTap: () {
-                    onIconHeartClick(modelProducts,context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border()),
-                    child: onIconHeartStart(modelProducts),
-                  ),
-                ),
-              ),
-            ]),
-            Container(
-              // color: Colors.grey[50],
-              decoration: new BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border(
-                      right: BorderSide(),
-                      left: BorderSide(),
-                      bottom: BorderSide())),
-              padding: EdgeInsetsDirectional.only(top: 12.0,bottom: 18.0),
-              child: Column(
-                /*mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,*/
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                        end: listPadding!, start: listPadding!),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // width: MediaQuery.of(context).size.width / 1.8,
-                          child: Hero(
-                            tag: modelProducts.name.toString(),
-                            child: Material(
-                              child: Text(
-                                name,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .headline3!
-                                        .fontSize),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        rateWidget(modelProducts),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  SizedBox(
-                    //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.only(
-                        end: listPadding!,
+    List<String> itemTags = [];
+    itemTags.add(modelProducts.slug.toString());
+    itemTags.add(modelProducts.name.toString());
+    return InkWell(
+      splashColor: colorPrimary,
+      onTap: () => Navigator.push(
+        context,
+        PageRouteBuilder<Null>(
+            pageBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation) {
+              return AnimatedBuilder(
+                  animation: animation,
+                  builder: (BuildContext context, Widget? child) {
+                    return Opacity(
+                      opacity: animation.value,
+                      child:ProductDetail(
+                        modelProducts: modelProducts,tags: itemTags,) ,
+                    );
+                  });
+            },
+            transitionDuration: Duration(milliseconds: 500)),
+      ),
+      child: Container(
+        margin:
+        EdgeInsetsDirectional.only(start: listPadding!, end: listPadding!),
+        // width: MediaQuery.of(context).size.width/1.2,
+        //height: MediaQuery.of(context).size.height / 2.9,
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            children: [
+              Stack(children: [
+                Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(0.0),
+                    child: Hero(
+                      tag: modelProducts.name.toString() +
+                          modelProducts.slug.toString(),
+                      child: CachedNetworkImage(
+                        placeholder:(con,str)=> Image.asset('images/plcholder.jpeg'),
+                        imageUrl: modelProducts.images!.isNotEmpty
+                            ? 'https://flk.sa/' + modelProducts.images![0]
+                            : 'jj',
+                        fit: BoxFit.cover,
+                        // width: MediaQuery.of(context).size.width / 3.7,
+                        height: MediaQuery.of(context).size.height / 5,
                       ),
+                    ),
+                  ),
+                ),
+                getDiscRate(modelProducts),
+                Positioned(
+                  left: 15,
+                  top: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      onIconHeartClick(modelProducts,context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border()),
+                      child: onIconHeartStart(modelProducts),
+                    ),
+                  ),
+                ),
+              ]),
+              Container(
+                // color: Colors.grey[50],
+                decoration: new BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border(
+                        right: BorderSide(),
+                        left: BorderSide(),
+                        bottom: BorderSide())),
+                padding: EdgeInsetsDirectional.only(top: 12.0,bottom: 18.0),
+                child: Column(
+                  /*mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,*/
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          end: listPadding!, start: listPadding!),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // rateWidget(modelProducts),
+                          Container(
+                            // width: MediaQuery.of(context).size.width / 1.8,
+                            child: Hero(
+                              tag: modelProducts.name.toString(),
+                              child: Material(
+                                child: Text(
+                                  name,
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .headline3!
+                                          .fontSize),
+                                ),
+                              ),
+                            ),
+                          ),
                           Spacer(
                             flex: 1,
                           ),
-                          Row(children: [
-                            Text(
-                              modelProducts.price! +
-                                  ' '  + ' '+sharedPrefs.exertedPriceUnitKey,
-                              style: TextStyle(fontSize: 14.0),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            getDiscountWidget(modelProducts),
-                          ])
+                          rateWidget(modelProducts),
                         ],
                       ),
                     ),
-                  ),
-                 /* Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Styles.getButton(
-                        context,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      //  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width / 2.8,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          end: listPadding!,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              S.of(context).cartAdd,
-                              style: TextStyle(fontSize: 14.0),
+                            // rateWidget(modelProducts),
+                            Spacer(
+                              flex: 1,
                             ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Icon(Icons.add_shopping_cart)
+                            Row(children: [
+                              Text(
+                                modelProducts.price! +
+                                    ' '  + ' '+sharedPrefs.exertedPriceUnitKey,
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              getDiscountWidget(modelProducts),
+                            ])
                           ],
                         ),
-                            () {},
-                        Styles.getCartButtonStyle()),
-                  )*/
-                ],
-              ),
-            )
-          ],
+                      ),
+                    ),
+                   /* Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Styles.getButton(
+                          context,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                S.of(context).cartAdd,
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Icon(Icons.add_shopping_cart)
+                            ],
+                          ),
+                              () {},
+                          Styles.getCartButtonStyle()),
+                    )*/
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -2067,6 +2067,7 @@ class TheSearch extends SearchDelegate<String?> {
   @override
   Widget buildResults(BuildContext context) {
     if (query.trim().isEmpty) {
+      FocusScope.of(context).requestFocus();
     } else {
       //  controller!.text = query.toString();
       SchedulerBinding.instance!.addPostFrameCallback((_) {

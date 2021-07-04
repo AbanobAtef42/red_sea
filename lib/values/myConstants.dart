@@ -88,5 +88,6 @@ const Color colorPrimary = Colors.black;
 const Color colorSemiWhite = Color(0x77ffffff);
 const Color colorSemiWhite2 = Color(0x44ffffff);
 const Color colorBorder = Colors.black54;
+
 const Color colorAccountIcon = Colors.grey;
 const Color colorAccountFocus = colorPrimary;
